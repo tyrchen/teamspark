@@ -2057,8 +2057,8 @@ table .span24 {
   font-family: 'FontAwesome';
   font-style: normal;
   font-weight: normal;
-  src: url('../font/fontawesome-webfont.eot');
-  src: url('../font/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), url('../font/fontawesome-webfont.woff') format('woff'), url('../font/fontawesome-webfont.ttf') format('truetype'), url('../font/fontawesome-webfont.svg#FontAwesome') format('svg');
+  src: url('/bootstrap/font/fontawesome-webfont.eot');
+  src: url('/bootstrap/font/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), url('/bootstrap/font/fontawesome-webfont.woff') format('woff'), url('../font/fontawesome-webfont.ttf') format('truetype'), url('/bootstrap/font/fontawesome-webfont.svg#FontAwesome') format('svg');
 }
 
 /*  Font Awesome styles
