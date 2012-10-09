@@ -5,21 +5,21 @@
 <body>
 <div class="container-fluid">
   <div class="row-fluid stretch">
-    <div class="span2 project-panel stretch">
-      <ul>
-        <li><a href="#"><i class="icon-time"></i>重要任务</a></li>
-        <li><a href="#"><i class="icon-asterisk"></i>紧急任务</a></li>
-      </ul>
-      <ul>
-        {{#each projects}}
-          {{>project}}
-        {{/each}}
+    <div class="span2 author-panel stretch sidebar-nav attraction">
+
+      <ul class="nav nav-list">
+        {{>author}}
+
+        <li class="nav-header">我的团队</li>
+        <li><a href="#"><i class="icon-tasks"></i>分享墙</a></li>
+        <li><a href="#"><i class="icon-credit-card"></i>任务板</a></li>
       </ul>
     </div>
     <div class="span6 spark-panel stretch">
+      <header><h4>途客圈战队</h4></header>
       {{> sparkBoard}}
     </div>
-    <div class="span4 member-panel stretch">
+    <div class="span4 member-panel stretch attraction">
       {{#each members}}
         {{>member}}
       {{/each}}
@@ -29,14 +29,80 @@
 </div>
 </body>
 
-<template name="project">
-  <h1>Hello World!</h1>
-  <input type="button" value="Click" />
+<template name="author">
+  <li class="author">
+    <img class="avatar" src="http://tp1.sinaimg.cn/1737931304/50/5624873554/1" alt="{{username}}" /> {{username}}陈天_Tyr
+  </li>
+  <li class="nav-header">个人中心</li>
+  <li><a href="#"><i class="icon-volume-up"></i>我的通知</a></li>
+  <li><a href="#"><i class="icon-time"></i>重要任务</a></li>
+  <li><a href="#"><i class="icon-asterisk"></i>紧急任务</a></li>
 </template>
 
 <template name="sparkBoard">
-  <h1>Hello again</h1>
-  <p>asdfksdfksdfakasdkf</p>
+  {{>sparkFilter}}
+  {{>sparkInput}}
+  {{#each sparks}}
+    {{>spark}}
+  {{/each}}
+</template>
+
+<template name="sparkFilter">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav pull-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> 筛选作者<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">全部</a></li>
+              {{#each member in members}}
+              <li><a href="#">{{member.username}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> 筛选项目<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">全部</a></li>
+              {{#each project in projects}}
+              <li><a href>{{project.name}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="sparkInput">
+  <div class="spark-input">
+    <div class="avatar">
+      <img class="avatar" src="http://tp1.sinaimg.cn/1737931304/50/5624873554/1" alt="{{username}}" />
+    </div>
+    <div class="input-container">
+      <ul class="nav category">
+        <li class="active"><a href="#"><i class="icon-magic"></i>点子</a></li>
+        <li><a href="#"><i class="icon-exclamation-sign"></i>BUG</a></li>
+        <li><a href="#"><i class="icon-money"></i>功能</a></li>
+        <li><a href="#"><i class="icon-inbox"></i>任务</a></li>
+      </ul>
+      <form>
+        <textarea></textarea>
+        <input type="hidden" name="type" />
+        <div class="pull-right">
+          <button class="btn btn-primary">发表</button>
+        </div>
+        <div class="clearfix"></div>
+      </form>
+    </div>
+
+  </div>
+</template>
+
+<template name="spark">
+
 </template>
 
 <template name="member">

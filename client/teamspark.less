@@ -14,14 +14,56 @@ html, body {
     height: 100%;
   }
 }
-.project-panel {
-  background-color: #383838;
+.author-panel {
+
 }
 
 .spark-panel {
+  padding: 0 5px;
   background: url(/img/lightbg.png) repeat top left;
+  > header h4 { text-align: center;}
+}
+.spark-input {
+  div.avatar {float: left;}
+  .input-container {
+    background-color: #f8f8ff;
+    padding: 10px;
+    margin-left: 60px;
+    .navbar {margin-bottom: 0px;}
+    form {margin: -10px 0 0 0;}
+    textarea {
+      margin-left: 10px;
+      left: -16px;
+      position: relative;
+      padding: 5px;
+      width:100%;
+    }
+  }
+}
+.category {
+  li {float:left; margin: 0 5px;}
+  .active {
+    background-color: #f8f8ff;
+    border-bottom-width: 0px;
+  }
+}
+.member-panel {
+
 }
 
-.member-panel {
-  background-color: rgba(0, 0, 0, 0.7);
+.attraction {
+  background-color: #383838;
+  color: #f8f8ff;
+  a {
+    i {color: #add8e6;}
+    color: white;
+    &:hover {
+      color:#000;
+      i {color: #383838;}
+    }
+  }
+}
+
+.author {
+  margin: 10px 0;
 }
