@@ -1,0 +1,48 @@
+<head>
+  <title>Team Spark</title>
+</head>
+
+<body>
+<div class="container-fluid">
+  <div class="row-fluid stretch">
+    <div class="span2 project-panel stretch">
+      <ul>
+        <li><a href="#"><i class="icon-time"></i>重要任务</a></li>
+        <li><a href="#"><i class="icon-asterisk"></i>紧急任务</a></li>
+      </ul>
+      <ul>
+        {{#each projects}}
+          {{>project}}
+        {{/each}}
+      </ul>
+    </div>
+    <div class="span6 spark-panel stretch">
+      {{> sparkBoard}}
+    </div>
+    <div class="span4 member-panel stretch">
+      {{#each members}}
+        {{>member}}
+      {{/each}}
+      {{>activityStream}}
+    </div>
+  </div>
+</div>
+</body>
+
+<template name="project">
+  <h1>Hello World!</h1>
+  <input type="button" value="Click" />
+</template>
+
+<template name="sparkBoard">
+  <h1>Hello again</h1>
+  <p>asdfksdfksdfakasdkf</p>
+</template>
+
+<template name="member">
+  <h1>User</h1>
+</template>
+
+<template name="activityStream">
+  <h1>Activity Stream</h1>
+</template>
