@@ -31,7 +31,8 @@
 
 <template name="author">
   <li class="author">
-    <img class="avatar" src="http://tp1.sinaimg.cn/1737931304/50/5624873554/1" alt="{{username}}" /> {{username}}陈天_Tyr
+    {{> loginButtons}}
+    <div class="clearfix"></div>
   </li>
   <li class="nav-header">个人中心</li>
   <li><a href="#"><i class="icon-volume-up"></i>我的通知</a></li>
@@ -89,12 +90,17 @@
         <li><a href="#"><i class="icon-inbox"></i>任务</a></li>
       </ul>
       <form>
-        <textarea></textarea>
+        <textarea name="content"></textarea>
         <input type="hidden" name="type" />
-        <div class="pull-right">
-          <button class="btn btn-primary">发表</button>
+        <div class="controls">
+          <div class="pull-left">
+            <a href="#"><i class="icon-group"></i>分享给</a>
+          </div>
+          <div class="pull-right">
+            <button class="btn btn-primary">发表</button>
+          </div>
         </div>
-        <div class="clearfix"></div>
+
       </form>
     </div>
 
