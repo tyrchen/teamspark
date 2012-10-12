@@ -13,12 +13,12 @@ resetData = ->
         name: item.name
         authorId: item.authorId
         members: item.members
-        createdAt: ns.getNow()
+        createdAt: ts.getNow()
 
 createUserHook = ->
-  Accounts.onCreateUser (options, extra, user) ->
-    user.services = options.services
-    user.profile = extra.profile
+  Accounts.onCreateUser (options, user) ->
+    #console.log 'options:', options, 'user:', user
+    user.profile = options.profile
     user.teamId = null
 
     if user.services.weibo?
