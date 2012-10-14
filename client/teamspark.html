@@ -5,40 +5,72 @@
 <body>
 <div class="container-fluid">
   <div class="row-fluid stretch">
-    <div class="span2 author-panel stretch sidebar-nav attraction">
 
-      <ul class="nav nav-list">
-        {{>author}}
+      <div class="span2 project-panel stretch sidebar-nav attraction">
+        {{>projects}}
+      </div>
+      <div class="span6 spark-panel stretch">
+        <header><h4>途客圈战队</h4></header>
+        {{> sparkBoard}}
+      </div>
+      <div class="span4 activity-panel stretch attraction">
+        {{#each members}}
+          {{>member}}
+        {{/each}}
+        {{>activityStream}}
+      </div>
 
-        <li class="nav-header">我的团队</li>
-        <li><a href="#"><i class="icon-tasks"></i>分享墙</a></li>
-        <li><a href="#"><i class="icon-credit-card"></i>任务板</a></li>
-      </ul>
-    </div>
-    <div class="span6 spark-panel stretch">
-      <header><h4>途客圈战队</h4></header>
-      {{> sparkBoard}}
-    </div>
-    <div class="span4 member-panel stretch attraction">
-      {{#each members}}
-        {{>member}}
-      {{/each}}
-      {{>activityStream}}
-    </div>
   </div>
 </div>
 </body>
 
-<template name="author">
-  <li class="author">
-    {{loginButtons}}
-    <div class="clearfix"></div>
-  </li>
-  <li class="nav-header">个人中心</li>
-  <li><a href="#"><i class="icon-volume-up"></i>我的通知</a></li>
-  <li><a href="#"><i class="icon-time"></i>重要任务</a></li>
-  <li><a href="#"><i class="icon-asterisk"></i>紧急任务</a></li>
+<template name="projects">
+  <ul class="nav nav-list">
+    {{>shortcuts}}
+    <li class="nav-header">项目</li>
+    {{#each projects}}
+      <li><a href="#">{{ name }} ({{totalItems}})</a></li>
+    {{/each}}
+  </ul>
+
+  {{>profile}}
+
+  <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
+    <button class="btn btn-primary">团队</button>
+    <button class="btn btn-primary">个人</button>
+  </div>
+
+  <div class="btn-group" id="user-settings">
+    {{# if ts.isStaff }}
+    <button class="btn">添加成员</button>
+    {{/if}}
+    <button class="btn">添加项目</button>
+    <button class="btn">个人资料</button>
+    <button class="btn">退出登录</button>
+
+  </div>
 </template>
+
+<template name="shortcuts">
+  <li class="nav-header">任务</li>
+  <li><a href="#"><i class="icon-time"></i>重要 ({{totalImportant}})</a></li>
+  <li><a href="#"><i class="icon-asterisk"></i></a>紧急 ({{totalUrgent}})</li>
+</template>
+
+<template name="profile">
+  <div class="profile">
+    <div>
+      <img src="{{ avatar }}" alt="{{ name }}" />
+      <h5>{{name}}</h5>
+      <p>{{description}}</p>
+    </div>
+    <ul>
+      <li>已完成：{{totalFinished}}</li>
+      <li>已提交：{{totalSubmitted}}</li>
+    </ul>
+  </div>
+</template>
+
 
 <template name="sparkBoard">
   {{>sparkFilter}}

@@ -13,6 +13,9 @@ ts.State = {}
 
 _.extend ts.State,
   # current user's team
+  started:
+    get: -> true
+
   teamId:
     #get: -> ts.getSession 'teamId'  # TODO: replace it with user's team
     get: -> Meteor.user.teamId
