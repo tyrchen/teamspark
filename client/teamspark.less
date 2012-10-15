@@ -4,9 +4,7 @@ html, body {
   height: 100%;
   margin: 0px;
 }
-body {
-  padding: 40px 0 0 0;
-}
+
 .nav-container {
   margin: 0 10px;
 }
@@ -58,7 +56,7 @@ body {
 .attraction {
   background-color: #383838;
   color: #f8f8ff;
-  a {
+  a:not(.btn) {
     i {color: #add8e6;}
     color: white;
     &:hover {
@@ -72,6 +70,9 @@ body {
       a {color:#383838;}
       input {width: 170px;}
     }
+  }
+  .modal {
+    color: #383838;
   }
 }
 

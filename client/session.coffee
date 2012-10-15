@@ -13,9 +13,6 @@ ts.State = {}
 
 _.extend ts.State,
   # current user's team
-  started:
-    get: -> true
-
   teamId:
     #get: -> ts.getSession 'teamId'  # TODO: replace it with user's team
     get: -> Meteor.user.teamId
@@ -61,9 +58,9 @@ _.extend ts.State,
     set: (value)-> ts.setSession 'sparkProgressFilter', value
 
   # activity display type. can be 'team' | 'project'
-  activityDisply:
-    get: -> ts.getSession 'activityDisply' || 'team'
-    set: (value)-> ts.setSession 'activityDisply', value
+  activityDisplay:
+    get: -> ts.getSession 'activityDisplay' || 'team'
+    set: (value)-> ts.setSession 'activityDisplay', value
 
   # activity selected filter. can be 'userId' | 'projectId'
   activitySelected:

@@ -15,8 +15,9 @@ class ts.InvalidValueException extends ts.Exception
   constructor: (message) ->
     super 'Invalid Value', message
 
-ts.getNow = ->
+ts.now = ->
   (new Date()).getTime()
 
 ts.isStaff = (team) -> Meteor.user()._id isnt team.authorId
 ts.isFreelancer = (user) -> not user.teamId
+

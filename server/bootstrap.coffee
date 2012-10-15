@@ -9,11 +9,13 @@ resetData = ->
     ]
 
     for item in data
-      Teams.insert
+      id = Teams.insert
         name: item.name
         authorId: item.authorId
         members: item.members
-        createdAt: ts.getNow()
+        createdAt: ts.now()
+
+      Meteor.users.update user._id, '$set': 'teamId': id
 
 createUserHook = ->
   Accounts.onCreateUser (options, user) ->

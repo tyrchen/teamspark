@@ -4,8 +4,13 @@
 
 <body>
 <div class="container-fluid">
-  <div class="row-fluid stretch">
+  {{>content}}
+</div>
+</body>
 
+<template name="content">
+  {{#if loggedIn }}
+    <div class="row-fluid stretch">
       <div class="span2 project-panel stretch sidebar-nav attraction">
         {{>projects}}
       </div>
@@ -14,16 +19,21 @@
         {{> sparkBoard}}
       </div>
       <div class="span4 activity-panel stretch attraction">
-        {{#each members}}
-          {{>member}}
-        {{/each}}
-        {{>activityStream}}
+        {{#if teamActivity}}
+          {{#each members}}
+            {{>member}}
+          {{/each}}
+        {{else}}
+          {{#each projects}}
+            {{>project}}
+          {{/each}}
+        {{/if}}
       </div>
-
-  </div>
-</div>
-</body>
-
+    </div>
+  {{else}}
+    {{loginButtons}}
+  {{/if}}
+</template>
 <template name="projects">
   <ul class="nav nav-list">
     {{>shortcuts}}
@@ -35,26 +45,67 @@
 
   {{>profile}}
 
-  <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-    <button class="btn btn-primary">团队</button>
-    <button class="btn btn-primary">个人</button>
+  <div class="btn-toolbar navbar-fixed-bottom" style="margin: 5px;">
+    <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
+      <button class="btn" title="团队"><i class="icon-group"></i></button>
+      <button class="btn" title="个人"><i class="icon-user"></i></button>
+    </div>
+
+    <div class="btn-group" id="user-settings">
+      {{# if ts.isStaff }}
+      <a class="btn" title="添加成员">
+        <i class="icon-plus"></i>
+      </a>
+      {{/if}}
+      <a class="btn" id="add-project" title="添加项目">
+        <i class="icon-plus-sign"></i>
+      </a>
+      <a class="btn" title="个人资料"><i class="icon-cogs"></i></a>
+      <a class="btn" title="退出登录"><i class="icon-signout"></i></a>
+
+    </div>
   </div>
 
-  <div class="btn-group" id="user-settings">
-    {{# if ts.isStaff }}
-    <button class="btn">添加成员</button>
-    {{/if}}
-    <button class="btn">添加项目</button>
-    <button class="btn">个人资料</button>
-    <button class="btn">退出登录</button>
+  <div class="modal fade hide" id="add-project-dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>添加新项目</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="project-name">请输入项目名称</label>
+          <input type="text" name="name" id="project-name" placeholder="比如：cayman" />
+        </div>
 
+        <div class="control-group">
+          <label class="control-label" for="project-description">请输入项目描述</label>
+          <textarea name="description" id="project-description" placeholder="让别人了解你的项目"></textarea>
+        </div>
+
+        {{#if hasProject}}
+        <div class="control-group">
+          <label class="control-label" for="project-parent">请选择父级项目</label>
+          <select name="parent" id="project-parent">
+            {{#each projects}}
+            <option value="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        {{/if}}
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" id="add-project-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="add-project-submit">立即创建</a>
+    </div>
   </div>
 </template>
 
 <template name="shortcuts">
   <li class="nav-header">任务</li>
   <li><a href="#"><i class="icon-time"></i>重要 ({{totalImportant}})</a></li>
-  <li><a href="#"><i class="icon-asterisk"></i></a>紧急 ({{totalUrgent}})</li>
+  <li><a href="#"><i class="icon-asterisk"></i>紧急 ({{totalUrgent}})</a></li>
 </template>
 
 <template name="profile">
@@ -144,9 +195,10 @@
 </template>
 
 <template name="member">
-  <h1>User</h1>
+  <
+  <h1>{{username}}</h1>
 </template>
 
-<template name="activityStream">
-  <h1>Activity Stream</h1>
+<template name="project">
+  <h1>{{name}}</h1>
 </template>
