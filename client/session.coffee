@@ -15,7 +15,11 @@ _.extend ts.State,
   # current user's team
   teamId:
     #get: -> ts.getSession 'teamId'  # TODO: replace it with user's team
-    get: -> Meteor.user().teamId
+    get: ->
+      user = Meteor.user()
+      if user
+        return user.teamId
+      return null
 
   # filter the sparks by current owner or team. Can be 'user' | 'team'
   filterType:
@@ -24,7 +28,8 @@ _.extend ts.State,
 
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
   filterSelected:
-    get: -> ts.getSession('filterSelected') || 'all'
+    get: -> ts.getSession('filterSelected')?.id || 'all'
+    getName: -> ts.getSession('filterSelected')?.name || 'all'
     set: (value)-> ts.setSession 'filterSelected', value
 
   # spark display type. 'wall' or 'board'
@@ -39,23 +44,36 @@ _.extend ts.State,
 
   # spark type for filter. can be 'idea' | 'bug' | 'requirement' | 'task'
   sparkTypeFilter:
-    get: -> ts.getSession('sparkTypeFilter') || null
+    get: -> ts.getSession('sparkTypeFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkTypeFilter')?.name || '全部'
     set: (value)-> ts.setSession 'sparkTypeFilter', value
 
   # spark priority filter. can be 1 - red | 2 - orange | 3 - yellow | 4 - green | 5 - gray
   sparkPriorityFilter:
-    get: -> ts.getSession('sparkPriorityFilter') || null
+    get: -> ts.getSession('sparkPriorityFilter') || 'all'
     set: (value)-> ts.setSession 'sparkPriorityFilter', value
 
   # spark author filter. can be author name
   sparkAuthorFilter:
-    get: -> ts.getSession('sparkAuthorFilter') || null
+    get: -> ts.getSession('sparkAuthorFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkAuthorFilter')?.name || 'all'
     set: (value)-> ts.setSession 'sparkAuthorFilter', value
+
+  # spark current owner filter. can be author name
+  sparkOwnerFilter:
+    get: -> ts.getSession('sparkOwnerFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkOwnerFilter')?.name || 'all'
+    set: (value) -> ts.setSession 'sparkOwnerFilter', value
 
   # spark progress filter. can be 'not started | just started | half down | almost done | done' - use visual graph
   sparkProgressFilter:
-    get: -> ts.getSession('sparkProgressFilter') || null
-    set: (value)-> ts.setSession 'sparkProgressFilter', value
+    get: -> ts.getSession('sparkProgressFilter') || 'all'
+    set: (value) -> ts.setSession 'sparkProgressFilter', value
+
+  sparkToCreate:
+    get: -> ts.getSession('sparkToCreate')?.id || 'idea'
+    getName: -> ts.getSession('sparkToCreate')?.name || '点子'
+    set: (value) -> ts.setSession 'sparkToCreate', value
 
   # activity display type. can be 'team' | 'project'
   activityDisplay:

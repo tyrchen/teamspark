@@ -1,14 +1,18 @@
 ts = ts || {}
 ts.filteringTeam = ->
-  ts.State.filterType == 'team'
+  ts.State.filterType is 'team'
 
 ts.filteringUser = ->
-  ts.State.filterType == 'user'
+  ts.State.filterType is 'user'
+
+ts.filteringProject = ->
+  ts.State.filterSelected isnt 'all'
+
+ts.selectedProject = ->
 
 _.extend Template.content,
   loggedIn: -> Meteor.userId
-  teamActivity: -> ts.State.activityDisplay.get()
-  members: -> Meteor.users.find()
+  teamActivity: -> ts.State.activityDisplay.get() is 'team'
   projects: -> Projects.find()
 
 _.extend Template.projects,
@@ -18,6 +22,17 @@ _.extend Template.projects,
 
     'click #filter-member': (e) ->
       ts.State.filterType.set 'user'
+
+
+    'click .filter-project': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.filterSelected.set {id: 'all', name: 'all'}
+      else
+        ts.State.filterSelected.set {id: id, name: name}
 
     'click #add-project': (e) ->
       $('#add-project-dialog').modal()
@@ -46,20 +61,19 @@ _.extend Template.projects,
 
     'click #manage-member': (e) ->
       $('#manage-member-dialog').modal()
-      $('#member-name').typeahead
+      $node = $('#member-name')
+      $node.typeahead
         minLength: 2
         display: 'username'
         source: (query) ->
-          items = Meteor.users.find(
-            $and: [
+          items = Meteor.users.find($and: [
               username:
                 $regex : query
                 $options: 'i'
               teamId: null
-            ]
-          ).fetch()
+          ]).fetch()
 
-          items = _.map items, (item) ->
+          _.map items, (item) ->
             id: item._id
             username: item.username
             avatar: item.avatar
@@ -68,17 +82,11 @@ _.extend Template.projects,
             indexOf: (string) -> String.prototype.indexOf.apply @username, arguments
             replace: (string) -> String.prototype.replace.apply @username, arguments
 
-          console.log query, items
-          return items
-
         updater: (itemString) ->
           item = JSON.parse itemString
           $member = $("<li data-id='#{item.id}' class='added'><img class='avatar' src='#{item.avatar}' alt='#{item.username}' /></li>")
           $member.appendTo $('#existing-members')
           return ''
-
-        onselect: (obj) ->
-          alert obj
 
     'click #existing-members li': (e) ->
       console.log this._id, ts.currentTeam().authorId
@@ -105,13 +113,9 @@ _.extend Template.projects,
       Meteor.call 'updateMembers', added_ids, removed_ids, (error, result) ->
         $('#manage-member-dialog').modal 'hide'
 
-    'click .filter-project': (e) ->
-      name = $('> a > span', $(e.currentTarget)).text()
-      console.log 'name:', name
-      if name == '全部'
-        ts.State.filterSelected.set 'all'
-      else
-        ts.State.filterSelected.set name
+
+    'click #logout': (e) ->
+      Meteor.logout()
 
   isActiveMember: ->
     if ts.filteringUser()
@@ -123,8 +127,8 @@ _.extend Template.projects,
       return 'active'
     return ''
 
-  isFilterSelected: (name='all') ->
-    if ts.State.filterSelected.get() is name
+  isFilterSelected: (id='all') ->
+    if ts.State.filterSelected.get() is id
       return 'active'
     return ''
 
@@ -134,3 +138,125 @@ _.extend Template.projects,
   hasProject: -> Projects.find().count()
 
   projects: -> Projects.find()
+
+_.extend Template.sparks,
+  sparks: ->
+    project = ts.State.filterSelected.get()
+    order = ts.State.sparkOrder.get()
+    type = ts.State.sparkTypeFilter.get()
+    priority = ts.State.sparkPriorityFilter.get()
+    author = ts.State.sparkAuthorFilter.get()
+    owner = ts.State.sparkOwnerFilter.get()
+    progress = ts.State.sparkProgressFilter.get()
+
+    query = []
+    # spark = {
+    # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
+    # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
+    # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
+    # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
+    # updatedAt: Date(), teamId: teamId
+    # }
+    if project isnt 'all'
+      query.push projects: project
+
+    if type isnt 'all'
+      query.push type: type
+
+    if priority isnt 'all'
+      query.push priority: priority
+
+    if author isnt 'all'
+      query.push authorId: author
+
+    if owner isnt 'all'
+      query.push currentOwnerId: owner
+
+    if progress isnt 'all'
+      query.push progress: progress
+
+    if order is 'createdAt'
+      Sparks.find {$and: query}, {sort: createdAt: -1}
+    else
+      Sparks.find {$and: query}, {sort: updatedAt: -1}
+
+_.extend Template.sparkFilter,
+  events:
+    'click .spark-list > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      ts.State.sparkToCreate.set {id: id, name: name}
+
+      usernames = _.pluck ts.members().fetch(), 'username'
+      $node = $('#spark-owner')
+      $node.select2
+        tags: usernames
+
+        placeholder:'添加责任人'
+        tokenSeparators: [' ']
+        separator:';'
+
+      $('#add-spark').modal()
+
+    'click #filter-spark-author > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkAuthorFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkAuthorFilter.set {id: id, name: name}
+
+    'click #filter-spark-owner > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkOwnerFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkOwnerFilter.set {id: id, name: name}
+
+    'click #filter-spark-type > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkTypeFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkTypeFilter.set {id: id, name: name}
+
+  types: ->
+    [
+      {name: '点子', id: 'idea', icon: 'icon-magic'},
+      {name: 'BUG', id: 'bug', icon: 'icon-exclamation-sign'},
+      {name: '需求', id: 'feature', icon: 'icon-money'},
+      {name: '任务', id: 'task', icon: 'icon-inbox'},
+    ]
+
+  isAuthorSelected: (id='all') ->
+    if ts.State.sparkAuthorFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+  isOwnerSelected: (id='all') ->
+    if ts.State.sparkOwnerFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+  isTypeSelected: (id='all') ->
+    if ts.State.sparkTypeFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+_.extend Template.sparkInput,
+  events:
+    'click #add-spark-cancel': (e) ->
+      $('#add-spark form')[0].reset()
+      $('#add-spark').modal 'hide'
+
+    'click #add-spark-submit': (e) ->

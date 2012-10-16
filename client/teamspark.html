@@ -14,13 +14,13 @@
       <div class="span2 project-panel stretch sidebar-nav attraction">
         {{>projects}}
       </div>
-      <div class="span6 spark-panel stretch">
+      <div class="span7 spark-panel stretch">
         <header><h4>途客圈战队</h4></header>
-        {{> sparkBoard}}
+        {{> sparks}}
       </div>
-      <div class="span4 activity-panel stretch attraction">
+      <div class="span3 activity-panel stretch attraction">
         {{#if teamActivity}}
-          {{#each members}}
+          {{#each ts.members}}
             {{>member}}
           {{/each}}
         {{else}}
@@ -38,9 +38,9 @@
 <template name="projects">
   <ul class="nav nav-list">
     <li class="nav-header">项目</li>
-    <li class="{{isFilterSelected all }} filter-project"><a href="#"><span>全部</span> ({{totalUnfinished}})</a></li>
+    <li class="{{isFilterSelected all }} filter-project" data-id="" data-name=""><a href="#">全部 ({{totalUnfinished}})</a></li>
     {{#each projects}}
-      <li class="{{isFilterSelected name }} filter-project"><a href="#"><span>{{ name }}</span> ({{totalUnfinished _id}})</a></li>
+      <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
     {{/each}}
   </ul>
 
@@ -59,8 +59,8 @@
       <a class="btn" id="add-project" title="添加项目">
         <i class="icon-plus-sign"></i>
       </a>
-      <a class="btn" title="个人资料"><i class="icon-cogs"></i></a>
-      <a class="btn" title="退出登录"><i class="icon-signout"></i></a>
+      <a class="btn" id="edit-profile" title="个人资料"><i class="icon-cogs"></i></a>
+      <a class="btn" id="logout" title="退出登录"><i class="icon-signout"></i></a>
 
     </div>
   </div>
@@ -135,7 +135,7 @@
 </template>
 
 
-<template name="sparkBoard">
+<template name="sparks">
   {{>sparkFilter}}
   {{>sparkInput}}
   {{#each sparks}}
@@ -147,58 +147,95 @@
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
+        <div class="nav-collapse collapse">
+        <ul class="nav spark-list">
+          {{#each types}}
+          <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
+          {{/each}}
+        </ul>
         <ul class="nav pull-right">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> 筛选作者<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">全部</a></li>
-              {{#each member in members}}
-              <li><a href="#">{{member.username}}</a></li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>作者: <b class="caret"></b></a>
+            <ul class="dropdown-menu" id="filter-spark-author">
+              <li data-id="" data-name=""><a href="#"><i class="{{isAuthorSelected all}}"></i> 全部</a></li>
+              {{#each ts.members}}
+              <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isAuthorSelected _id}}"></i> {{username}}</a></li>
               {{/each}}
             </ul>
           </li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> 筛选项目<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">全部</a></li>
-              {{#each project in projects}}
-              <li><a href>{{project.name}}</a></li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>责任人 <b class="caret"></b></a>
+            <ul class="dropdown-menu" id="filter-spark-owner">
+              <li data-id="" data-name=""><a href="#"><i class="{{isOwnerSelected all}}"></i>全部</a></li>
+              {{#each ts.members}}
+              <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isOwnerSelected _id}}"></i>{{username}}</a></li>
               {{/each}}
             </ul>
           </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> <b class="caret"></b></a>
+            <ul class="dropdown-menu" id="filter-spark-type">
+              <li data-id="all" data-name=""><a href="#"><i class="{{isTypeSelected all}}"></i>全部</a></li>
+              {{#each types}}
+              <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{isTypeSelected id}}"></i>{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+
         </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <template name="sparkInput">
-  <div class="spark-input">
-    <div class="avatar">
-      <img class="avatar" src="http://tp1.sinaimg.cn/1737931304/50/5624873554/1" alt="{{username}}" />
+  <div class="modal fade hide" id="add-spark">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>
+        {{#if ts.filteringProject}}
+          为{{ts.State.filterSelected.getName}}
+        {{/if}}
+        添加{{ts.State.sparkToCreate.getName}}
+      </h3>
     </div>
-    <div class="input-container">
-      <ul class="nav category">
-        <li class="active"><a href="#"><i class="icon-magic"></i>点子</a></li>
-        <li><a href="#"><i class="icon-exclamation-sign"></i>BUG</a></li>
-        <li><a href="#"><i class="icon-money"></i>功能</a></li>
-        <li><a href="#"><i class="icon-inbox"></i>任务</a></li>
-      </ul>
-      <form>
-        <textarea name="content"></textarea>
-        <input type="hidden" name="type" />
-        <div class="controls">
-          <div class="pull-left">
-            <a href="#"><i class="icon-group"></i>分享给</a>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="span9">
+          <div class="control-group">
+            <label class="control-label" for="spark-name">标题abc: </label>
+            <input type="text" class="input-xlarge" name="name" id="spark-name" placeholder="用一句话描述这个{{ts.State.sparkToCreate.getName}}" maxlength="32" />
           </div>
-          <div class="pull-right">
-            <button class="btn btn-primary">发表</button>
+
+          <div class="control-group">
+            <label class="control-label" for="spark-content">内容: </label>
+            <textarea style="width:460px;height: 260px;" name="content" id="spark-content" placeholder="介个{{ts.State.sparkToCreate.getName}}的详细信息"></textarea>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="spark-owner">分配给: </label>
+            <input id="spark-owner" type="text" placeholder="选择要负责的团队成员" style="width:430px;float:none;margin-bottom: 10px;" value="">
           </div>
         </div>
 
+        <div class="span3" style="background-color: #f8f8f8; border: 1px solid #eee; padding:5px;">
+          <div class="control-group">
+            <label class="control-label" for="spark-priority">优先级: </label>
+            <select name="priority" id="spark-priority" class="input-small">
+              <option>1</option>
+              <option>2</option>
+              <option selected="selected">3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>
       </form>
     </div>
-
+    <div class="modal-footer">
+      <a href="#" class="btn" id="add-spark-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="add-spark-submit">立即创建</a>
+    </div>
   </div>
 </template>
 
@@ -207,7 +244,6 @@
 </template>
 
 <template name="member">
-  <
   <h1>{{username}}</h1>
 </template>
 

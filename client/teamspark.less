@@ -61,7 +61,7 @@ body .modal.fade.in {
   }
 }
 .avatar { width: 50px; height: 50px;}
-
+.avatar-small {width:25px; height: 25px;}
 // project panel
 .project-panel {
   ul {list-style: none;}
@@ -100,31 +100,26 @@ body .modal.fade.in {
   padding: 0 5px;
   background: url(/img/lightbg.png) repeat top left;
   > header h4 { text-align: center;}
-}
-.spark-input {
-  div.avatar {float: left;}
-  .input-container {
-    background-color: #f8f8ff;
-    padding: 10px;
-    margin-left: 60px;
-    .navbar {margin-bottom: 0px;}
-    form {margin: -10px 0 0 0;}
-    textarea {
-      margin-left: 10px;
-      left: -16px;
-      position: relative;
-      padding: 5px;
-      width:100%;
+  .navbar {
+    .nav-collapse > .nav > li {
+      &:hover, &:active {
+        color: white;
+        background-color: #08c;
+        > a {
+          color: #f8f8ff;
+        }
+      }
     }
   }
 }
-.category {
-  li {float:left; margin: 0 5px;}
-  .active {
-    background-color: #f8f8ff;
-    border-bottom-width: 0px;
+
+#add-spark {
+  form {
+    label {width: 70px;}
   }
 }
+
+
 
 // activity panel
 .activity-panel {
