@@ -34,21 +34,20 @@
     {{loginButtons}}
   {{/if}}
 </template>
+
 <template name="projects">
   <ul class="nav nav-list">
-    {{>shortcuts}}
     <li class="nav-header">项目</li>
+    <li class="{{isFilterSelected all }} filter-project"><a href="#"><span>全部</span> ({{totalUnfinished}})</a></li>
     {{#each projects}}
-      <li><a href="#">{{ name }} ({{totalItems}})</a></li>
+      <li class="{{isFilterSelected name }} filter-project"><a href="#"><span>{{ name }}</span> ({{totalUnfinished _id}})</a></li>
     {{/each}}
   </ul>
 
-  {{>profile}}
-
   <div class="btn-toolbar navbar-fixed-bottom" style="margin: 5px;">
     <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-      <button class="btn" title="团队"><i class="icon-group"></i></button>
-      <button class="btn" title="个人"><i class="icon-user"></i></button>
+      <button class="btn {{ isActiveMember }}" id="filter-member" title="个人"><i class="icon-user"></i></button>
+      <button class="btn {{ isActiveTeam }}" id="filter-team" title="团队"><i class="icon-group"></i></button>
     </div>
 
     <div class="btn-group" id="user-settings">
@@ -132,26 +131,6 @@
       <a href="#" class="btn" id="add-project-cancel">取消</a>
       <a href="#" class="btn btn-primary" id="add-project-submit">立即创建</a>
     </div>
-  </div>
-</template>
-
-<template name="shortcuts">
-  <li class="nav-header">任务</li>
-  <li><a href="#"><i class="icon-time"></i>重要 ({{totalImportant}})</a></li>
-  <li><a href="#"><i class="icon-asterisk"></i>紧急 ({{totalUrgent}})</a></li>
-</template>
-
-<template name="profile">
-  <div class="profile">
-    <div>
-      <img src="{{ avatar }}" alt="{{ name }}" />
-      <h5>{{name}}</h5>
-      <p>{{description}}</p>
-    </div>
-    <ul>
-      <li>已完成：{{totalFinished}}</li>
-      <li>已提交：{{totalSubmitted}}</li>
-    </ul>
   </div>
 </template>
 

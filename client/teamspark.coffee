@@ -11,12 +11,14 @@ _.extend Template.content,
   members: -> Meteor.users.find()
   projects: -> Projects.find()
 
-_.extend Template.shortcuts,
-  events:
-    'click': -> alert('aa')
-
 _.extend Template.projects,
   events:
+    'click #filter-team': (e) ->
+      ts.State.filterType.set 'team'
+
+    'click #filter-member': (e) ->
+      ts.State.filterType.set 'user'
+
     'click #add-project': (e) ->
       $('#add-project-dialog').modal()
 
@@ -102,6 +104,32 @@ _.extend Template.projects,
       removed_ids = _.map $removed, (item) -> $(item).data('id')
       Meteor.call 'updateMembers', added_ids, removed_ids, (error, result) ->
         $('#manage-member-dialog').modal 'hide'
+
+    'click .filter-project': (e) ->
+      name = $('> a > span', $(e.currentTarget)).text()
+      console.log 'name:', name
+      if name == '全部'
+        ts.State.filterSelected.set 'all'
+      else
+        ts.State.filterSelected.set name
+
+  isActiveMember: ->
+    if ts.filteringUser()
+      return 'active'
+    return ''
+
+  isActiveTeam: ->
+    if ts.filteringTeam()
+      return 'active'
+    return ''
+
+  isFilterSelected: (name='all') ->
+    if ts.State.filterSelected.get() is name
+      return 'active'
+    return ''
+
+  totalUnfinished: (id=null) ->
+    ts.sparks.totalUnfinished id
 
   hasProject: -> Projects.find().count()
 

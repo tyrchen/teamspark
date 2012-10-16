@@ -2,10 +2,10 @@ Meteor.methods
   hire: (user, team) ->
 
     if not ts.isStaff team
-      throw new ts.AccessDeniedException('Only team staff can hire team members')
+      throw new ts.exp.AccessDeniedException('Only team staff can hire team members')
 
     if not ts.isFreelancer user
-      throw new ts.InvalidValueException('Only freelancer can be hired by a team')
+      throw new ts.exp.InvalidValueException('Only freelancer can be hired by a team')
 
     Meteor.users.update user._id, $set: {teamId: team._id}
     Teams.update team._id, $addToSet: {members: user._id}
@@ -13,10 +13,10 @@ Meteor.methods
 
   layoff: (user, team) ->
     if not ts.isStaff team
-      throw new ts.AccessDeniedException('Only team staff can layoff team members')
+      throw new ts.exp.AccessDeniedException('Only team staff can layoff team members')
 
     if user._id is team.authorId
-      throw new ts.AccessDeniedException('team admin cannot be layed off')
+      throw new ts.exp.AccessDeniedException('team admin cannot be layed off')
 
     if not ts.isFreelancer user
       Meteor.users.update user._id, $set: {teamId: null}
