@@ -5,9 +5,53 @@ html, body {
   margin: 0px;
 }
 
+// fix bootstrap css
+body .modal {
+  width: 50%; /* desired relative width */
+  left: 25%; /* (100%-width)/2 */
+  margin: auto auto auto auto; /* place center */
+}
+body .modal.fade.in {
+  top:50px; /* fade in to correct spot */
+}
 .nav-container {
   margin: 0 10px;
 }
+
+// teamspark specific css
+
+// common css
+.attraction {
+  background-color: #383838;
+  color: #f8f8ff;
+  a:not(.btn) {
+    i {color: #add8e6;}
+    color: white;
+    &:hover {
+      color:#000;
+      i {color: #383838;}
+    }
+  }
+  #login-buttons {
+    color: #383838;
+    #login-dropdown-list {
+      a {color:#383838;}
+      input {width: 170px;}
+    }
+  }
+  .modal {
+    color: #383838;
+  }
+}
+
+.author {
+  margin: 10px 0;
+}
+
+.mask {
+  opacity: 0.2;
+}
+
 .container-fluid {
   padding: 0px;
   width: 100%;
@@ -16,10 +60,42 @@ html, body {
     height: 100%;
   }
 }
-.project-panel {
+.avatar { width: 50px; height: 50px;}
 
+// project panel
+.project-panel {
+  ul {list-style: none;}
+  #existing-members {
+    li {
+      float: left;
+      margin: 5px;
+      cursor: pointer;
+
+      background-color: #ffffff;
+      border: 1px solid #cccccc;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+      -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+      -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+      transition: border linear 0.2s, box-shadow linear 0.2s;
+
+      &:hover {
+        border-color: rgba(82, 168, 236, 0.8);
+        outline: 0;
+        outline: thin dotted \9;
+        /* IE6-9 */
+
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+      }
+    }
+  }
 }
 
+// spark panel
 .spark-panel {
   padding: 0 5px;
   background: url(/img/lightbg.png) repeat top left;
@@ -49,33 +125,9 @@ html, body {
     border-bottom-width: 0px;
   }
 }
+
+// activity panel
 .activity-panel {
 
 }
 
-.attraction {
-  background-color: #383838;
-  color: #f8f8ff;
-  a:not(.btn) {
-    i {color: #add8e6;}
-    color: white;
-    &:hover {
-      color:#000;
-      i {color: #383838;}
-    }
-  }
-  #login-buttons {
-    color: #383838;
-    #login-dropdown-list {
-      a {color:#383838;}
-      input {width: 170px;}
-    }
-  }
-  .modal {
-    color: #383838;
-  }
-}
-
-.author {
-  margin: 10px 0;
-}

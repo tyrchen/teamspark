@@ -18,6 +18,9 @@ class ts.InvalidValueException extends ts.Exception
 ts.now = ->
   (new Date()).getTime()
 
-ts.isStaff = (team) -> Meteor.user()._id isnt team.authorId
+ts.currentTeam = ->
+  Teams.findOne _id: Meteor.user().teamId
+
+ts.isStaff = (team) -> team and Meteor.user()._id is team.authorId
 ts.isFreelancer = (user) -> not user.teamId
 

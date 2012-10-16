@@ -52,8 +52,8 @@
     </div>
 
     <div class="btn-group" id="user-settings">
-      {{# if ts.isStaff }}
-      <a class="btn" title="添加成员">
+      {{# if ts.isStaff ts.currentTeam }}
+      <a class="btn" id="manage-member" title="管理团队成员">
         <i class="icon-plus"></i>
       </a>
       {{/if}}
@@ -66,6 +66,37 @@
     </div>
   </div>
 
+  <div class="modal fade hide" id="manage-member-dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>管理团队成员</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="project-name">请输入新成员用户名: </label>
+          <input type="text" class="input-xlarge" name="name" id="member-name" placeholder="比如：陈天_Tyr" maxlength="16" />
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">已有成员: </label>
+          <ul id="existing-members">
+            {{#each ts.members}}
+              <li data-id="{{_id}}">
+                <img class="avatar" src="{{avatar}}" alt="{{username}}" />
+              </li>
+            {{/each}}
+          </ul>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" id="manage-member-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="manage-member-submit">确定</a>
+    </div>
+  </div>
+
   <div class="modal fade hide" id="add-project-dialog">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -75,18 +106,20 @@
       <form class="form-horizontal">
         <div class="control-group">
           <label class="control-label" for="project-name">请输入项目名称</label>
-          <input type="text" name="name" id="project-name" placeholder="比如：cayman" />
+          <input type="text" class="input-xlarge" name="name" id="project-name" placeholder="比如：cayman" maxlength="16" />
+          <span class="help-inline">项目名不能重复，且不能为空，16个字符内</span>
         </div>
 
         <div class="control-group">
           <label class="control-label" for="project-description">请输入项目描述</label>
-          <textarea name="description" id="project-description" placeholder="让别人了解你的项目"></textarea>
+          <textarea name="description" class="input-xxlarge" id="project-description" placeholder="让别人了解你的项目"></textarea>
         </div>
 
         {{#if hasProject}}
         <div class="control-group">
           <label class="control-label" for="project-parent">请选择父级项目</label>
           <select name="parent" id="project-parent">
+            <option value="null">无</option>
             {{#each projects}}
             <option value="{{_id}}">{{name}}</option>
             {{/each}}
