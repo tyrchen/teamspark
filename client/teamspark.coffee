@@ -1,19 +1,18 @@
 ts = ts || {}
 ts.filteringTeam = ->
-  ts.State.filterType is 'team'
+  ts.State.filterType.get() is 'team'
 
 ts.filteringUser = ->
-  ts.State.filterType is 'user'
+  ts.State.filterType.get() is 'user'
 
 ts.filteringProject = ->
-  ts.State.filterSelected isnt 'all'
-
-ts.selectedProject = ->
+  ts.State.filterSelected.get() isnt 'all'
 
 _.extend Template.content,
   loggedIn: -> Meteor.userId
   teamActivity: -> ts.State.activityDisplay.get() is 'team'
   projects: -> Projects.find()
+  teamName: -> ts.currentTeam()?.name
 
 _.extend Template.projects,
   events:
@@ -43,6 +42,8 @@ _.extend Template.projects,
       name = $name.val()
       description = $('textarea[name="description"]', $form).val()
       parentId = $('select[name="parent"]', $form).val()
+      if parentId is 'null'
+        parentId = null
       console.log "name: #{name}, desc: #{description}, parent: #{parentId}"
       count = Projects.find({name: name, teamId: Meteor.user().teamId}).count()
 
@@ -50,7 +51,7 @@ _.extend Template.projects,
         $name.parent().addClass 'error'
         return null
 
-      Meteor.call 'createProject', name, description, null, (error, result) ->
+      Meteor.call 'createProject', name, description, parentId, (error, result) ->
         $('.control-group', $form).removeClass 'error'
         $form[0].reset()
         $('#add-project-dialog').modal 'hide'
@@ -138,6 +139,10 @@ _.extend Template.projects,
   hasProject: -> Projects.find().count()
 
   projects: -> Projects.find()
+
+  parentProjects: -> Projects.find parent: null
+
+  childProjects: (id)-> Projects.find parent: id
 
 _.extend Template.sparks,
   sparks: ->
@@ -230,13 +235,8 @@ _.extend Template.sparkFilter,
       else
         ts.State.sparkTypeFilter.set {id: id, name: name}
 
-  types: ->
-    [
-      {name: '点子', id: 'idea', icon: 'icon-magic'},
-      {name: 'BUG', id: 'bug', icon: 'icon-exclamation-sign'},
-      {name: '需求', id: 'feature', icon: 'icon-money'},
-      {name: '任务', id: 'task', icon: 'icon-inbox'},
-    ]
+  types: -> ts.sparks.types()
+
 
   isAuthorSelected: (id='all') ->
     if ts.State.sparkAuthorFilter.get() is id
@@ -260,3 +260,30 @@ _.extend Template.sparkInput,
       $('#add-spark').modal 'hide'
 
     'click #add-spark-submit': (e) ->
+      $form = $('#add-spark form')
+      $title = $('input[name="title"]', $form)
+      title = $.trim($title.val())
+      content = $('textarea[name="content"]', $form).val()
+      priority = parseInt $('select[name="priority"]').val()
+      type = ts.State.sparkToCreate.get()
+      if ts.filteringProject()
+        project = ts.State.filterSelected.get()
+      else
+        project = $('select[name="project"]', $form).val()
+
+      owners = $('input[name="owner"]', $form).val().split(';')
+      owners = _.map owners, (item) -> Meteor.users.findOne({username: item})?._id
+
+
+      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners
+
+      if not title
+        $title.parent().addClass 'error'
+        return null
+
+      Meteor.call 'createSpark', title, content, type, project, owners, priority, (error, result) ->
+        $('.control-group', $form).removeClass 'error'
+        $form[0].reset()
+        $('#add-spark').modal 'hide'
+
+  projects: -> Projects.find()

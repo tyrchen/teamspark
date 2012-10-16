@@ -29,7 +29,7 @@ _.extend ts.State,
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
   filterSelected:
     get: -> ts.getSession('filterSelected')?.id || 'all'
-    getName: -> ts.getSession('filterSelected')?.name || 'all'
+    getName: -> ts.getSession('filterSelected')?.name || '全部'
     set: (value)-> ts.setSession 'filterSelected', value
 
   # spark display type. 'wall' or 'board'
@@ -56,13 +56,13 @@ _.extend ts.State,
   # spark author filter. can be author name
   sparkAuthorFilter:
     get: -> ts.getSession('sparkAuthorFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkAuthorFilter')?.name || 'all'
+    getName: -> ts.getSession('sparkAuthorFilter')?.name || '全部'
     set: (value)-> ts.setSession 'sparkAuthorFilter', value
 
   # spark current owner filter. can be author name
   sparkOwnerFilter:
     get: -> ts.getSession('sparkOwnerFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkOwnerFilter')?.name || 'all'
+    getName: -> ts.getSession('sparkOwnerFilter')?.name || '全部'
     set: (value) -> ts.setSession 'sparkOwnerFilter', value
 
   # spark progress filter. can be 'not started | just started | half down | almost done | done' - use visual graph

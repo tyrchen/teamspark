@@ -16,7 +16,7 @@ if Meteor.is_server
     Projects.find teamId: teamId
 
   Meteor.publish 'sparks', (teamId) ->
-    Sparks.find teamId: teamId, sort: 'updateddAt': -1
+    Sparks.find {teamId: teamId}, {sort: 'updateddAt': -1}
 
   Meteor.publish 'auditTrails', (teamId) ->
     AuditTrails.find teamId: teamId
