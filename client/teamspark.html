@@ -35,276 +35,36 @@
   {{/if}}
 </template>
 
-<template name="projects">
-  <ul class="nav nav-list">
-    <li class="nav-header">项目</li>
-    <li class="{{isFilterSelected all }} filter-project" data-id="" data-name=""><a href="#">全部 ({{totalUnfinished null}})</a></li>
-    {{#each parentProjects}}
-      <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
-      {{#each childProjects _id}}
-      <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
-      {{/each}}
-    {{/each}}
-  </ul>
-
-  <div class="btn-toolbar navbar-fixed-bottom" style="margin: 5px;">
-    <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-      <button class="btn {{ isActiveMember }}" id="filter-member" title="个人"><i class="icon-user"></i></button>
-      <button class="btn {{ isActiveTeam }}" id="filter-team" title="团队"><i class="icon-group"></i></button>
-    </div>
-
-    <div class="btn-group" id="user-settings">
-      {{# if ts.isStaff ts.currentTeam }}
-      <a class="btn" id="manage-member" title="管理团队成员">
-        <i class="icon-plus"></i>
-      </a>
-      {{/if}}
-      <a class="btn" id="add-project" title="添加项目">
-        <i class="icon-plus-sign"></i>
-      </a>
-      <a class="btn" id="edit-profile" title="个人资料"><i class="icon-cogs"></i></a>
-      <a class="btn" id="logout" title="退出登录"><i class="icon-signout"></i></a>
-
-    </div>
-  </div>
-
-  <div class="modal fade hide" id="manage-member-dialog">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3>管理团队成员</h3>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="project-name">新成员: </label>
-          <input type="text" class="input-xlarge" name="name" id="member-name" placeholder="比如：陈天_Tyr" maxlength="16" />
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">已有成员: </label>
-          <ul id="existing-members">
-            {{#each ts.members}}
-              <li data-id="{{_id}}">
-                <img class="avatar" src="{{avatar}}" alt="{{username}}" />
-              </li>
-            {{/each}}
-          </ul>
-
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn" id="manage-member-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="manage-member-submit">确定</a>
-    </div>
-  </div>
-
-  <div class="modal fade hide" id="add-project-dialog">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3>添加新项目</h3>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="project-name">项目名称</label>
-          <input type="text" class="input-large" name="name" id="project-name" placeholder="比如：cayman" maxlength="16" />
-          <span class="help-inline">项目名不能重复，且不能为空，16个字符内</span>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label" for="project-description">项目描述</label>
-          <textarea name="description" class="input-xlarge" id="project-description" placeholder="让别人了解你的项目"></textarea>
-        </div>
-
-        {{#if hasProject}}
-        <div class="control-group">
-          <label class="control-label" for="project-parent">请选择父级项目</label>
-          <select name="parent" id="project-parent">
-            <option value="null">无</option>
-            {{#each parentProjects}}
-            <option value="{{_id}}">{{name}}</option>
-            {{/each}}
-          </select>
-        </div>
-        {{/if}}
-      </form>
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn" id="add-project-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="add-project-submit">立即创建</a>
-    </div>
-  </div>
-</template>
-
-
-<template name="sparks">
-  {{>sparkFilter}}
-  {{>sparkInput}}
-  <div class="sparks">
-  {{#each sparks}}
-    {{>spark}}
-  {{/each}}
-  </div>
-</template>
-
-<template name="sparkFilter">
-  <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container">
-        <div class="nav-collapse collapse">
-        <ul class="nav spark-list">
-          {{#each types}}
-          <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
-          {{/each}}
-        </ul>
-        <ul class="nav pull-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>作者 <b class="caret"></b></a>
-            <ul class="dropdown-menu" id="filter-spark-author">
-              <li data-id="" data-name=""><a href="#"><i class="{{isAuthorSelected all}}"></i> 全部</a></li>
-              {{#each ts.members}}
-              <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isAuthorSelected _id}}"></i> {{username}}</a></li>
-              {{/each}}
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>责任人 <b class="caret"></b></a>
-            <ul class="dropdown-menu" id="filter-spark-owner">
-              <li data-id="" data-name=""><a href="#"><i class="{{isOwnerSelected all}}"></i>全部</a></li>
-              {{#each ts.members}}
-              <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isOwnerSelected _id}}"></i>{{username}}</a></li>
-              {{/each}}
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> <b class="caret"></b></a>
-            <ul class="dropdown-menu" id="filter-spark-type">
-              <li data-id="all" data-name=""><a href="#"><i class="{{isTypeSelected all}}"></i>全部</a></li>
-              {{#each types}}
-              <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{isTypeSelected id}}"></i>{{name}}</a></li>
-              {{/each}}
-            </ul>
-          </li>
-
-        </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<template name="sparkInput">
-  <div class="modal fade hide" id="add-spark">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3>
-        {{#if ts.filteringProject}}
-          为{{ts.State.filterSelected.getName}}
-        {{/if}}
-        添加{{ts.State.sparkToCreate.getName}}
-      </h3>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal">
-        <div class="span9">
-          {{#if ts.filteringProject}}
-          {{else}}
-          <div class="control-group">
-            <label class="control-label" for="spark-project">项目: </label>
-            <select name="project" id="spark-project">
-              {{#each projects}}
-              <option value="{{_id}}">{{name}}</option>
-              {{/each}}
-            </select>
-            <span class="help-inline">*</span>
-          </div>
-          {{/if}}
-          <div class="control-group">
-            <label class="control-label" for="spark-title">标题: </label>
-            <input type="text" class="input-xlarge" name="title" id="spark-title" placeholder="用一句话描述这个{{ts.State.sparkToCreate.getName}}" maxlength="32" />
-            <span class="help-inline">*32个字符内</span>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="spark-content">内容: </label>
-            <textarea name="content" id="spark-content" placeholder="介个{{ts.State.sparkToCreate.getName}}的详细信息"></textarea>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="spark-owner">分配给: </label>
-            <input id="spark-owner" name="owner" type="text" placeholder="选择要负责的团队成员" class="input-xlarge" value="">
-          </div>
-        </div>
-
-        <div class="span3" style="background-color: #f8f8f8; border: 1px solid #eee; padding:5px;">
-          <div class="control-group">
-            <label class="control-label" for="spark-priority">优先级: </label>
-            <select name="priority" id="spark-priority" class="input-small">
-              <option>1</option>
-              <option>2</option>
-              <option selected="selected">3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="spark-deadline">截止日期: </label>
-            <input class="input-small" size="16" type="text" value="" name="deadline" id="spark-deadline">
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn" id="add-spark-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="add-spark-submit">立即创建</a>
-    </div>
-  </div>
-</template>
-
-<template name="spark">
-  <div class="spark">
-    <div class="avatar">
-      <img class="avatar" src="{{author.avatar}}" alt="{{author.username}}" title="{{author.username}}" />
-      <p><i class="{{typeObj.icon}}"></i></p>
-    </div>
-    <div class="spark-container">
-      <div class="title">
-        <h5>
-          {{author.username}}分享了一个{{typeObj.name}}
-          <ul class="pull-right nav">
-            <li><i class="icon-columns"></i></li>
-            <li><i class="icon-trash"></i></li>
-          </ul>
-        </h5>
-        <p>
-          <span>{{created}}</span> |
-          <span>{{project.name}}</span> |
-          <span>最后更新: {{updated}}</span>
-        </p>
-      </div>
-      <div class="content">
-        <div class="modal-header">
-          <h5>{{title}}</h5>
-        </div>
-        <div class="modal-body">
-          <p>{{content}}</p>
-        </div>
-        <div class="modal-footer">
-          <ul class="nav">
-            <li><a href="#"><i class="icon-comments-alt"></i>讨论</a></li>
-            <li><a href="#"><i class="icon-heart"></i>赞同</a></li>
-            <li><a href="#"><i class="icon-tasks"></i>分配</a></li>
-            <li><a href="#"><i class="icon-upload"></i>上传文件</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</template>
-
 <template name="member">
-  <h1>{{username}}</h1>
+  <div class="member">
+    <div class="author-info clearfix">
+      <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
+      <h5>{{username}}</h5>
+      <p>{{description}}</p>
+    </div>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">进行中: 20<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  {{#each projects}}
+                  <li data-id="{{_id}}" data-name="{{name}}"><a href="#">{{name}}</a></li>
+                  {{/each}}
+                </ul>
+
+              </li>
+              <li><a href="#">重要: 20</a></li>
+              <li><a href="#">紧急: 20</a></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <template name="project">

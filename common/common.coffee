@@ -25,25 +25,50 @@ ts.sparks.types = ->
     {name: '需求', id: 'feature', icon: 'icon-money'},
     {name: '任务', id: 'task', icon: 'icon-inbox'},
   ]
-ts.sparks.total = (projectId) -> Sparks.find(projects: projectId).count()
+#ts.sparks.total = (projectId) -> Sparks.find(projects: projectId).count()
+#ts.sparks.totalFinished = (projectId) -> Sparks.find(projects: projectId, finished: true).count()
 
-ts.sparks.totalUnfinished = (projectId) -> ts.sparks.unfinishedItems(projectId).count()
+ts.sparks.totalUnfinished = (projectId=null, ownerId=null) ->
+  ts.sparks.unfinishedItems(projectId, ownerId).count()
 
-ts.sparks.totalFinished = (projectId) -> Sparks.find(projects: projectId, finished: true).count()
-
-ts.sparks.unfinishedItems = (projectId=null) ->
+ts.sparks.unfinishedItems = (projectId=null, ownerId=null) ->
+  query = finished: false
   if projectId
-    Sparks.find projects: projectId, finished: false
-  else
-    Sparks.find finished: false
+    query.push projects: projectId
 
-ts.sparks.importantItems = (projectId) -> Sparks.find projects: projectId, priority: $gt: ts.consts.prio.HIGH
+  if ownerId
+    query.push currentOwnerId: ownerId
 
-ts.sparks.totalImportant = (projectId) -> ts.sparks.importantItems(projectId).count()
+  Sparks.find query
 
-ts.sparks.urgentItems = (projectId) ->
+ts.sparks.importantItems = (projectId=null, ownerId=null) ->
+  query =
+    finished: false
+    priority: $gt: ts.consts.prio.HIGH
+
+  if projectId
+    query.push projects: projectId
+
+  if ownerId
+    query.push currentOwnerId: ownerId
+
+  Sparks.find query
+
+ts.sparks.totalImportant = (projectId=null, ownerId=null) ->
+  ts.sparks.importantItems(projectId, ownerId).count()
+
+ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   # tasks expire in 3 days
   time = ts.now() + 3 * 24 * 3600 * 1000
-  Sparks.find $and: [projects: projectId, deadline: $ne: null, deadline: $lt:  time]
+  query =
+    deadline: $and: $ne: null, $lt:  time
+
+  if projectId
+    query.push projects: projectId
+
+  if ownerId
+    query.push currentOwnerId: ownerId
+
+  Sparks.find query
 
 ts.sparks.totalUrgent = (projectId) -> ts.sparks.urgentItems(projectId).count()

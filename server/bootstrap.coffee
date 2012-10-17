@@ -25,6 +25,7 @@ createUserHook = ->
 
     if user.services.weibo?
       user.username = user.profile.screen_name
+      user.description = user.profile.description
       user.avatar = user.profile.profile_image_url
       user.url = "http://weibo.com/#{user.profile.profile_url}"
       user.location = user.profile.location
@@ -32,6 +33,7 @@ createUserHook = ->
 
     if user.services.github?
       user.username = user.profile.name
+      user.description = user.profile.bio
       user.avatar = user.profile.avatar_url
       user.url = user.profile.html_url
       user.location = user.profile.location
