@@ -32,19 +32,20 @@ ts.sparks.totalUnfinished = (projectId=null, ownerId=null) ->
   ts.sparks.unfinishedItems(projectId, ownerId).count()
 
 ts.sparks.unfinishedItems = (projectId=null, ownerId=null) ->
-  query = finished: false
+  query = [finished: false]
   if projectId
     query.push projects: projectId
 
   if ownerId
     query.push currentOwnerId: ownerId
 
-  Sparks.find query
+  Sparks.find $and: query
 
 ts.sparks.importantItems = (projectId=null, ownerId=null) ->
-  query =
-    finished: false
-    priority: $gt: ts.consts.prio.HIGH
+  query = [
+    {finished: false},
+    {priority: $gt: ts.consts.prio.HIGH}
+  ]
 
   if projectId
     query.push projects: projectId
@@ -52,7 +53,7 @@ ts.sparks.importantItems = (projectId=null, ownerId=null) ->
   if ownerId
     query.push currentOwnerId: ownerId
 
-  Sparks.find query
+  Sparks.find $and: query
 
 ts.sparks.totalImportant = (projectId=null, ownerId=null) ->
   ts.sparks.importantItems(projectId, ownerId).count()
@@ -60,8 +61,9 @@ ts.sparks.totalImportant = (projectId=null, ownerId=null) ->
 ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   # tasks expire in 3 days
   time = ts.now() + 3 * 24 * 3600 * 1000
-  query =
+  query = [
     deadline: $and: $ne: null, $lt:  time
+  ]
 
   if projectId
     query.push projects: projectId

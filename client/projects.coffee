@@ -120,7 +120,7 @@ _.extend Template.projects,
     return ''
 
   totalUnfinished: (id=null) ->
-    ts.sparks.totalUnfinished id
+    ts.sparks.totalUnfinished id, null
 
   hasProject: -> Projects.find().count()
 
