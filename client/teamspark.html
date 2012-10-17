@@ -32,15 +32,7 @@
         {{> sparks}}
       </div>
       <div class="span3 activity-panel stretch attraction">
-        {{#if teamActivity}}
-          {{#each ts.members}}
-            {{>member}}
-          {{/each}}
-        {{else}}
-          {{#each projects}}
-            {{>project}}
-          {{/each}}
-        {{/if}}
+        {{> activities}}
       </div>
     </div>
     {{>memberDialog}}
@@ -49,42 +41,3 @@
   {{/if}}
 </template>
 
-<template name="member">
-  <div class="member">
-    <div class="author-info clearfix">
-      <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
-      <h5>{{username}}</h5>
-      <p>{{description}}</p>
-    </div>
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a href="#">进行中: {{totalUnfinished null}}</a></li>
-              <li><a href="#">重要: {{totalImportant null}}</a></li>
-              <li><a href="#">紧急: {{totalUrgent null}}</a></li>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="audit-trail-container hide">
-      <p>最近动态：</p>
-      <ul>
-        {{#each auditTrails}}
-          {{>audit}}
-        {{/each}}
-      </ul>
-    </div>
-  </div>
-</template>
-
-<template name="project">
-  <h1>{{name}}</h1>
-</template>
-
-<template name="audit">
-  <li><small>{{info}}</small><small>{{created}}</small></li>
-</template>

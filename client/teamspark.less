@@ -82,7 +82,7 @@ img.avatar-small {width:25px; height: 25px;}
 // project panel
 .project-panel {
   position: relative;
-  padding-bottom: 30px;
+  padding-bottom: 35px;
   height: 100%;
   .project-list {
   }
@@ -174,9 +174,15 @@ img.avatar-small {width:25px; height: 25px;}
 
 // activity panel
 .activity-panel {
-
+  position: relative;
+  padding-bottom: 35px;
+  height: 100%;
+  .activity-list {
+    height: 100%;
+    overflow-y: auto;
+  }
 }
-.member{
+.member, .project{
   cursor: pointer;
   &:hover, &.active {
     background-color: #eee;
