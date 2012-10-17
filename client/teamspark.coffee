@@ -203,6 +203,10 @@ _.extend Template.sparkFilter,
         tokenSeparators: [' ']
         separator:';'
 
+      $node = $('#spark-deadline')
+      if not $node.data('done')
+        $node.data('done', 'done')
+        $node.datepicker({format: 'yyyy-mm-dd'}).on 'changeDate', (ev) -> $node.datepicker('hide')
       $('#add-spark').modal()
 
     'click #filter-spark-author > li': (e) ->
@@ -271,19 +275,70 @@ _.extend Template.sparkInput,
       else
         project = $('select[name="project"]', $form).val()
 
-      owners = $('input[name="owner"]', $form).val().split(';')
-      owners = _.map owners, (item) -> Meteor.users.findOne({username: item})?._id
+      owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
+      owners = _.map owners.fetch(), (item) -> item._id
+
+      deadlineStr = $('input[name="deadline"]', $form).val()
 
 
-      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners
+      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
 
       if not title
         $title.parent().addClass 'error'
         return null
 
-      Meteor.call 'createSpark', title, content, type, project, owners, priority, (error, result) ->
+      Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
         $('.control-group', $form).removeClass 'error'
         $form[0].reset()
         $('#add-spark').modal 'hide'
 
   projects: -> Projects.find()
+
+_.extend Template.sparks,
+  sparks: ->
+    projectId = ts.State.filterSelected.get()
+    if projectId is 'all'
+      Sparks.find()
+    else
+      Sparks.find projects: projectId
+
+_.extend Template.spark,
+  # spark = {
+  # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
+  # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
+  # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
+  # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
+  # updatedAt: Date(), teamId: teamId
+  # }
+  author: ->
+    Meteor.users.findOne @authorId
+
+  created: ->
+    moment(@createdAt).fromNow()
+
+  updated: ->
+    moment(@updatedAt).fromNow()
+
+  expired: ->
+    moment(@deadline).fromNow()
+
+  project: ->
+    if @projects?.length
+      return Projects.findOne @projects[0]
+    else
+      return null
+
+  currentOwner: ->
+    if @currentOwnerId
+      Meteor.users.findOne @currentOwnerId
+    else
+      return null
+
+  nextOwner: ->
+    if @currentOwnerId and @owners.length - 1 > @nextStep
+      Meteor.users.findOne @owners[@nextStep]
+    else
+      return null
+
+  supporttedUsers: ->
+    Meteor.users.find _id: $in: @supporters

@@ -1,5 +1,5 @@
 Meteor.methods
-  createSpark: (title, content, type, projectId, owners, priority) ->
+  createSpark: (title, content, type, projectId, owners, priority, deadlineStr='') ->
     # spark = {
     # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
     # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
@@ -27,6 +27,11 @@ Meteor.methods
       currentOwnerId = null
       nextStep = 0
 
+    if deadlineStr
+      deadline = (new Date(deadlineStr)).getTime()
+    else
+      deadline = null
+
     now = ts.now()
 
     Sparks.insert
@@ -43,7 +48,7 @@ Meteor.methods
       supporters: []
       finished: false
       projects: projects
-      deadline: null
+      deadline: deadline
       createdAt: now
       updatedAt: now
       teamId: team._id

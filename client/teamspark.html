@@ -245,6 +245,10 @@
               <option>5</option>
             </select>
           </div>
+          <div class="control-group">
+            <label class="control-label" for="spark-deadline">截止日期: </label>
+            <input class="input-small" size="16" type="text" value="" name="deadline" id="spark-deadline">
+          </div>
         </div>
       </form>
     </div>
@@ -256,7 +260,11 @@
 </template>
 
 <template name="spark">
-
+  <div class="spark">
+    <h1>{{title}}</h1>
+    <p>{{content}}</p>
+    <p>{{test}}</p>
+  </div>
 </template>
 
 <template name="member">

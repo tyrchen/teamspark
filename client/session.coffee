@@ -16,10 +16,15 @@ _.extend ts.State,
   teamId:
     #get: -> ts.getSession 'teamId'  # TODO: replace it with user's team
     get: ->
-      user = Meteor.user()
-      if user
-        return user.teamId
-      return null
+      teamId = ts.getSession 'teamId'
+      if not teamId
+        user = Meteor.user()
+        if user
+          ts.setSession 'teamId', teamId
+          return user.teamId
+        return null
+      else
+        return teamId
 
   # filter the sparks by current owner or team. Can be 'user' | 'team'
   filterType:
