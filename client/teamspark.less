@@ -73,35 +73,31 @@ body .modal.fade.in {
 img.avatar { width: 50px; height: 50px;}
 img.avatar-small {width:25px; height: 25px;}
 
+.toolbar-bottom {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
 // project panel
 .project-panel {
-  ul {list-style: none;}
+  position: relative;
+  padding-bottom: 30px;
+  height: 100%;
+  .project-list {
+  }
+
   .child {margin-left: 10px;}
-  #existing-members {
-    li {
-      float: left;
-      margin: 5px;
-      cursor: pointer;
-
-      background-color: #ffffff;
-      border: 1px solid #cccccc;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-      -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-      -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-      transition: border linear 0.2s, box-shadow linear 0.2s;
-
-      &:hover {
-        border-color: rgba(82, 168, 236, 0.8);
-        outline: 0;
-        outline: thin dotted \9;
-        /* IE6-9 */
-
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  .nav-list {
+    list-style: none;
+    height: 100%;
+    overflow-y: auto;
+    .nav-header {
+      font-size: 16px; line-height: 32px;
+      > .btn-group {
+        margin: 0px;
+        font-size: 8px;
+        .btn-small {padding: 2px 2px;}
       }
     }
   }
@@ -109,9 +105,19 @@ img.avatar-small {width:25px; height: 25px;}
 
 // spark panel
 .spark-panel {
-  padding: 0 5px;
+  position: relative;
+  padding: 80px 5px 30px 5px;
+
   background: url(/img/lightbg.png) repeat top left;
-  > header h4 { text-align: center;}
+  > header {
+    position: relative;
+    top: -80px;
+    h4 { text-align: center;}
+  }
+  > .spark-controls {
+    position: relative;
+    top: -80px;
+  }
   .navbar {
     .nav-collapse > .nav > li {
       &:hover, &:active {
@@ -124,8 +130,10 @@ img.avatar-small {width:25px; height: 25px;}
     }
   }
   .sparks {
-    overflow-y: scroll;
-    height: 85%;
+    position: relative;
+    top: -80px;
+    overflow-y: auto;
+    height: 100%;
   }
 }
 
@@ -187,3 +195,32 @@ img.avatar-small {width:25px; height: 25px;}
   }
 }
 
+#existing-members {
+  list-style: none;
+  li {
+    float: left;
+    margin: 5px;
+    cursor: pointer;
+
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+
+    &:hover {
+      border-color: rgba(82, 168, 236, 0.8);
+      outline: 0;
+      outline: thin dotted \9;
+    /* IE6-9 */
+
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    }
+  }
+}

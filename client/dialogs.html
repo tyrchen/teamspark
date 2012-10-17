@@ -1,0 +1,138 @@
+<template name="memberDialog">
+  <div class="modal fade hide" id="manage-member-dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>管理团队成员</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="member-name">新成员: </label>
+          <input type="text" class="input-xlarge" name="name" id="member-name" placeholder="比如：陈天_Tyr" maxlength="16" />
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">已有成员: </label>
+          <ul id="existing-members">
+            {{#each ts.members}}
+            <li data-id="{{_id}}">
+              <img class="avatar" src="{{avatar}}" alt="{{username}}" />
+            </li>
+            {{/each}}
+          </ul>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" id="manage-member-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="manage-member-submit">确定</a>
+    </div>
+  </div>
+</template>
+
+<template name="projectDialog">
+  <div class="modal fade hide" id="add-project-dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>添加新项目</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="project-name">项目名称</label>
+          <input type="text" class="input-large" name="name" id="project-name" placeholder="比如：cayman" maxlength="16" />
+          <span class="help-inline">项目名不能重复，且不能为空，16个字符内</span>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="project-description">项目描述</label>
+          <textarea name="description" class="input-xlarge" id="project-description" placeholder="让别人了解你的项目"></textarea>
+        </div>
+
+        {{#if hasProject}}
+        <div class="control-group">
+          <label class="control-label" for="project-parent">请选择父级项目</label>
+          <select name="parent" id="project-parent">
+            <option value="null">无</option>
+            {{#each parentProjects}}
+            <option value="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        {{/if}}
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" id="add-project-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="add-project-submit">立即创建</a>
+    </div>
+  </div>
+</template>
+
+<template name="sparkInput">
+  <div class="modal fade hide" id="add-spark">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>
+        {{#if ts.filteringProject}}
+        为{{ts.State.filterSelected.getName}}
+        {{/if}}
+        添加{{ts.State.sparkToCreate.getName}}
+      </h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="span9">
+          {{#if ts.filteringProject}}
+          {{else}}
+          <div class="control-group">
+            <label class="control-label" for="spark-project">项目: </label>
+            <select name="project" id="spark-project">
+              {{#each projects}}
+              <option value="{{_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+            <span class="help-inline">*</span>
+          </div>
+          {{/if}}
+          <div class="control-group">
+            <label class="control-label" for="spark-title">标题: </label>
+            <input type="text" class="input-xlarge" name="title" id="spark-title" placeholder="用一句话描述这个{{ts.State.sparkToCreate.getName}}" maxlength="32" />
+            <span class="help-inline">*32个字符内</span>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="spark-content">内容: </label>
+            <textarea name="content" id="spark-content" placeholder="介个{{ts.State.sparkToCreate.getName}}的详细信息"></textarea>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="spark-owner">分配给: </label>
+            <input id="spark-owner" name="owner" type="text" placeholder="选择要负责的团队成员" class="input-xlarge" value="">
+          </div>
+        </div>
+
+        <div class="span3" style="background-color: #f8f8f8; border: 1px solid #eee; padding:5px;">
+          <div class="control-group">
+            <label class="control-label" for="spark-priority">优先级: </label>
+            <select name="priority" id="spark-priority" class="input-small">
+              <option>1</option>
+              <option>2</option>
+              <option selected="selected">3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="spark-deadline">截止日期: </label>
+            <input class="input-small" size="16" type="text" value="" name="deadline" id="spark-deadline">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" id="add-spark-cancel">取消</a>
+      <a href="#" class="btn btn-primary" id="add-spark-submit">立即创建</a>
+    </div>
+  </div>
+</template>
