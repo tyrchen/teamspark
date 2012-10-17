@@ -60,7 +60,7 @@ ts.sparks.totalImportant = (projectId=null, ownerId=null) ->
 
 ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   # tasks expire in 3 days
-  time = ts.now() + 3 * 24 * 3600 * 1000
+  time = ts.now() + ts.consts.EXPIRE_IN_3_DAYS
   query = [
     deadline: $and: $ne: null, $lt:  time
   ]
@@ -74,6 +74,15 @@ ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   Sparks.find query
 
 ts.sparks.totalUrgent = (projectId) -> ts.sparks.urgentItems(projectId).count()
+
+ts.sparks.type = (spark) ->
+  _.find ts.sparks.types(), (item) => item.id is spark.type
+ts.sparks.isUrgent = (spark) ->
+  time = ts.now() + ts.consts.EXPIRE_IN_3_DAYS
+  spark.deadline and spark.deadline < time
+
+ts.sparks.isImportant = (spark) ->
+  spark.priority >= ts.consts.prio.HIGH
 
 ts.audits = ts.audits || {}
 ts.audits.all = (userId=null, projectId=null) ->

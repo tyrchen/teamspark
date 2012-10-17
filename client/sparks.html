@@ -125,7 +125,7 @@
   <div class="spark">
     <div class="avatar">
       <img class="avatar" src="{{author.avatar}}" alt="{{author.username}}" title="{{author.username}}" />
-      <p><i class="{{typeObj.icon}}"></i></p>
+      <p><i class="{{typeObj.icon}} {{urgentStyle}} {{importantStyle}}" title="{{info}}"></i></p>
     </div>
     <div class="spark-container">
       <div class="title">
@@ -144,10 +144,10 @@
       </div>
       <div class="content">
         <div class="modal-header">
-          <h5>{{title}}</h5>
+          <h4>{{title}}</h4>
         </div>
         <div class="modal-body">
-          <p>{{content}}</p>
+          <p>{{{content}}}</p>
         </div>
         <div class="modal-footer">
           <ul class="nav">

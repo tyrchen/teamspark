@@ -171,7 +171,7 @@ _.extend Template.spark,
     moment(@deadline).fromNow()
 
   typeObj: ->
-    obj = _.find ts.sparks.types(), (item) => item.id is @type
+    obj = ts.sparks.type(@)
 
   activity: ->
     return @title
@@ -196,3 +196,27 @@ _.extend Template.spark,
 
   supporttedUsers: ->
     Meteor.users.find _id: $in: @supporters
+
+  urgentStyle: ->
+    if ts.sparks.isUrgent(@)
+      return 'urgent'
+    return ''
+
+  importantStyle: ->
+    if ts.sparks.isImportant @
+      return 'important'
+    return ''
+
+  info: ->
+    typeObj = ts.sparks.type @
+    text = [typeObj.name]
+    if ts.sparks.isUrgent @
+      text.push '紧急(3日内到期)'
+
+    if ts.sparks.isImportant @
+      text.push '重要(优先级4及以上)'
+
+    if text.length == 1
+      text.push '正常'
+
+    return text.join(' | ')
