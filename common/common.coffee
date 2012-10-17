@@ -74,3 +74,14 @@ ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   Sparks.find query
 
 ts.sparks.totalUrgent = (projectId) -> ts.sparks.urgentItems(projectId).count()
+
+ts.audits = ts.audits || {}
+ts.audits.all = (userId=null, projectId=null) ->
+  query = []
+  if userId
+    query.push userId: userId
+
+  if projectId
+    query.push projectId: projectId
+
+  AuditTrails.find {$and: query}, {sort: createdAt: -1}

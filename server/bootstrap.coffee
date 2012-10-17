@@ -38,6 +38,12 @@ createUserHook = ->
       user.url = user.profile.html_url
       user.location = user.profile.location
 
+    if user.services.google?
+      user.username = user.profile.name
+      user.description = ''
+      user.avatar = ''
+      user.url = user.profile.link
+      user.location = ''
     return user
 
 Meteor.startup ->

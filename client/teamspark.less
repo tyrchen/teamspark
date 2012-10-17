@@ -165,11 +165,21 @@ img.avatar-small {width:25px; height: 25px;}
 
 }
 .member{
+  cursor: pointer;
+  &:hover, &.active {
+    background-color: #eee;
+  }
+  overflow-y: auto;
+  color: #383838;
   margin: 5px 10px 0px 10px;
   background-color: whiteSmoke;
   border-top: 1px solid #DDD;
   .author-info {
-    .avatar {float:left;}
+    .avatar {float:left; margin: 10px;}
+  }
+  .audit-trail-container {
+    padding: 5px;
+    ul{list-style: none;}
   }
 }
 

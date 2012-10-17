@@ -16,6 +16,27 @@ _.extend Template.content,
 
 
 _.extend Template.member,
-  projects: -> Projects.find()
-  totalUnfinished: (projectId) ->
+  events:
+    'click .member': (e) ->
+      $node = $(e.currentTarget)
+      $('.audit-trail-container', $node).toggle()
+      $node.toggleClass('active')
+
+  auditTrails: -> ts.audits.all @_id, null
+
+  totalUnfinished: (projectId=null) ->
     ts.sparks.totalUnfinished projectId, @_id
+
+  totalImportant: (projectId=null) ->
+    ts.sparks.totalImportant projectId, @_id
+
+  totalUrgent: (projectId=null) ->
+    ts.sparks.totalUrgent projectId, @_id
+
+_.extend Template.audit,
+  created: ->
+    moment(@createdAt).fromNow()
+
+  info: ->
+    user = Meteor.users.findOne _id: @userId
+    @content.replace(user.username, '')
