@@ -294,14 +294,6 @@ _.extend Template.sparkInput,
 
   projects: -> Projects.find()
 
-_.extend Template.sparks,
-  sparks: ->
-    projectId = ts.State.filterSelected.get()
-    if projectId is 'all'
-      Sparks.find()
-    else
-      Sparks.find projects: projectId
-
 _.extend Template.spark,
   # spark = {
   # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
@@ -321,6 +313,12 @@ _.extend Template.spark,
 
   expired: ->
     moment(@deadline).fromNow()
+
+  typeObj: ->
+    obj = _.find ts.sparks.types(), (item) => item.id is @type
+
+  activity: ->
+    return @title
 
   project: ->
     if @projects?.length

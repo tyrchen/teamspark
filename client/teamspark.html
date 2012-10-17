@@ -141,9 +141,11 @@
 <template name="sparks">
   {{>sparkFilter}}
   {{>sparkInput}}
+  <div class="sparks">
   {{#each sparks}}
     {{>spark}}
   {{/each}}
+  </div>
 </template>
 
 <template name="sparkFilter">
@@ -261,9 +263,43 @@
 
 <template name="spark">
   <div class="spark">
-    <h1>{{title}}</h1>
-    <p>{{content}}</p>
-    <p>{{test}}</p>
+    <div class="avatar">
+      <img class="avatar" src="{{author.avatar}}" alt="{{author.username}}" title="{{author.username}}" />
+      <p><i class="{{typeObj.icon}}"></i></p>
+    </div>
+    <div class="spark-container">
+      <div class="title">
+        <h5>
+          {{author.username}}分享了一个{{typeObj.name}}
+          <ul class="pull-right nav">
+            <li><i class="icon-columns"></i></li>
+            <li><i class="icon-trash"></i></li>
+          </ul>
+        </h5>
+        <p>
+          <span>{{created}}</span> |
+          <span>{{project.name}}</span> |
+          <span>最后更新: {{updated}}</span>
+        </p>
+      </div>
+      <div class="content">
+        <div class="modal-header">
+          <h5>{{title}}</h5>
+        </div>
+        <div class="modal-body">
+          <p>{{content}}</p>
+        </div>
+        <div class="modal-footer">
+          <ul class="nav">
+            <li><a href="#"><i class="icon-comments-alt"></i>讨论</a></li>
+            <li><a href="#"><i class="icon-heart"></i>赞同</a></li>
+            <li><a href="#"><i class="icon-tasks"></i>分配</a></li>
+            <li><a href="#"><i class="icon-upload"></i>上传文件</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
