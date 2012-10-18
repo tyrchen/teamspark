@@ -71,5 +71,9 @@ _.extend Template.content,
   loggedIn: -> Meteor.userId
   projects: -> Projects.find()
   teamName: -> ts.currentTeam()?.name
+  isOrphan: ->
+    if not Meteor.user().teamId
+      return 'orphan'
+    return ''
 
 

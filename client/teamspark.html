@@ -10,7 +10,13 @@
 
 <template name="content">
   {{#if loggedIn }}
-    <div class="row-fluid stretch">
+    <div class="row-fluid stretch {{isOrphan}}">
+      {{#if isOrphan}}
+      <div class="orphan-notice">
+        <h1>您还没有加入任何团队，请等待您的team leader审批</h1>
+      </div>
+      {{/if}}
+
       <div class="span2 project-panel stretch sidebar-nav attraction">
         {{>projects}}
       </div>
