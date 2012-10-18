@@ -75,6 +75,10 @@ _.extend ts.State,
     get: -> ts.getSession('sparkProgressFilter') || 'all'
     set: (value) -> ts.setSession 'sparkProgressFilter', value
 
+  sparkFinishFilter:
+    get: -> ts.getSession('sparkFinishFilter')
+    set: (value) -> ts.setSession 'sparkFinishFilter', value
+
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
     getName: -> ts.getSession('sparkToCreate')?.name || '点子'
@@ -90,3 +94,5 @@ _.extend ts.State,
     get: -> ts.getSession('activityType') || null
     set: (value)-> ts.setSession 'activityType', value
 
+Meteor.startup ->
+  ts.State.sparkFinishFilter.set true

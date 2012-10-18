@@ -122,20 +122,24 @@ img.avatar-small {width:20px; height: 20px;}
 // spark panel
 .spark-panel {
   position: relative;
-  padding: 80px 5px 30px 5px;
+  padding: 70px 5px 30px 5px;
 
   background: url(/img/lightbg.png) repeat top left;
   > header {
     position: relative;
-    top: -80px;
+    top: -70px;
     h4 { text-align: center;}
   }
   > .spark-controls {
     position: relative;
-    top: -80px;
+    top: -70px;
   }
   .navbar {
+    .navbar-inner {min-height:30px;}
     .nav-collapse > .nav > li {
+      > a {
+        padding: 5px 6px;
+      }
       &:hover, &:active {
         color: white;
         background-color: #08c;
@@ -230,7 +234,7 @@ img.avatar-small {width:20px; height: 20px;}
         margin-left:50px;
         textarea{
           margin-right: 20px;
-          width: 480px;
+          width: 420px;
           height: 24px;
         }
       }
@@ -261,7 +265,7 @@ img.avatar-small {width:20px; height: 20px;}
       width: 40px;
     }
     .span7{
-      width: 570px;
+      width: 510px;
       margin:0 0 0 10px;
       border-bottom: 1px #E8E6E6 dashed;
       .author{

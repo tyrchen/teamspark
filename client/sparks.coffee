@@ -15,6 +15,7 @@ _.extend Template.sparks,
     author = ts.State.sparkAuthorFilter.get()
     owner = ts.State.sparkOwnerFilter.get()
     progress = ts.State.sparkProgressFilter.get()
+    finish = ts.State.sparkFinishFilter.get()
 
     query = []
 
@@ -35,6 +36,9 @@ _.extend Template.sparks,
 
     if progress isnt 'all'
       query.push progress: progress
+
+    if finish
+      query.push finished: false
 
     if order is 'createdAt'
       Sparks.find {$and: query}, {sort: createdAt: -1}
@@ -81,6 +85,10 @@ _.extend Template.sparkFilter,
       else
         ts.State.sparkTypeFilter.set {id: id, name: name}
 
+    'click #hide-finished': (e) ->
+      finish = ts.State.sparkFinishFilter.get()
+      ts.State.sparkFinishFilter.set(not finish)
+
   types: -> ts.sparks.types()
 
 
@@ -97,6 +105,11 @@ _.extend Template.sparkFilter,
   isTypeSelected: (id='all') ->
     if ts.State.sparkTypeFilter.get() is id
       return 'icon-ok'
+    return ''
+
+  hideFinished: ->
+    if ts.State.sparkFinishFilter.get()
+      return 'checked'
     return ''
 
 _.extend Template.sparkInput,

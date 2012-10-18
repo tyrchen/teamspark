@@ -61,8 +61,15 @@ _.extend Template.projects,
       return 'active'
     return ''
 
-  totalUnfinished: (id=null) ->
-    ts.sparks.totalUnfinished id, null
+  totalSparks: (id=null) ->
+    query = []
+    if ts.State.sparkFinishFilter.get()
+      query.push finished: false
+
+    if id
+      query.push projects: id
+
+    Sparks.find($and: query).count()
 
 
   childProjects: (id)-> ts.projects.children id
