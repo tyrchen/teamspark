@@ -132,8 +132,13 @@ _.extend Template.sparkInput,
       else
         project = $('select[name="project"]', $form).val()
 
-      owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
-      owners = _.map owners.fetch(), (item) -> item._id
+      # use $in will make the order wrong
+      #owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
+      #owners = _.map owners.fetch(), (item) -> item._id
+
+      owners = _.map $('input[name="owner"]', $form).val().split(';'), (username) ->
+        user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+        return user._id
 
       deadlineStr = $('input[name="deadline"]', $form).val()
 
@@ -169,6 +174,18 @@ _.extend Template.spark,
       $('.audits', $spark).toggle()
       $('.comments', $spark).hide()
 
+    'click .support': (e) ->
+      Meteor.call 'supportSpark', @_id
+
+    'click .finish': (e) ->
+      Meteor.call 'finishSpark', @_id
+
+    'click .upload': (e) ->
+      console.log e
+
+    'click .edit': (e) ->
+
+
   author: ->
     Meteor.users.findOne @authorId
 
@@ -193,9 +210,23 @@ _.extend Template.spark,
     else
       return null
 
+  supported: ->
+    found = ts.sparks.hasSupported @
+    if found
+      return 'supported'
+    return ''
+
+  showSupporters: ->
+    items = []
+    supporters = Meteor.users.find _id: $in: @supporters
+    supporters.forEach (item) ->
+      items.push "<li><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
+    return items.join('\n')
+
   showOwners: ->
     items = []
-    owners = Meteor.users.find _id: $in: @owners
+    owners = _.map @owners, (id) -> Meteor.users.findOne _id: id
+
     currentOwnerId = @currentOwnerId
     owners.forEach (item) ->
       if currentOwnerId is item._id
@@ -207,22 +238,16 @@ _.extend Template.spark,
     return items.join('\n')
 
   currentOwner: ->
-    if @currentOwnerId
-      Meteor.users.findOne @currentOwnerId
-    else
-      return null
+    ts.sparks.currentOwner @
 
   nextOwner: ->
-    if @currentOwnerId and @owners.length - 1 > @nextStep
-      Meteor.users.findOne @owners[@nextStep]
-    else
-      return null
+    ts.sparks.nextOwner @
 
   supporttedUsers: ->
     Meteor.users.find _id: $in: @supporters
 
   urgentStyle: ->
-    if ts.sparks.isUrgent(@)
+    if ts.sparks.isUrgent @
       return 'urgent'
     return ''
 

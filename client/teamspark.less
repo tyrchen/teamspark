@@ -173,6 +173,7 @@ img.avatar-small {width:20px; height: 20px;}
       li {
         display: inline;
         >a {display: inline;}
+        &.supported i {color: #d14;}
       }
 
     }
@@ -184,19 +185,30 @@ img.avatar-small {width:20px; height: 20px;}
     .content {
       background-color: #f8f8ff;
     }
+    .modal-header {
+      .small {font-size: 14px; font-weight: normal;}
+      ul {
+        margin: 0 0 0 5px;
+        display: inline-block;
+        list-style: none;
+      }
+    }
     .modal-body {
       max-height: none;
     }
     .modal-footer {
       text-align: left;
-      .owners li {
-        opacity: 0.6;
-        &:after {content: '>'; margin: 0 3px;}
-        &:last-child:after {content: ''; margin: 0px;}
-        &.active {
-          opacity: 1;
-          img {
-            border: 1px solid #08c;
+      .owners {
+        ul {display: inline-block; margin: 0 0 0 5px;}
+        li {
+          opacity: 0.6;
+          &:after {content: '>'; margin: 0 3px;}
+          &:last-child:after {content: ''; margin: 0px;}
+          &.active {
+            opacity: 1;
+            img {
+              border: 1px solid #08c;
+            }
           }
         }
       }

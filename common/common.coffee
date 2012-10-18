@@ -12,11 +12,14 @@ ts.currentTeam = ->
 
 ts.isStaff = (team) -> team and Meteor.user()._id is team.authorId
 ts.isFreelancer = (user) -> not user.teamId
-ts.isTeamProject = (project, team) -> project.teamId is team._id
-ts.isTeamSpark = (spark, team) -> spark.teamId is team._id
 
 # project model functions
 ts.projects = ts.projects || {}
+ts.projects.writable = (project) ->
+  if not project.teamId?
+    project = Projects.findOne _id: project
+  project.teamId is Meteor.user().teamId
+
 ts.projects.hasProject = -> Projects.find().count()
 ts.projects.all = -> Projects.find()
 ts.projects.parents = -> Projects.find parent: null
@@ -31,6 +34,20 @@ ts.sparks.types = ->
     {name: '需求', id: 'feature', icon: 'icon-money'},
     {name: '任务', id: 'task', icon: 'icon-inbox'},
   ]
+
+ts.sparks.type = (spark) ->
+  _.find ts.sparks.types(), (item) => item.id is spark.type
+
+ts.sparks.isAuthor = (spark) ->
+  if not spark.authorId?
+    spark = Sparks.findOne _id: spark
+  spark.authorId is Meteor.user()._id
+
+ts.sparks.writable = (spark) ->
+  if not spark.teamId?
+    spark = Sparks.findOne _id: spark
+  spark.teamId is Meteor.user().teamId
+
 #ts.sparks.total = (projectId) -> Sparks.find(projects: projectId).count()
 #ts.sparks.totalFinished = (projectId) -> Sparks.find(projects: projectId, finished: true).count()
 
@@ -81,14 +98,27 @@ ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
 
 ts.sparks.totalUrgent = (projectId) -> ts.sparks.urgentItems(projectId).count()
 
-ts.sparks.type = (spark) ->
-  _.find ts.sparks.types(), (item) => item.id is spark.type
 ts.sparks.isUrgent = (spark) ->
   time = ts.now() + ts.consts.EXPIRE_IN_3_DAYS
   spark.deadline and spark.deadline < time
 
 ts.sparks.isImportant = (spark) ->
   spark.priority >= ts.consts.prio.HIGH
+
+ts.sparks.hasSupported = (spark) ->
+  _.find spark.supporters, (id) -> Meteor.user()._id is id
+
+ts.sparks.currentOwner = (spark) ->
+  if spark.currentOwnerId
+    return Meteor.users.findOne spark.currentOwnerId
+  else
+    return null
+
+ts.sparks.nextOwner = (spark) ->
+  if spark.currentOwnerId and spark.owners.length - 1 > spark.nextStep
+    Meteor.users.findOne spark.owners[spark.nextStep]
+  else
+    return null
 
 ts.audits = ts.audits || {}
 ts.audits.all = (userId=null, projectId=null) ->

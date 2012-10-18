@@ -65,10 +65,10 @@
         <h5>
           <a href="#">{{author.username}}</a> 分享了一个{{typeObj.name}}
           <ul class="pull-right nav">
-            <li><a href="#" title="支持"><i class="icon-hand-up"></i></a></li>
-            <li><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
-            <li><a href="#" title="编辑"><i class="icon-edit"></i></a></li>
-            <li><a href="#" title="删除"><i class="icon-trash"></i></a></li>
+            <li class="support {{supported}}"><a href="#" title="支持"><i class="icon-thumbs-up"></i></a></li>
+            <li class="upload"><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
+            <li class="edit"><a href="#" title="编辑"><i class="icon-edit"></i></a></li>
+            <li class="finish"><a href="#" title="完成"><i class="icon-ok"></i></a></li>
           </ul>
         </h5>
         <p>
@@ -79,7 +79,14 @@
       </div>
       <div class="content">
         <div class="modal-header">
-          <h4>{{title}}</h4>
+          <h4>
+            {{title}}
+            <div class="pull-right">
+            {{#if supporters}}
+            <span class="small">支持者:</span> <ul>{{{showSupporters}}}</ul>
+            {{/if}}
+            </div>
+          </h4>
         </div>
         <div class="modal-body">
           <p>{{{content}}}</p>
@@ -87,7 +94,7 @@
         <div class="modal-footer">
           <ul class="nav pull-left owners">
             {{#if currentOwner}}
-              分配给：{{{showOwners}}}
+              分配给：<ul>{{{showOwners}}}</ul>
             {{else}}
               <li><a href="#"><i class="icon-tasks"></i>分配</a></li>
             {{/if}}
