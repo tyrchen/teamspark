@@ -13,6 +13,7 @@ ts.currentTeam = ->
 ts.isStaff = (team) -> team and Meteor.user()._id is team.authorId
 ts.isFreelancer = (user) -> not user.teamId
 ts.isTeamProject = (project, team) -> project.teamId is team._id
+ts.isTeamSpark = (spark, team) -> spark.teamId is team._id
 
 # project model functions
 ts.projects = ts.projects || {}

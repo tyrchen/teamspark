@@ -54,8 +54,6 @@
   </div>
 </template>
 
-
-
 <template name="spark">
   <div class="spark">
     <div class="avatar">
@@ -67,8 +65,10 @@
         <h5>
           <a href="#">{{author.username}}</a> 分享了一个{{typeObj.name}}
           <ul class="pull-right nav">
-            <li><i class="icon-columns"></i></li>
-            <li><i class="icon-trash"></i></li>
+            <li><a href="#" title="支持"><i class="icon-hand-up"></i></a></li>
+            <li><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
+            <li><a href="#" title="编辑"><i class="icon-edit"></i></a></li>
+            <li><a href="#" title="删除"><i class="icon-trash"></i></a></li>
           </ul>
         </h5>
         <p>
@@ -93,13 +93,61 @@
             {{/if}}
           </ul>
           <ul class="nav pull-right">
-            <li><a href="#"><i class="icon-comments-alt"></i>讨论</a></li>
-            <li><a href="#"><i class="icon-heart"></i>赞同</a></li>
-            <li><a href="#"><i class="icon-upload"></i>上传文件</a></li>
+            <li class="show-comments"><a href="#"><i class="icon-comments-alt"></i>讨论</a></li>
+            <li class="show-audits"><a href="#"><i class="icon-book"></i>历史</a></li>
+          </ul>
+        </div>
+        <div class="comment-box hide comments">
+          {{>commentInput}}
+          <ul class="comment-list">
+          {{#each reversedComments}}
+            {{>comment}}
+          {{/each}}
+          </ul>
+        </div>
+        <div class="comment-box hide audits">
+          <ul class="comment-list audit-list">
+            {{#each reversedAudits}}
+            {{>comment}}
+            {{/each}}
           </ul>
         </div>
       </div>
     </div>
 
   </div>
+</template>
+
+<template name="commentInput">
+  <form id="create-comment-form" class="form-horizontal">
+    <div class="control-group">
+      <img src="{{avatar}}" class="avatar-medium">
+      <div class="controls">
+        <input type="hidden" name="spark-id" value="{{_id}}" />
+        <textarea id="id-content" name="content" rows="1" placeholder="分享一下你的想法"></textarea>
+        <button type="button" class="btn btn-green">发表</button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<template name="comment">
+  <li class="comment-item">
+    <div class="comment-tools hide">
+      <a>删除</a>
+      <a>回复</a>
+    </div>
+    <div class="row">
+      <div class="span1">
+        <img src="{{author.avatar}}" class="avatar-medium">
+      </div>
+      <div class="span7">
+        <div class="author">
+          <a href="#">{{author.username}}</a>
+          <span class="pull-right">{{created}}</span>
+        </div>
+        <p>{{content}}</p>
+      </div>
+    </div>
+  </li>
 </template>

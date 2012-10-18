@@ -149,7 +149,6 @@ _.extend Template.sparkInput,
         $form[0].reset()
         $('#add-spark').modal 'hide'
 
-  projects: -> Projects.find()
 
 _.extend Template.spark,
 # spark = {
@@ -159,6 +158,17 @@ _.extend Template.spark,
   # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
   # updatedAt: Date(), teamId: teamId
   # }
+  events:
+    'click .show-comments': (e) ->
+      $spark = $(e.currentTarget).closest('.spark')
+      $('.comments', $spark).toggle()
+      $('.audits', $spark).hide()
+
+    'click .show-audits': (e) ->
+      $spark = $(e.currentTarget).closest('.spark')
+      $('.audits', $spark).toggle()
+      $('.comments', $spark).hide()
+
   author: ->
     Meteor.users.findOne @authorId
 
@@ -234,3 +244,41 @@ _.extend Template.spark,
       text.push '正常'
 
     return text.join(' | ')
+
+  reversedComments: ->
+    if @comments
+      comments = _.clone(@comments)
+      comments.reverse()
+      return comments
+    else
+      return []
+
+  reversedAudits: ->
+    if @auditTrails
+      audits = _.clone(@auditTrails)
+      audits.reverse()
+      return audits
+    else
+      return []
+
+_.extend Template.commentInput,
+  events:
+    'click .btn': (e) ->
+      $form = $(e.currentTarget).closest('form')
+      $node = $form.closest('.comment-box')
+      content = $('textarea', $form).val()
+      id = $('input[name="spark-id"]').val()
+      Meteor.call 'createComment', id, content, (error, result) ->
+        $('textarea', $form).val('')
+        console.log $node
+        $node.show()
+
+  avatar: ->
+    Meteor.user().avatar
+
+_.extend Template.comment,
+  author: ->
+    Meteor.users.findOne @authorId
+
+  created: ->
+    moment(@createdAt).fromNow()

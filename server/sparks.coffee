@@ -1,7 +1,7 @@
 Meteor.methods
   createSpark: (title, content, type, projectId, owners, priority, deadlineStr='') ->
     # spark = {
-    # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
+    # _id: uuid, type: 'idea', authorId: userId, auditTrails: [], comments: []
     # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
     # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
     # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
@@ -38,6 +38,7 @@ Meteor.methods
       type: type
       authorId: user._id
       auditTrails: []
+      comments: []
       currentOwnerId: currentOwnerId
       nextStep: nextStep
       owners: owners
@@ -60,3 +61,24 @@ Meteor.methods
       teamId: team._id
       projectId: projectId
       createdAt: ts.now()
+
+  createComment: (sparkId, content) ->
+    # comments = {_id: uuid(), authorId: userId, content: content}
+    spark = Sparks.findOne _id: sparkId
+    user = Meteor.user()
+    team = ts.currentTeam()
+    now = ts.now()
+    if not ts.isTeamSpark spark, team
+      throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
+
+    if not content
+      throw new ts.exp.InvalidValueException 'comment cannot be empty'
+
+    comment =
+      _id: Meteor.uuid()
+      authorId: user._id
+      content: content
+      createdAt: now
+
+    console.log sparkId, user._id, content
+    Sparks.update sparkId, $push: comments: comment

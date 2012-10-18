@@ -71,6 +71,7 @@ body .modal {
   }
 }
 img.avatar { width: 50px; height: 50px;}
+img.avatar-medium { width: 30px; height: 30px;}
 img.avatar-small {width:20px; height: 20px;}
 
 .toolbar-bottom {
@@ -203,6 +204,64 @@ img.avatar-small {width:20px; height: 20px;}
   }
 }
 
+.comment-box{
+  ul { list-style: none;}
+  margin: 15px 0 0 0;
+  padding:15px;
+  border-bottom: 1px #E2A499 solid;
+  #create-comment-form{
+    .control-group{
+      img{
+        float:left;
+      }
+      .controls{
+        margin-left:50px;
+        textarea{
+          margin-right: 20px;
+          width: 480px;
+          height: 24px;
+        }
+      }
+    }
+  }
+  .comment-item{
+    padding: 10px 0;
+    position:relative;
+    .comment-tools{
+      position: absolute;
+      right: 250px;
+      top: 8px;
+      visibility: hidden;
+      margin:0 20px;
+      a{
+        line-height: 20px;
+        color: #A59D98;
+        font-size: 12px;
+        margin: 0 0 0 5px;
+      }
+    }
+    &:hover{
+      .comment-tools{
+        visibility:visible;
+      }
+    }
+    .span1{
+      width: 40px;
+    }
+    .span7{
+      width: 570px;
+      margin:0 0 0 10px;
+      border-bottom: 1px #E8E6E6 dashed;
+      .author{
+        margin: 0px;
+        font-size: 12px;
+        span{
+          color: #A59D98;
+        }
+      }
+    }
+  }
+}
 
 // activity panel
 .activity-panel {
