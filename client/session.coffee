@@ -9,6 +9,13 @@ ts.setSession = (name, value) ->
 ts.members = ->
   Meteor.users.find teamId: ts.State.teamId.get()
 
+ts.editor = ->
+  new nicEditor
+    fullPanel : false
+    buttonList : ['save','bold','italic','underline','left','center','right','ol','ul','fontSize','fontFamily','fontFormat','indent','outdent','link','forecolor','bgcolor'],
+    iconsPath: '/nicEditorIcons.gif'
+
+
 ts.State = {}
 
 _.extend ts.State,

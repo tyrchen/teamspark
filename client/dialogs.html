@@ -102,10 +102,7 @@
             <span class="help-inline">*32个字符内</span>
           </div>
 
-          <div class="control-group">
-            <label class="control-label" for="spark-content">内容: </label>
-            <textarea name="content" id="spark-content" placeholder="介个{{ts.State.sparkToCreate.getName}}的详细信息"></textarea>
-          </div>
+          {{>sparkContentEditor}}
           <div class="control-group">
             <label class="control-label" for="spark-owner">分配给: </label>
             <input id="spark-owner" name="owner" type="text" placeholder="选择要负责的团队成员" class="input-xlarge" value="">
@@ -133,6 +130,15 @@
     <div class="modal-footer">
       <a href="#" class="btn" id="add-spark-cancel">取消</a>
       <a href="#" class="btn btn-primary" id="add-spark-submit">立即创建</a>
+    </div>
+  </div>
+</template>
+
+<template name="sparkContentEditor">
+  <div class="control-group">
+    <label class="control-label" for="spark-content">内容: </label>
+    <div style="display: inline-block;">
+      <div id="spark-content" style="width:550px; height:200px;"></div>
     </div>
   </div>
 </template>

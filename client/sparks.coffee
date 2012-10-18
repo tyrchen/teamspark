@@ -112,6 +112,10 @@ _.extend Template.sparkFilter,
       return 'checked'
     return ''
 
+_.extend Template.sparkContentEditor,
+  rendered: ->
+    ts.editor().panelInstance 'spark-content', hasPanel : true
+
 _.extend Template.sparkInput,
   rendered: ->
     usernames = _.pluck ts.members().fetch(), 'username'
@@ -137,7 +141,12 @@ _.extend Template.sparkInput,
       $form = $('#add-spark form')
       $title = $('input[name="title"]', $form)
       title = $.trim($title.val())
-      content = $('textarea[name="content"]', $form).val()
+
+      if not title
+        $title.parent().addClass 'error'
+        return null
+
+      content = nicEditors.findEditor('spark-content').nicInstances?[0].getContent()
       priority = parseInt $('select[name="priority"]').val()
       type = ts.State.sparkToCreate.get()
       if ts.filteringProject()
@@ -149,18 +158,19 @@ _.extend Template.sparkInput,
       #owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
       #owners = _.map owners.fetch(), (item) -> item._id
 
-      owners = _.map $('input[name="owner"]', $form).val().split(';'), (username) ->
-        user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
-        return user._id
+      owners = $.trim($('input[name="owner"]', $form).val())
+      if owners
+        owners = _.map owners.split(';'), (username) ->
+          user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+          if user
+            return user._id
+      else
+        owners = []
 
       deadlineStr = $('input[name="deadline"]', $form).val()
 
 
       console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
-
-      if not title
-        $title.parent().addClass 'error'
-        return null
 
       Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
         $('.control-group', $form).removeClass 'error'
