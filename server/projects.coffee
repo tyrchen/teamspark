@@ -5,7 +5,7 @@ Meteor.methods
     user = Meteor.user()
     now = ts.now()
 
-    console.log name, description, parentId, user
+    console.log 'creating project:', name, description, parentId, user.username
     if ts.isFreelancer user
       return null
 

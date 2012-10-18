@@ -36,7 +36,6 @@ Meteor.methods
 
   updateMembers: (added_ids, removed_ids) ->
     team = ts.currentTeam()
-    #console.log added_ids, removed_ids
     for id in added_ids
       user = Meteor.users.findOne _id: id
       if user

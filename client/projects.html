@@ -8,11 +8,11 @@
       </div>
     </li>
     <li class="{{isFilterSelected all }} filter-project" data-id="" data-name=""><a href="#">全部 ({{totalUnfinished null}})</a></li>
-    {{#each parentProjects}}
+    {{#each ts.projects.parents}}
     <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
-    {{#each childProjects _id}}
-    <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
-    {{/each}}
+      {{#each childProjects _id}}
+      <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
+      {{/each}}
     {{/each}}
   </ul>
   </div>

@@ -64,10 +64,5 @@ _.extend Template.projects,
   totalUnfinished: (id=null) ->
     ts.sparks.totalUnfinished id, null
 
-  hasProject: -> Projects.find().count()
 
-  projects: -> Projects.find()
-
-  parentProjects: -> Projects.find parent: null
-
-  childProjects: (id)-> Projects.find parent: id
+  childProjects: (id)-> ts.projects.children id

@@ -50,12 +50,12 @@
           <textarea name="description" class="input-xlarge" id="project-description" placeholder="让别人了解你的项目"></textarea>
         </div>
 
-        {{#if hasProject}}
+        {{#if ts.projects.hasProject}}
         <div class="control-group">
-          <label class="control-label" for="project-parent">请选择父级项目</label>
+          <label class="control-label" for="project-parent">父项目</label>
           <select name="parent" id="project-parent">
             <option value="null">无</option>
-            {{#each parentProjects}}
+            {{#each ts.projects.parents}}
             <option value="{{_id}}">{{name}}</option>
             {{/each}}
           </select>
@@ -89,7 +89,7 @@
           <div class="control-group">
             <label class="control-label" for="spark-project">项目: </label>
             <select name="project" id="spark-project">
-              {{#each projects}}
+              {{#each ts.projects.all}}
               <option value="{{_id}}">{{name}}</option>
               {{/each}}
             </select>

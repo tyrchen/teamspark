@@ -40,12 +40,10 @@ _.extend Template.content,
           return ''
 
     'click #existing-members li': (e) ->
-      console.log this._id, ts.currentTeam().authorId
       if this._id is ts.currentTeam().authorId
         return
 
       $this = $(e.currentTarget)
-      console.log 'this: ', $this
       if $this.hasClass 'mask'
         $this.removeClass 'mask'
       else

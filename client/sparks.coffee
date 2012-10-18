@@ -192,8 +192,6 @@ _.extend Template.spark,
       else
         active = ''
 
-      console.log currentOwnerId, item._id, active
-
       items.push "<li class='#{active}'><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
     return items.join('\n')
 

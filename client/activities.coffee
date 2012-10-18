@@ -16,7 +16,6 @@ _.extend Template.activities,
       return 'active'
     return ''
 
-  projects: -> Projects.find()
 
 _.extend Template.member,
   events:
