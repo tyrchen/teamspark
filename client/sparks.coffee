@@ -309,6 +309,15 @@ _.extend Template.spark,
     else
       return []
 
+  canFinish: ->
+    if not @currentOwnerId
+      if ts.isStaff()
+        return true
+    else if @currentOwnerId is Meteor.user()._id
+      return true
+
+    return false
+
 _.extend Template.commentInput,
   events:
     'click .btn': (e) ->

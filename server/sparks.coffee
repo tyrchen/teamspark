@@ -55,12 +55,8 @@ Meteor.methods
       teamId: user.teamId
 
     sparkType = _.find ts.sparks.types(), (item) -> item.id is type
-    AuditTrails.insert
-      userId: user._id
-      content: "#{user.username}创建了一个#{sparkType.name}: #{title}"
-      teamId: user.teamId
-      projectId: projectId
-      createdAt: ts.now()
+
+    Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{title}", projectId
 
   createComment: (sparkId, content) ->
     # comments = {_id: uuid(), authorId: userId, content: content}
@@ -92,8 +88,12 @@ Meteor.methods
 
     if ts.sparks.hasSupported spark
       Sparks.update sparkId, $pull: supporters: user._id
+      content = "#{user.username} 支持 #{spark.title}"
     else
+      content = "#{user.username} 支持 #{spark.title}"
       Sparks.update sparkId, $push: supporters: user._id
+
+    Meteor.call 'createAudit', content, projectId
 
   finishSpark: (sparkId) ->
     spark = Sparks.findOne _id: sparkId
@@ -115,8 +115,13 @@ Meteor.methods
       nextId = spark.owners[spark.nextStep]
       nextOwner = Meteor.users.findOne _id: nextId
       audit.content = "#{user.username} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
+      content1 = "#{user.username} 对 #{spark.title} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
       Sparks.update sparkId, $set: {currentOwnerId: nextId}, $inc: {nextStep: 1}, $push: {auditTrails: audit}
     else
-      audit.content = "#{user.username} 将整个任务标记为完成"
+      audit.content = "#{user.username} 将任务标记为完成"
+      content1 = "#{user.username} 将任务 #{spark.title} 标记为完成"
       Sparks.update sparkId, $set: {currentOwnerId: null, finished: true}, $push: {auditTrails: audit}
+
+
+    Meteor.call 'createAudit', content1, spark.projects[0]
 

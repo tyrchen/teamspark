@@ -10,7 +10,12 @@ ts.currentTeam = ->
   return null
 
 
-ts.isStaff = (team) -> team and Meteor.user()._id is team.authorId
+ts.isStaff = (team=null) ->
+  user = Meteor.user()
+  if not team
+    team = Teams.findOne _id: user.teamId
+  team and user._id is team.authorId
+
 ts.isFreelancer = (user) -> not user.teamId
 
 # project model functions

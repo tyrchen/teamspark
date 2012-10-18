@@ -13,5 +13,5 @@ Projects = new Meteor.Collection 'projects'
 # }
 Sparks = new Meteor.Collection 'sparks'
 
-# auditTrail = { _id: uuid, userId: teamId, content: 'bla bla', teamId: teamId, projectId: projectId, createdAt: Date()}
+# auditTrail = { _id: uuid, userId: userId, content: 'bla bla', teamId: teamId, projectId: projectId, sparkId: sparkId, createdAt: Date()}
 AuditTrails = new Meteor.Collection 'auditTrails'
