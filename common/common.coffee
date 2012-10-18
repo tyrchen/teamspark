@@ -19,9 +19,7 @@ ts.projects = ts.projects || {}
 ts.projects.hasProject = -> Projects.find().count()
 ts.projects.all = -> Projects.find()
 ts.projects.parents = -> Projects.find parent: null
-ts.projects.children = (id)->
-  console.log id
-  Projects.find parent: id
+ts.projects.children = (id)-> Projects.find parent: id
 
 # spark model functions
 ts.sparks = ts.sparks || {}

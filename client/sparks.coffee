@@ -49,20 +49,6 @@ _.extend Template.sparkFilter,
       name = $node.data('name')
 
       ts.State.sparkToCreate.set {id: id, name: name}
-
-      usernames = _.pluck ts.members().fetch(), 'username'
-      $node = $('#spark-owner')
-      $node.select2
-        tags: usernames
-
-        placeholder:'添加责任人'
-        tokenSeparators: [' ']
-        separator:';'
-
-      $node = $('#spark-deadline')
-      if not $node.data('done')
-        $node.data('done', 'done')
-        $node.datepicker({format: 'yyyy-mm-dd'}).on 'changeDate', (ev) -> $node.datepicker('hide')
       $('#add-spark').modal()
 
     'click #filter-spark-author > li': (e) ->
@@ -114,6 +100,21 @@ _.extend Template.sparkFilter,
     return ''
 
 _.extend Template.sparkInput,
+  rendered: ->
+    usernames = _.pluck ts.members().fetch(), 'username'
+    $node = $('#spark-owner')
+
+    $node.select2
+      tags: usernames
+      placeholder:'添加责任人'
+      tokenSeparators: [' ']
+      separator:';'
+
+    $node = $('#spark-deadline')
+    if not $node.data('done')
+      $node.data('done', 'done')
+      $node.datepicker({format: 'yyyy-mm-dd'}).on 'changeDate', (ev) -> $node.datepicker('hide')
+
   events:
     'click #add-spark-cancel': (e) ->
       $('#add-spark form')[0].reset()
