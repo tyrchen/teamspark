@@ -11,9 +11,9 @@ body .modal {
   width: 50%; /* desired relative width */
   left: 25%; /* (100%-width)/2 */
   margin: auto auto auto auto; /* place center */
-}
-body .modal.fade.in {
-  top:50px; /* fade in to correct spot */
+  &.fade.in {
+    top:50px; /* fade in to correct spot */
+  }
 }
 .nav-container {
   margin: 0 10px;
@@ -71,7 +71,7 @@ body .modal.fade.in {
   }
 }
 img.avatar { width: 50px; height: 50px;}
-img.avatar-small {width:25px; height: 25px;}
+img.avatar-small {width:20px; height: 20px;}
 
 .toolbar-bottom {
   position: absolute;
@@ -167,6 +167,20 @@ img.avatar-small {width:25px; height: 25px;}
     }
     .content {
       background-color: #f8f8ff;
+    }
+    .modal-footer {
+      text-align: left;
+      .owners li {
+        opacity: 0.6;
+        &:after {content: '>'; margin: 0 3px;}
+        &:last-child:after {content: ''; margin: 0px;}
+        &.active {
+          opacity: 1;
+          img {
+            border: 1px solid #08c;
+          }
+        }
+      }
     }
   }
 }

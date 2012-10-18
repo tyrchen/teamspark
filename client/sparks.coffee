@@ -182,6 +182,21 @@ _.extend Template.spark,
     else
       return null
 
+  showOwners: ->
+    items = []
+    owners = Meteor.users.find _id: $in: @owners
+    currentOwnerId = @currentOwnerId
+    owners.forEach (item) ->
+      if currentOwnerId is item._id
+        active = 'active'
+      else
+        active = ''
+
+      console.log currentOwnerId, item._id, active
+
+      items.push "<li class='#{active}'><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
+    return items.join('\n')
+
   currentOwner: ->
     if @currentOwnerId
       Meteor.users.findOne @currentOwnerId
