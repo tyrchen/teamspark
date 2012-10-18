@@ -11,6 +11,7 @@ if Meteor.is_server
       avatar: 1
       url: 1
       location: 1
+      description: 1
 
   Meteor.publish 'projects', (teamId) ->
     Projects.find teamId: teamId

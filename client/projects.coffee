@@ -69,6 +69,9 @@ _.extend Template.projects,
     if id
       query.push projects: id
 
+    if ts.State.filterType.get() is 'user'
+      query.push currentOwnerId: Meteor.user()._id
+
     Sparks.find($and: query).count()
 
 

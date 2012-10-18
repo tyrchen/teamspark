@@ -8,11 +8,13 @@
 
 _.extend Template.sparks,
   sparks: ->
+
     project = ts.State.filterSelected.get()
     order = ts.State.sparkOrder.get()
     type = ts.State.sparkTypeFilter.get()
     priority = ts.State.sparkPriorityFilter.get()
     author = ts.State.sparkAuthorFilter.get()
+    filterType = ts.State.filterType.get()
     owner = ts.State.sparkOwnerFilter.get()
     progress = ts.State.sparkProgressFilter.get()
     finish = ts.State.sparkFinishFilter.get()
@@ -31,8 +33,11 @@ _.extend Template.sparks,
     if author isnt 'all'
       query.push authorId: author
 
+    if filterType is 'user'
+      query.push currentOwnerId: Meteor.user()._id
+
     if owner isnt 'all'
-      query.push currentOwnerId: owner
+      query.push owners: owner
 
     if progress isnt 'all'
       query.push progress: progress

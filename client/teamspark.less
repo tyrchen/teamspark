@@ -78,6 +78,25 @@ img.avatar-small {width:20px; height: 20px;}
   position: absolute;
   bottom: 0px;
   width: 100%;
+  .btn-group {
+    width: 100%;
+    > .btn, > .btn:first-child {
+      width: 50%;
+
+      -webkit-border-top-right-radius: 0px;
+      border-top-right-radius: 0px;
+      -webkit-border-bottom-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      -moz-border-radius-topright: 0px;
+      -moz-border-radius-bottomright: 0px;
+      -webkit-border-bottom-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+      -webkit-border-top-left-radius: 0px;
+      border-top-left-radius: 0px;
+      -moz-border-radius-bottomleft: 0px;
+      -moz-border-radius-topleft: 0px;
+    }
+  }
 }
 
 .orphan {
@@ -302,6 +321,21 @@ img.avatar-small {width:20px; height: 20px;}
   border-top: 1px solid #DDD;
   .author-info {
     .avatar {float:left; margin: 10px;}
+  }
+  .navbar {
+    margin-bottom: 5px;
+    .navbar-inner {
+      min-height:30px;
+      margin: 0;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      border-radius: 0px;
+    }
+    .nav-collapse > .nav > li {
+      > a {
+        padding: 5px 6px;
+      }
+    }
   }
   .audit-trail-container {
     padding: 5px;
