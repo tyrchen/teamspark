@@ -39,10 +39,10 @@ _.extend Template.sparks,
       query.push authorId: author
 
     if filterType is 'user'
-      query.push currentOwnerId: Meteor.user()._id
+      query.push owners: Meteor.user()._id
 
     if owner isnt 'all'
-      query.push owners: owner
+      query.push currentOwnerId: owner
 
     if progress isnt 'all'
       query.push progress: progress
@@ -225,6 +225,10 @@ _.extend Template.spark,
 
 
     'click .edit': (e) ->
+      alert 'Not finished yet'
+
+    'click .allocate': (e) ->
+      alert 'Not finished yet'
 
 
   author: ->
@@ -278,8 +282,8 @@ _.extend Template.spark,
       items.push "<li class='#{active}'><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
     return items.join('\n')
 
-  currentOwner: ->
-    ts.sparks.currentOwner @
+  allocated: ->
+    @finished or @currentOwnerId
 
   nextOwner: ->
     ts.sparks.nextOwner @
@@ -295,6 +299,11 @@ _.extend Template.spark,
   importantStyle: ->
     if ts.sparks.isImportant @
       return 'important'
+    return ''
+
+  finishedStyle: ->
+    if @finished
+      return 'finished'
     return ''
 
   info: ->
@@ -328,6 +337,9 @@ _.extend Template.spark,
       return []
 
   canFinish: ->
+    if @finished
+      return false
+
     if not @currentOwnerId
       if ts.isStaff()
         return true

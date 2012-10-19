@@ -56,7 +56,7 @@
 </template>
 
 <template name="spark">
-  <div class="spark">
+  <div class="spark {{finishedStyle}}">
     <div class="avatar">
       <img class="avatar" src="{{author.avatar}}" alt="{{author.username}}" title="{{author.username}}" />
       <p><i class="{{typeObj.icon}} {{urgentStyle}} {{importantStyle}}" title="{{info}}"></i></p>
@@ -124,10 +124,10 @@
         </div>
         <div class="modal-footer">
           <ul class="nav pull-left owners">
-            {{#if currentOwner}}
-              分配给：<ul>{{{showOwners}}}</ul>
+            {{#if allocated}}
+              <a href="#" class="allocate"><i class="icon-tasks"></i>分配</a>给{{#if finished}}(已完成){{/if}}：<ul>{{{showOwners}}}</ul>
             {{else}}
-              <li><a href="#"><i class="icon-tasks"></i>分配</a></li>
+              <li><a href="#" class="allocate"><i class="icon-tasks"></i>分配</a></li>
             {{/if}}
           </ul>
           <ul class="nav pull-right">

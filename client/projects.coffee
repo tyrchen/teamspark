@@ -70,7 +70,7 @@ _.extend Template.projects,
       query.push projects: id
 
     if ts.State.filterType.get() is 'user'
-      query.push currentOwnerId: Meteor.user()._id
+      query.push owners: Meteor.user()._id
 
     Sparks.find($and: query).count()
 
