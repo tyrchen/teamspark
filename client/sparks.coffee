@@ -7,6 +7,11 @@
 # }
 
 _.extend Template.sparks,
+  rendered: ->
+    $('.carousel').carousel
+      interval: false
+    $('.carousel .item:first-child').addClass('active')
+
   sparks: ->
 
     project = ts.State.filterSelected.get()
@@ -330,6 +335,12 @@ _.extend Template.spark,
       return true
 
     return false
+
+  hasImages: ->
+    @images?.length > 0
+
+  hasFiles: ->
+    @files?.length > 0
 
 _.extend Template.commentInput,
   events:
