@@ -172,6 +172,6 @@ Meteor.methods
       content1 += desc
 
     console.log 'command:', command
-    Sparks.update sparkId, $pushAll: command
+    Sparks.update sparkId, $pushAll: command, $push: {auditTrails: audit}
 
     Meteor.call 'createAudit', content1, spark.projects[0]
