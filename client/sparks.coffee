@@ -209,7 +209,15 @@ _.extend Template.spark,
       Meteor.call 'finishSpark', @_id
 
     'click .upload': (e) ->
-      console.log e
+      id = @_id
+      filepicker.pickMultiple
+        extensions: ['.png', '.jpg', '.gif', '.doc', '.xls', '.ppt', '.docx', '.pptx', '.xlsx', '.pdf', '.txt']
+        container: 'modal'
+        services: ['COMPUTER']
+        (fpfiles) =>
+          console.log 'uploaded:', id, fpfiles
+          Meteor.call 'uploadFiles', id, fpfiles
+
 
     'click .edit': (e) ->
 
@@ -344,3 +352,6 @@ _.extend Template.comment,
 
   created: ->
     moment(@createdAt).fromNow()
+
+Meteor.startup ->
+  filepicker.setKey 'AJEoTb-YlRYuHGmtOfmdjz'

@@ -125,3 +125,53 @@ Meteor.methods
 
     Meteor.call 'createAudit', content1, spark.projects[0]
 
+  uploadFiles: (sparkId, lists) ->
+    # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
+    console.log 'update sparks:', sparkId, lists
+    if lists.length <= 0
+      return
+
+    spark = Sparks.findOne _id: sparkId
+    if not ts.sparks.writable spark
+      throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
+
+    user = Meteor.user()
+
+    audit =
+      _id: Meteor.uuid()
+      authorId: user._id
+      createdAt: ts.now()
+      content: "#{user.username} 上传了"
+
+    content1 = "#{user.username} 在 #{spark.title} 里上传了"
+
+    images = []
+    files  = []
+
+    for file in lists
+      console.log 'mimetype:', file.mimetype, file.mimetype.indexOf('image')
+      if file.mimetype.indexOf('image') >= 0
+        images.push file
+      else
+        files.push file
+
+    console.log 'images:', images, 'files:', files
+    command = {}
+    if files.length > 0
+      command.files = files
+      filenames = _.pluck(files, 'filename').join(' ')
+      desc = " #{files.length}个文件: #{filenames}"
+      audit.content += desc
+      content1 += desc
+
+    if images.length > 0
+      command.images = images
+      filenames = _.pluck(images, 'filename').join(' ')
+      desc = " #{images.length}个图片: #{filenames}"
+      audit.content += desc
+      content1 += desc
+
+    console.log 'command:', command
+    Sparks.update sparkId, $pushAll: command
+
+    Meteor.call 'createAudit', content1, spark.projects[0]
