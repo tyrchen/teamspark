@@ -56,7 +56,7 @@
 </template>
 
 <template name="spark">
-  <div class="spark {{finishedStyle}}">
+  <div class="spark {{finishedStyle}}" id="{{_id}}">
     <div class="avatar">
       <img class="avatar" src="{{author.avatar}}" alt="{{author.username}}" title="{{author.username}}" />
       <p><i class="{{typeObj.icon}} {{urgentStyle}} {{importantStyle}}" title="{{info}}"></i></p>
@@ -76,7 +76,9 @@
         </h5>
         <p>
           <span>{{created}}</span> |
-          <span>{{project.name}}</span> |
+          <span>项目: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
+          <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}">{{priority}}</a></span> |
+          <span>截至日期: <a href="#" class="edit-deadline" data-id="{{_id}}">{{expired}}</a></span> |
           <span>最后更新: {{updated}}</span>
         </p>
       </div>
@@ -96,7 +98,7 @@
           {{#if hasImages}}
           <hr/>
           <p>共{{images.length}}张图片：</p>
-          <div class="carousel slide" id="{{_id}}">
+          <div class="carousel slide" id="{{_id}}-img">
             <div class="carousel-inner" data-interval="false" >
               {{#each images}}
               <div class="item">
@@ -108,8 +110,8 @@
               {{/each}}
             </div>
             {{#if hasMoreImages}}
-            <a class="left carousel-control" href="#{{_id}}" data-slide="prev">‹</a>
-            <a class="right carousel-control" href="#{{_id}}" data-slide="next">›</a>
+            <a class="left carousel-control" href="#{{_id}}-img" data-slide="prev">‹</a>
+            <a class="right carousel-control" href="#{{_id}}-img" data-slide="next">›</a>
             {{/if}}
           </div>
           {{/if}}
@@ -127,9 +129,9 @@
         <div class="modal-footer">
           <ul class="nav pull-left owners">
             {{#if allocated}}
-              <a href="#" class="allocate"><i class="icon-tasks"></i>分配</a>给{{#if finished}}(已完成){{/if}}：<ul>{{{showOwners}}}</ul>
+              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>给{{#if finished}}(已完成){{/if}}：<ul>{{{showOwners}}}</ul>
             {{else}}
-              <li><a href="#" class="allocate"><i class="icon-tasks"></i>分配</a></li>
+              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>
             {{/if}}
           </ul>
           <ul class="nav pull-right">

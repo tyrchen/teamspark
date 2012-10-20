@@ -113,6 +113,9 @@ ts.sparks.isImportant = (spark) ->
 ts.sparks.hasSupported = (spark) ->
   _.find spark.supporters, (id) -> Meteor.user()._id is id
 
+ts.sparks.allOwners = (spark) ->
+  _.map spark.owners, (id) -> Meteor.users.findOne id
+
 ts.sparks.currentOwner = (spark) ->
   if spark.currentOwnerId
     return Meteor.users.findOne spark.currentOwnerId

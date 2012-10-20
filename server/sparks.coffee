@@ -90,7 +90,7 @@ Meteor.methods
       Sparks.update sparkId, $pull: supporters: user._id
       content = "#{user.username} 支持 #{spark.title}"
     else
-      content = "#{user.username} 支持 #{spark.title}"
+      content = "#{user.username} 取消支持 #{spark.title}"
       Sparks.update sparkId, $push: supporters: user._id
 
     Meteor.call 'createAudit', content, projectId
@@ -173,5 +173,79 @@ Meteor.methods
 
     console.log 'command:', command
     Sparks.update sparkId, $pushAll: command, $push: {auditTrails: audit}
+
+    Meteor.call 'createAudit', content1, spark.projects[0]
+
+  updateSpark: (sparkId, value, field) ->
+    formatValue = ->
+      switch field
+        when 'deadline' then new Date(value)
+        when 'priority' then parseInt value
+        else value
+
+    auditInfo = ->
+      v = formatValue()
+      switch field
+        when 'deadline' then "截止日期为: #{v}"
+        when 'priority' then "优先级为: #{v}"
+        when 'title' then "标题为: #{v}"
+        when 'content' then "内容为: #{v}"
+
+    console.log 'updateSpark: ', value, field
+    fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content']
+    if not _.find(fields, (item) -> item is field)
+      return
+
+    spark = Sparks.findOne _id: sparkId
+    if not ts.sparks.writable spark
+      throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
+
+    user = Meteor.user()
+
+    audit =
+      _id: Meteor.uuid()
+      authorId: user._id
+      createdAt: ts.now()
+      content: "#{user.username} 更新了"
+
+    content1 = "#{user.username} 更新了 #{spark.title} 的"
+
+    if field is 'project'
+      project = Projects.findOne _id: value
+      if project.parent
+        parent = Projects.findOne _id: project.parent
+        projects = [project._id, parent._id]
+      else
+        projects = [project._id]
+
+      info = "项目为: #{project.name}"
+      audit.content += info
+      content1 += info
+
+      Sparks.update sparkId, $set: {projects: projects}, $push: {auditTrails: audit}
+    else if field is 'owners'
+      command = {}
+      users = Meteor.users.find({_id: $in: value}, {fields: ['_id', 'username']}).fetch()
+      owners = _.pluck users, '_id'
+      command['owners'] = owners
+      if not _.find(owners, (id) -> spark.currentOwnerId is id)
+        if owners.length > 0
+          command['currentOwnerId'] = owners[0]
+        else
+          command['currentOwnerId'] = null
+
+      info = '责任人为: ' + _.pluck(users, 'username').join(', ')
+      audit.content += info
+      content1 += info
+
+      Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
+    else
+      info = auditInfo()
+      audit.content += info
+      content1 += info
+
+      command = {}
+      command[field] = formatValue()
+      Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
 
     Meteor.call 'createAudit', content1, spark.projects[0]

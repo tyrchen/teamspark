@@ -8,6 +8,7 @@
 
 _.extend Template.sparks,
   rendered: ->
+    console.log 'template sparks rendered'
     $('.carousel').carousel
       interval: false
     $('.carousel .item:first-child').addClass('active')
@@ -196,6 +197,81 @@ _.extend Template.spark,
   # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
   # updatedAt: Date(), teamId: teamId
   # }
+  rendered: ->
+    console.log 'template spark rendered:', @
+
+    #TODO: projects may change so we need to reset editable for .edit-project
+    $('.edit-project', $(@firstNode)).editable(
+      type: 'select'
+      value: -> @projectId
+      placement: 'right'
+      name: 'project'
+      pk: null
+      source: ->
+        projects = {}
+        for p in ts.projects.all().fetch()
+          projects[p._id] = p.name
+        return projects
+    ).on 'render', (e, editable) ->
+      value = editable.value
+      sparkId = editable.$element.data('id')
+      console.log value, sparkId
+      Meteor.call 'updateSpark', sparkId, value, 'project'
+
+    $('.edit-priority', $(@firstNode)).editable(
+      type: 'select'
+      source: 1:1, 2:2, 3:3, 4:4, 5:5
+      value: 3
+      placement: 'right'
+      name: 'priority'
+      pk: null
+    ).on 'render', (e, editable) ->
+      value = editable.value
+      sparkId = editable.$element.data('id')
+      spark = Sparks.findOne _id: sparkId
+      if spark.priority isnt parseInt(value)
+        console.log value, sparkId, spark.priority, parseInt(value)
+        Meteor.call 'updateSpark', sparkId, value, 'priority'
+
+    $('.edit-deadline', $(@firstNode)).editable(
+      type: 'date'
+      value: null
+      placement: 'right'
+      name: 'deadline'
+      pk: null
+      format: 'yyyy-mm-dd'
+    ).on 'render', (e, editable) ->
+      value = editable.value
+      sparkId = editable.$element.data('id')
+      console.log value, sparkId
+      Meteor.call 'updateSpark', sparkId, value, 'deadline'
+
+    $('.edit-owners', $(@firstNode)).editable(
+      type: 'text'
+      value: ->
+        spark = Sparks.findOne _id: @id
+        _.pluck(ts.sparks.allOwners(spark), 'username').join(';')
+      placement: 'bottom'
+      name: 'owners'
+      pk: null
+    ).on('render', (e, editable) ->
+      value = editable.value
+      sparkId = editable.$element.data('id')
+      spark = Sparks.findOne _id: sparkId
+      if spark.priority isnt parseInt(value)
+        console.log value, sparkId, spark.priority, parseInt(value)
+        Meteor.call 'updateSpark', sparkId, value, 'priority'
+    ).on('shown', (e, editable) ->
+      usernames = _.pluck ts.members().fetch(), 'username'
+
+      $(editable.$input).select2
+        tags: usernames
+        placeholder:'添加责任人'
+        tokenSeparators: [' ']
+        separator:';'
+      console.log e, editable
+    )
+
   events:
     'click .show-comments': (e) ->
       $spark = $(e.currentTarget).closest('.spark')
@@ -241,7 +317,9 @@ _.extend Template.spark,
     moment(@updatedAt).fromNow()
 
   expired: ->
-    moment(@deadline).fromNow()
+    if @deadline
+      return moment(@deadline).fromNow()
+    return '未指定'
 
   typeObj: ->
     obj = ts.sparks.type(@)
