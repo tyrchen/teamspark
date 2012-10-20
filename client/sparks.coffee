@@ -351,6 +351,9 @@ _.extend Template.spark,
   hasImages: ->
     @images?.length > 0
 
+  hasMoreImages: ->
+    @images?.length > 1
+
   hasFiles: ->
     @files?.length > 0
 
@@ -360,11 +363,12 @@ _.extend Template.commentInput,
       $form = $(e.currentTarget).closest('form')
       $node = $form.closest('.comment-box')
       content = $('textarea', $form).val()
-      id = $('input[name="spark-id"]').val()
+      id = $('input[name="spark-id"]', $form).val()
       Meteor.call 'createComment', id, content, (error, result) ->
         $('textarea', $form).val('')
-        console.log $node
-        $node.show()
+        Meteor.setTimeout (->
+          $node.show()
+        ), 200
 
   avatar: ->
     Meteor.user().avatar

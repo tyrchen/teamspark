@@ -102,13 +102,15 @@
               <div class="item">
                 <img src="{{url}}" alt="{{filename}}" />
                 <div class="carousel-caption">
-                  <p>文件大小: {{size}}字节 | 下载: <a href="{{url}}">{{filename}}</a></p>
+                  <p>图片大小: {{size}}字节 | 下载: <a href="{{url}}">{{filename}}</a></p>
                 </div>
               </div>
               {{/each}}
             </div>
+            {{#if hasMoreImages}}
             <a class="left carousel-control" href="#{{_id}}" data-slide="prev">‹</a>
             <a class="right carousel-control" href="#{{_id}}" data-slide="next">›</a>
+            {{/if}}
           </div>
           {{/if}}
 
