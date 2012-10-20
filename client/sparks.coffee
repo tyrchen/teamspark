@@ -7,12 +7,6 @@
 # }
 
 _.extend Template.sparks,
-  rendered: ->
-    console.log 'template sparks rendered'
-    $('.carousel').carousel
-      interval: false
-    $('.carousel .item:first-child').addClass('active')
-
   sparks: ->
 
     project = ts.State.filterSelected.get()
@@ -56,139 +50,6 @@ _.extend Template.sparks,
     else
       Sparks.find {$and: query}, {sort: updatedAt: -1}
 
-_.extend Template.sparkFilter,
-  events:
-    'click .spark-list > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      ts.State.sparkToCreate.set {id: id, name: name}
-      $('#add-spark').modal()
-
-    'click #filter-spark-author > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkAuthorFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkAuthorFilter.set {id: id, name: name}
-
-    'click #filter-spark-owner > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkOwnerFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkOwnerFilter.set {id: id, name: name}
-
-    'click #filter-spark-type > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkTypeFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkTypeFilter.set {id: id, name: name}
-
-    'click #hide-finished': (e) ->
-      finish = ts.State.sparkFinishFilter.get()
-      ts.State.sparkFinishFilter.set(not finish)
-
-  types: -> ts.sparks.types()
-
-
-  isAuthorSelected: (id='all') ->
-    if ts.State.sparkAuthorFilter.get() is id
-      return 'icon-ok'
-    return ''
-
-  isOwnerSelected: (id='all') ->
-    if ts.State.sparkOwnerFilter.get() is id
-      return 'icon-ok'
-    return ''
-
-  isTypeSelected: (id='all') ->
-    if ts.State.sparkTypeFilter.get() is id
-      return 'icon-ok'
-    return ''
-
-  hideFinished: ->
-    if ts.State.sparkFinishFilter.get()
-      return 'checked'
-    return ''
-
-_.extend Template.sparkContentEditor,
-  rendered: ->
-    ts.editor().panelInstance 'spark-content', hasPanel : true
-
-_.extend Template.sparkInput,
-  rendered: ->
-    usernames = _.pluck ts.members().fetch(), 'username'
-    $node = $('#spark-owner')
-
-    $node.select2
-      tags: usernames
-      placeholder:'添加责任人'
-      tokenSeparators: [' ']
-      separator:';'
-
-    $node = $('#spark-deadline')
-    if not $node.data('done')
-      $node.data('done', 'done')
-      $node.datepicker({format: 'yyyy-mm-dd'}).on 'changeDate', (ev) -> $node.datepicker('hide')
-
-  events:
-    'click #add-spark-cancel': (e) ->
-      $('#add-spark form')[0].reset()
-      $('#add-spark').modal 'hide'
-
-    'click #add-spark-submit': (e) ->
-      $form = $('#add-spark form')
-      $title = $('input[name="title"]', $form)
-      title = $.trim($title.val())
-
-      if not title
-        $title.parent().addClass 'error'
-        return null
-
-      content = nicEditors.findEditor('spark-content').nicInstances?[0].getContent()
-      priority = parseInt $('select[name="priority"]').val()
-      type = ts.State.sparkToCreate.get()
-      if ts.filteringProject()
-        project = ts.State.filterSelected.get()
-      else
-        project = $('select[name="project"]', $form).val()
-
-      # use $in will make the order wrong
-      #owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
-      #owners = _.map owners.fetch(), (item) -> item._id
-
-      owners = $.trim($('input[name="owner"]', $form).val())
-      if owners
-        owners = _.map owners.split(';'), (username) ->
-          user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
-          return user?._id
-        owners = _.filter owners, (id) -> id
-      else
-        owners = []
-
-      deadlineStr = $('input[name="deadline"]', $form).val()
-
-
-      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
-
-      Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
-        $('.control-group', $form).removeClass 'error'
-        $form[0].reset()
-        $('#add-spark').modal 'hide'
-
-
 _.extend Template.spark,
 # spark = {
   # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
@@ -198,10 +59,13 @@ _.extend Template.spark,
   # updatedAt: Date(), teamId: teamId
   # }
   rendered: ->
-    console.log 'template spark rendered:', @
-
+    console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
+    $parent = $(@firstNode)
+    $('.carousel', $parent).carousel
+      interval: false
+    $('.carousel .item:first-child', $parent).addClass('active')
     #TODO: projects may change so we need to reset editable for .edit-project
-    $('.edit-project', $(@firstNode)).editable(
+    $('.edit-project', $parent).editable(
       type: 'select'
       value: -> @projectId
       placement: 'right'
@@ -212,45 +76,71 @@ _.extend Template.spark,
         for p in ts.projects.all().fetch()
           projects[p._id] = p.name
         return projects
-    ).on 'render', (e, editable) ->
+    ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
       console.log value, sparkId
-      Meteor.call 'updateSpark', sparkId, value, 'project'
+      if value and sparkId
+        Meteor.call 'updateSpark', sparkId, value, 'project'
+    )
 
-    $('.edit-priority', $(@firstNode)).editable(
+    $('.edit-type', $parent).editable(
+      type: 'select'
+      value: -> @sparkType
+      placement: 'right'
+      name: 'sparktype'
+      pk: null
+      source: ->
+        types = {}
+        console.log 'types:', types
+        _.each ts.sparks.types(), (item) ->
+          types[item.id] = item.name
+
+        return types
+    ).on('render', (e, editable) ->
+      value = editable.value
+      sparkId = editable.$element.data('id')
+      console.log value, sparkId
+      if value and sparkId
+        Meteor.call 'updateSpark', sparkId, value, 'type'
+    )
+
+    $('.edit-priority', $parent).editable(
       type: 'select'
       source: 1:1, 2:2, 3:3, 4:4, 5:5
-      value: 3
+      value: -> @priority
       placement: 'right'
       name: 'priority'
       pk: null
-    ).on 'render', (e, editable) ->
+    ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      spark = Sparks.findOne _id: sparkId
-      console.log value, sparkId, spark.priority, parseInt(value)
-      Meteor.call 'updateSpark', sparkId, value, 'priority'
+      console.log value, sparkId
+      if value and sparkId
+        Meteor.call 'updateSpark', sparkId, value, 'priority'
+    )
 
-    $('.edit-deadline', $(@firstNode)).editable(
+    $('.edit-deadline', $parent).editable(
       type: 'date'
-      value: null
+      value: -> moment(@deadline)?.format('YYYY-MM-DD')
       placement: 'right'
       name: 'deadline'
       pk: null
       format: 'yyyy-mm-dd'
-    ).on 'render', (e, editable) ->
+    ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
       console.log value, sparkId
       Meteor.call 'updateSpark', sparkId, value, 'deadline'
+    )
 
-    $('.edit-owners', $(@firstNode)).editable(
+    $('.edit-owners', $parent).editable(
       type: 'text'
+      inputclass: 'span4'
       value: ->
         spark = Sparks.findOne _id: @id
         _.pluck(ts.sparks.allOwners(spark), 'username').join(';')
-      placement: 'bottom'
+      placement: 'right'
       name: 'owners'
       pk: null
     ).on('render', (e, editable) ->
@@ -262,8 +152,10 @@ _.extend Template.spark,
         return user?._id
 
       owners = _.filter owners, (id) -> id
-      Meteor.call 'updateSpark', sparkId, owners, 'owners'
+      if owners and sparkId
+        Meteor.call 'updateSpark', sparkId, owners, 'owners'
     ).on('shown', (e, editable) ->
+      console.log e, editable, $(editable.$content).addClass('editable-owners')
       usernames = _.pluck ts.members().fetch(), 'username'
 
       $(editable.$input).select2

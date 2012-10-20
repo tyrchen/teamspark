@@ -3,6 +3,18 @@ ts = ts || {}
 ts.now = ->
   (new Date()).getTime()
 
+ts.formatDate = (date) ->
+  y = date.getFullYear()
+  m = date.getMonth() + 1
+  d = date.getDate()
+  if m < 9
+    m = '0' + m
+
+  if d < 9
+    d = '0' + d
+
+  return "#{y}-#{m}-#{d}"
+
 ts.currentTeam = ->
   user = Meteor.user()
   if user
@@ -38,10 +50,15 @@ ts.sparks.types = ->
     {name: 'BUG', id: 'bug', icon: 'icon-exclamation-sign'},
     {name: '需求', id: 'feature', icon: 'icon-money'},
     {name: '任务', id: 'task', icon: 'icon-inbox'},
+    {name: '改进', id: 'improvement', icon: 'icon-wrench'}
   ]
 
 ts.sparks.type = (spark) ->
-  _.find ts.sparks.types(), (item) => item.id is spark.type
+  if spark.type
+    type = spark.type
+  else
+    type = spark
+  _.find ts.sparks.types(), (item) => item.id is type
 
 ts.sparks.isAuthor = (spark) ->
   if not spark.authorId?

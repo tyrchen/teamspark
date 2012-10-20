@@ -186,13 +186,14 @@ Meteor.methods
     auditInfo = ->
       v = formatValue()
       switch field
-        when 'deadline' then "截止日期为: #{v.toDateString()}"
+        when 'deadline' then "截止日期为: #{ts.formatDate(v)}"
         when 'priority' then "优先级为: #{v}"
         when 'title' then "标题为: #{v}"
         when 'content' then "内容为: #{v}"
+        when 'type' then "类型为: #{ts.sparks.type(v).name}"
 
     console.log 'updateSpark: ', value, field
-    fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content']
+    fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content', 'type']
     if not _.find(fields, (item) -> item is field)
       return
 

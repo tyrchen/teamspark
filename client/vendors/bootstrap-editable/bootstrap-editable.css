@@ -22,7 +22,7 @@ a.editable-changed {
 }
                  
 .editable-loading {
-  background: url('../img/loading.gif') center center no-repeat;  
+  background: url('/loading.gif') center center no-repeat;
   height: 20px;  
 }
 
@@ -32,7 +32,7 @@ a.editable-changed {
 
 .popover.editable-popover .popover-inner {
    width: auto;
-   max-width: 410px;  /* should be enough for span4 */
+   max-width: 510px;  /* should be enough for span4 */
 }
 
 .popover.editable-popover div.control-group,

@@ -75,3 +75,135 @@ _.extend Template.content,
     return ''
 
 
+_.extend Template.sparkFilter,
+  events:
+    'click .spark-list > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      ts.State.sparkToCreate.set {id: id, name: name}
+      $('#add-spark').modal()
+
+    'click #filter-spark-author > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkAuthorFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkAuthorFilter.set {id: id, name: name}
+
+    'click #filter-spark-owner > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkOwnerFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkOwnerFilter.set {id: id, name: name}
+
+    'click #filter-spark-type > li': (e) ->
+      $node = $(e.currentTarget)
+      id = $node.data('id')
+      name = $node.data('name')
+
+      if id == ''
+        ts.State.sparkTypeFilter.set {id: 'all', name: 'all'}
+      else
+        ts.State.sparkTypeFilter.set {id: id, name: name}
+
+    'click #hide-finished': (e) ->
+      finish = ts.State.sparkFinishFilter.get()
+      ts.State.sparkFinishFilter.set(not finish)
+
+  types: -> ts.sparks.types()
+
+
+  isAuthorSelected: (id='all') ->
+    if ts.State.sparkAuthorFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+  isOwnerSelected: (id='all') ->
+    if ts.State.sparkOwnerFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+  isTypeSelected: (id='all') ->
+    if ts.State.sparkTypeFilter.get() is id
+      return 'icon-ok'
+    return ''
+
+  hideFinished: ->
+    if ts.State.sparkFinishFilter.get()
+      return 'checked'
+    return ''
+
+_.extend Template.sparkContentEditor,
+  rendered: ->
+    ts.editor().panelInstance 'spark-content', hasPanel : true
+
+_.extend Template.sparkInput,
+  rendered: ->
+    console.log 'spark input rendered', @
+    usernames = _.pluck ts.members().fetch(), 'username'
+    $node = $('#spark-owner')
+
+    $node.select2
+      tags: usernames
+      placeholder:'添加责任人'
+      tokenSeparators: [' ']
+      separator:';'
+
+    $node = $('#spark-deadline')
+    if not $node.data('done')
+      $node.data('done', 'done')
+      $node.datepicker({format: 'yyyy-mm-dd'}).on 'changeDate', (ev) -> $node.datepicker('hide')
+
+  events:
+    'click #add-spark-cancel': (e) ->
+      $('#add-spark form')[0].reset()
+      $('#add-spark').modal 'hide'
+
+    'click #add-spark-submit': (e) ->
+      $form = $('#add-spark form')
+      $title = $('input[name="title"]', $form)
+      title = $.trim($title.val())
+
+      if not title
+        $title.parent().addClass 'error'
+        return null
+
+      content = nicEditors.findEditor('spark-content').nicInstances?[0].getContent()
+      priority = parseInt $('select[name="priority"]').val()
+      type = ts.State.sparkToCreate.get()
+      if ts.filteringProject()
+        project = ts.State.filterSelected.get()
+      else
+        project = $('select[name="project"]', $form).val()
+
+      # use $in will make the order wrong
+      #owners = Meteor.users.find teamId: ts.State.teamId.get(), username: $in: $('input[name="owner"]', $form).val().split(';')
+      #owners = _.map owners.fetch(), (item) -> item._id
+
+      owners = $.trim($('input[name="owner"]', $form).val())
+      if owners
+        owners = _.map owners.split(';'), (username) ->
+          user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+          return user?._id
+        owners = _.filter owners, (id) -> id
+      else
+        owners = []
+
+      deadlineStr = $('input[name="deadline"]', $form).val()
+
+
+      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
+
+      Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
+        $('.control-group', $form).removeClass 'error'
+        $form[0].reset()
+        $('#add-spark').modal 'hide'

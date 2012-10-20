@@ -34,6 +34,8 @@
             </div>
           </h4>
         </header>
+        {{>sparkFilter}}
+        {{>sparkInput}}
         {{> sparks}}
       </div>
       <div class="span3 activity-panel stretch attraction">
@@ -46,3 +48,49 @@
   {{/if}}
 </template>
 
+<template name="sparkFilter">
+  <div class="navbar spark-controls">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="nav-collapse collapse">
+          <ul class="nav spark-list">
+            {{#each types}}
+            <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
+            {{/each}}
+          </ul>
+          <ul class="nav pull-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>作者 <b class="caret"></b></a>
+              <ul class="dropdown-menu" id="filter-spark-author">
+                <li data-id="" data-name=""><a href="#"><i class="{{isAuthorSelected all}}"></i> 全部</a></li>
+                {{#each ts.members}}
+                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isAuthorSelected _id}}"></i> {{username}}</a></li>
+                {{/each}}
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>责任人 <b class="caret"></b></a>
+              <ul class="dropdown-menu" id="filter-spark-owner">
+                <li data-id="" data-name=""><a href="#"><i class="{{isOwnerSelected all}}"></i>全部</a></li>
+                {{#each ts.members}}
+                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isOwnerSelected _id}}"></i>{{username}}</a></li>
+                {{/each}}
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> <b class="caret"></b></a>
+              <ul class="dropdown-menu" id="filter-spark-type">
+                <li data-id="all" data-name=""><a href="#"><i class="{{isTypeSelected all}}"></i>全部</a></li>
+                {{#each types}}
+                <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{isTypeSelected id}}"></i>{{name}}</a></li>
+                {{/each}}
+              </ul>
+            </li>
+            <li><a><input type="checkbox" id="hide-finished" checked="{{hideFinished}}" /> 隐藏已完成</a></li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

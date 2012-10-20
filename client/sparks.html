@@ -1,6 +1,4 @@
 <template name="sparks">
-  {{>sparkFilter}}
-  {{>sparkInput}}
   <div class="sparks">
     {{#each sparks}}
     {{>spark}}
@@ -8,52 +6,7 @@
   </div>
 </template>
 
-<template name="sparkFilter">
-  <div class="navbar spark-controls">
-    <div class="navbar-inner">
-      <div class="container">
-        <div class="nav-collapse collapse">
-          <ul class="nav spark-list">
-            {{#each types}}
-            <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
-            {{/each}}
-          </ul>
-          <ul class="nav pull-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>作者 <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-author">
-                <li data-id="" data-name=""><a href="#"><i class="{{isAuthorSelected all}}"></i> 全部</a></li>
-                {{#each ts.members}}
-                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isAuthorSelected _id}}"></i> {{username}}</a></li>
-                {{/each}}
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>责任人 <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-owner">
-                <li data-id="" data-name=""><a href="#"><i class="{{isOwnerSelected all}}"></i>全部</a></li>
-                {{#each ts.members}}
-                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isOwnerSelected _id}}"></i>{{username}}</a></li>
-                {{/each}}
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-type">
-                <li data-id="all" data-name=""><a href="#"><i class="{{isTypeSelected all}}"></i>全部</a></li>
-                {{#each types}}
-                <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{isTypeSelected id}}"></i>{{name}}</a></li>
-                {{/each}}
-              </ul>
-            </li>
-            <li><a><input type="checkbox" id="hide-finished" checked="{{hideFinished}}" /> 隐藏已完成</a></li>
 
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <template name="spark">
   <div class="spark {{finishedStyle}}" id="{{_id}}">
@@ -64,7 +17,7 @@
     <div class="spark-container">
       <div class="title">
         <h5>
-          <a href="#">{{author.username}}</a> 分享了一个{{typeObj.name}}
+          <a href="#">{{author.username}}</a> 提交了一个 <a href="#" class="edit-type" data-id="{{_id}}" data-spark-type="{{typeObj.id}}"><i class="{{typeObj.icon}}"></i>{{typeObj.name}}</a>
           <ul class="pull-right nav">
             <li class="support {{supported}}"><a href="#" title="支持"><i class="icon-thumbs-up"></i></a></li>
             <li class="upload"><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
@@ -77,8 +30,8 @@
         <p>
           <span>{{created}}</span> |
           <span>项目: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
-          <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}">{{priority}}</a></span> |
-          <span>截至日期: <a href="#" class="edit-deadline" data-id="{{_id}}">{{expired}}</a></span> |
+          <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}" data-priority="{{priority}}">{{priority}}</a></span> |
+          <span>截至日期: <a href="#" class="edit-deadline" data-id="{{_id}}" data-deadline="{{deadline}}">{{expired}}</a></span> |
           <span>最后更新: {{updated}}</span>
         </p>
       </div>
