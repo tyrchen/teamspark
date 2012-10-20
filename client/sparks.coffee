@@ -173,8 +173,8 @@ _.extend Template.sparkInput,
       if owners
         owners = _.map owners.split(';'), (username) ->
           user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
-          if user
-            return user._id
+          return user?._id
+        owners = _.filter owners, (id) -> id
       else
         owners = []
 
@@ -229,9 +229,8 @@ _.extend Template.spark,
       value = editable.value
       sparkId = editable.$element.data('id')
       spark = Sparks.findOne _id: sparkId
-      if spark.priority isnt parseInt(value)
-        console.log value, sparkId, spark.priority, parseInt(value)
-        Meteor.call 'updateSpark', sparkId, value, 'priority'
+      console.log value, sparkId, spark.priority, parseInt(value)
+      Meteor.call 'updateSpark', sparkId, value, 'priority'
 
     $('.edit-deadline', $(@firstNode)).editable(
       type: 'date'
@@ -257,10 +256,13 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      spark = Sparks.findOne _id: sparkId
-      if spark.priority isnt parseInt(value)
-        console.log value, sparkId, spark.priority, parseInt(value)
-        Meteor.call 'updateSpark', sparkId, value, 'priority'
+      console.log value, sparkId
+      owners = _.map value.split(';'), (username) ->
+        user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+        return user?._id
+
+      owners = _.filter owners, (id) -> id
+      Meteor.call 'updateSpark', sparkId, owners, 'owners'
     ).on('shown', (e, editable) ->
       usernames = _.pluck ts.members().fetch(), 'username'
 
@@ -269,7 +271,6 @@ _.extend Template.spark,
         placeholder:'添加责任人'
         tokenSeparators: [' ']
         separator:';'
-      console.log e, editable
     )
 
   events:

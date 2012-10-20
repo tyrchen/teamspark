@@ -186,7 +186,7 @@ Meteor.methods
     auditInfo = ->
       v = formatValue()
       switch field
-        when 'deadline' then "截止日期为: #{v}"
+        when 'deadline' then "截止日期为: #{v.toDateString()}"
         when 'priority' then "优先级为: #{v}"
         when 'title' then "标题为: #{v}"
         when 'content' then "内容为: #{v}"
@@ -225,12 +225,12 @@ Meteor.methods
       Sparks.update sparkId, $set: {projects: projects}, $push: {auditTrails: audit}
     else if field is 'owners'
       command = {}
-      users = Meteor.users.find({_id: $in: value}, {fields: ['_id', 'username']}).fetch()
-      owners = _.pluck users, '_id'
-      command['owners'] = owners
-      if not _.find(owners, (id) -> spark.currentOwnerId is id)
-        if owners.length > 0
-          command['currentOwnerId'] = owners[0]
+      users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
+      console.log 'new users:', users
+      command['owners'] = value
+      if not _.find(value, (id) -> spark.currentOwnerId is id)
+        if value.length > 0
+          command['currentOwnerId'] = value[0]
         else
           command['currentOwnerId'] = null
 
