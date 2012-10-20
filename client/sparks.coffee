@@ -349,8 +349,7 @@ _.extend Template.commentInput,
       $form = $(e.currentTarget).closest('form')
       $node = $form.closest('.comment-box')
       content = $('textarea', $form).val()
-      id = $('input[name="spark-id"]', $form).val()
-      Meteor.call 'createComment', id, content, (error, result) ->
+      Meteor.call 'createComment', @_id, content, (error, result) ->
         $('textarea', $form).val('')
         Meteor.setTimeout (->
           $node.show()
