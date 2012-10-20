@@ -306,6 +306,11 @@ _.extend Template.spark,
 
     return text.join(' | ')
 
+  totalComments: ->
+    if @comments
+      return @comments.length
+    return 0
+
   reversedComments: ->
     if @comments
       comments = _.clone(@comments)
@@ -313,6 +318,11 @@ _.extend Template.spark,
       return comments
     else
       return []
+
+  totalAudits: ->
+    if @auditTrails
+      return @auditTrails.length
+    return 0
 
   reversedAudits: ->
     if @auditTrails
