@@ -235,7 +235,14 @@ Meteor.methods
         else
           command['currentOwnerId'] = null
 
-      info = '责任人为: ' + _.pluck(users, 'username').join(', ')
+      if value.length > 0
+        # if owners updated, spark should be changed back to unfinished
+        command['finished'] = false
+
+      if users
+        info = '责任人为: ' + _.pluck(users, 'username').join(', ')
+      else
+        info = '责任人为空'
       audit.content += info
       content1 += info
 
