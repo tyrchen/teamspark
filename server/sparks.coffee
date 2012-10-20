@@ -250,7 +250,11 @@ Meteor.methods
     else
       info = auditInfo()
       audit.content += info
-      content1 += info
+      # for system audit, do not need to put entire change into it
+      if field is 'content'
+        content1 += '内容'
+      else
+        content1 += info
 
       command = {}
       command[field] = formatValue()

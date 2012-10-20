@@ -146,6 +146,32 @@ _.extend Template.sparkContentEditor,
   rendered: ->
     ts.editor().panelInstance 'spark-content', hasPanel : true
 
+_.extend Template.sparkEdit,
+  rendered:
+    console.log 'spark edit rendered', @
+
+  events:
+    'click #edit-spark-cancel': (e) ->
+      $('#edit-spark form')[0].reset()
+      $('#edit-spark').modal 'hide'
+
+    'click #edit-spark-submit': (e) ->
+      $node = $('#edit-spark')
+      id = $node.data('id')
+      title = $('#spark-edit-title').val()
+      content = nicEditors.findEditor('spark-edit-content').nicInstances?[0].getContent()
+      spark = Sparks.findOne _id: id
+      if spark.title != title
+        console.log 'title changed:', id, title
+        Meteor.call 'updateSpark', id, title, 'title'
+
+      if spark.content != content
+        console.log 'content changed:', id, content
+        Meteor.call 'updateSpark', id, content, 'content'
+
+      $('form', $node)?[0].reset()
+      $node.modal 'hide'
+
 _.extend Template.sparkInput,
   rendered: ->
     console.log 'spark input rendered', @
