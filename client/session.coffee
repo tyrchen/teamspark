@@ -51,7 +51,8 @@ _.extend ts.State,
 
   # spark order for display. can be 'createdAt' | 'updatedAt'
   sparkOrder:
-    get: -> ts.getSession('sparkOrder') || 'updatedAt'
+    get: -> ts.getSession('sparkOrder')?.id || 'createdAt'
+    getName: -> ts.getSession('sparkOrder')?.name || '最近创建'
     set: (value)-> ts.setSession 'sparkOrder', value
 
   # spark type for filter. can be 'idea' | 'bug' | 'requirement' | 'task'
@@ -62,7 +63,8 @@ _.extend ts.State,
 
   # spark priority filter. can be 1 - red | 2 - orange | 3 - yellow | 4 - green | 5 - gray
   sparkPriorityFilter:
-    get: -> ts.getSession('sparkPriorityFilter') || 'all'
+    get: -> ts.getSession('sparkPriorityFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkPriorityFilter')?.name || '全部'
     set: (value)-> ts.setSession 'sparkPriorityFilter', value
 
   # spark author filter. can be author name
@@ -79,12 +81,29 @@ _.extend ts.State,
 
   # spark progress filter. can be 'not started | just started | half down | almost done | done' - use visual graph
   sparkProgressFilter:
-    get: -> ts.getSession('sparkProgressFilter') || 'all'
+    get: -> ts.getSession('sparkProgressFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkProgressFilter')?.id || '全部'
     set: (value) -> ts.setSession 'sparkProgressFilter', value
 
   sparkFinishFilter:
-    get: -> ts.getSession('sparkFinishFilter')
+    get: -> ts.getSession('sparkFinishFilter')?.id
+    getName: -> ts.getSession('sparkFinishFilter')?.name || '过滤已完成'
     set: (value) -> ts.setSession 'sparkFinishFilter', value
+
+  sparkDeadlineFilter:
+    get: -> ts.getSession('sparkDeadlineFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkDeadlineFilter')?.name || 0
+    set: (value) -> ts.setSession 'sparkDeadlineFilter', value
+
+  clearFilters: ->
+    ts.State.sparkDeadlineFilter.set null
+    ts.State.sparkFinishFilter.set null
+    ts.State.sparkProgressFilter.set null
+    ts.State.sparkOwnerFilter.set null
+    ts.State.sparkAuthorFilter.set null
+    ts.State.sparkPriorityFilter.set null
+    ts.State.sparkTypeFilter.set null
+    ts.State.sparkFinishFilter.set {id: true, name: '过滤已完成'}
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
@@ -102,4 +121,4 @@ _.extend ts.State,
     set: (value)-> ts.setSession 'activityType', value
 
 Meteor.startup ->
-  ts.State.sparkFinishFilter.set true
+  ts.State.sparkFinishFilter.set {id: true, name: '过滤已完成'}

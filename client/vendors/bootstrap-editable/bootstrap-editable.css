@@ -3,7 +3,7 @@
 * https://github.com/vitalets/bootstrap-editable
 * Copyright (c) 2012 Vitaliy Potapov; Licensed MIT, GPL */
 
-a.editable, a.editable:hover {
+a.editable, a.editable:hover, span.editable, span.editable:hover {
   text-decoration: none;
   border-bottom: dashed 1px #0088cc;
 }
@@ -12,12 +12,12 @@ a.editable-open, a.editable-open:hover {
  
 }
 
-a.editable-empty {
+a.editable-empty, span.editable-empty {
   font-style: italic; 
   color: #DD1144;  
 }
 
-a.editable-changed {
+a.editable-changed, span.editable-changed {
   font-weight: bold; 
 }
                  

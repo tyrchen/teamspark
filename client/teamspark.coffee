@@ -76,6 +76,97 @@ _.extend Template.content,
 
 
 _.extend Template.sparkFilter,
+  rendered: ->
+    ts.setEditable
+      node: $('#filter-finished')
+      value: -> ts.State.sparkFinishFilter.get()
+      source: -> ts.consts.filter.FINISHED
+      renderCallback: (e, editable) ->
+        if editable.value is 'true'
+          value = {id: true, name: '过滤已完成'}
+        else
+          value = {id: false, name: '全部'}
+        ts.State.sparkFinishFilter.set value
+
+    ts.setEditable
+      node: $('#filter-priority')
+      value: -> ts.State.sparkPriorityFilter.get()
+      source: ->
+        priorities = ts.consts.filter.PRIORITY
+        priorities['all'] = '全部'
+        return priorities
+      renderCallback: (e, editable) ->
+        if editable.value is 'all'
+          value = {id: 'all', name: '全部'}
+        else
+          v = parseInt editable.value
+          value = {id: v, name: v}
+
+        console.log 'priority:', value
+        ts.State.sparkPriorityFilter.set value
+
+    ts.setEditable
+      node: $('#filter-deadline')
+      value: ->
+        v = ts.State.sparkDeadlineFilter.get()
+        switch v
+          when ts.consts.EXPIRE_IN_3_DAYS then 1
+          when ts.consts.EXPIRE_IN_1_WEEK then 2
+          when ts.consts.EXPIRE_IN_2_WEEKS then 3
+          else 0
+      source: -> ts.consts.filter.DEADLINE
+      renderCallback: (e, editable) ->
+        value = parseInt editable.value
+        switch value
+          when 1 then deadline = ts.consts.EXPIRE_IN_3_DAYS
+          when 2 then deadline = ts.consts.EXPIRE_IN_1_WEEK
+          when 3 then deadline = ts.consts.EXPIRE_IN_2_WEEKS
+          else deadline = 'all'
+        ts.State.sparkDeadlineFilter.set {id: deadline, name: value}
+
+    ts.setEditable
+      node: $('#filter-spark-type')
+      value: -> ts.State.sparkTypeFilter.get()
+      source: ->
+        types = ts.consts.filter.TYPE()
+        types['all'] = '全部'
+        return types
+
+      renderCallback: (e, editable) ->
+        if editable.value is 'all'
+          value = {id: 'all', name: '全部'}
+        else
+          value = {id: editable.value, name: ts.consts.filter.TYPE()[editable.value]}
+        ts.State.sparkTypeFilter.set value
+
+    ts.setEditable
+      node: $('#filter-author')
+      value: -> ts.State.sparkAuthorFilter.get()
+      source: ->
+        members = ts.consts.filter.MEMBERS()
+        members['all'] = '全部'
+        return members
+      renderCallback: (e, editable) ->
+        if editable.value is 'all'
+          user = {id: 'all', username: '全部'}
+        else
+          user = Meteor.users.findOne _id: editable.value
+        ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
+
+    ts.setEditable
+      node: $('#filter-owner')
+      value: -> ts.State.sparkOwnerFilter.get()
+      source: ->
+        members = ts.consts.filter.MEMBERS()
+        members['all'] = '全部'
+        return members
+      renderCallback: (e, editable) ->
+        if editable.value is 'all'
+          user = {id: 'all', username: '全部'}
+        else
+          user = Meteor.users.findOne _id: editable.value
+        ts.State.sparkOwnerFilter.set {id: user._id, name: user.username}
+
   events:
     'click .spark-list > li': (e) ->
       $node = $(e.currentTarget)
@@ -85,71 +176,39 @@ _.extend Template.sparkFilter,
       ts.State.sparkToCreate.set {id: id, name: name}
       $('#add-spark').modal()
 
-    'click #filter-spark-author > li': (e) ->
+    'click #clear-filter': (e) ->
+      ts.State.clearFilters()
+
+    'click #spark-sort > li > a': (e) ->
       $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkAuthorFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkAuthorFilter.set {id: id, name: name}
-
-    'click #filter-spark-owner > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkOwnerFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkOwnerFilter.set {id: id, name: name}
-
-    'click #filter-spark-type > li': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.sparkTypeFilter.set {id: 'all', name: 'all'}
-      else
-        ts.State.sparkTypeFilter.set {id: id, name: name}
-
-    'click #hide-finished': (e) ->
-      finish = ts.State.sparkFinishFilter.get()
-      ts.State.sparkFinishFilter.set(not finish)
+      value = {id: $node.data('id'), name: $node.data('name')}
+      ts.State.sparkOrder.set value
 
   types: -> ts.sparks.types()
 
 
-  isAuthorSelected: (id='all') ->
-    if ts.State.sparkAuthorFilter.get() is id
-      return 'icon-ok'
-    return ''
+  finishText: -> ts.State.sparkFinishFilter.getName()
 
-  isOwnerSelected: (id='all') ->
-    if ts.State.sparkOwnerFilter.get() is id
-      return 'icon-ok'
-    return ''
+  typeText: -> ts.State.sparkTypeFilter.getName()
 
-  isTypeSelected: (id='all') ->
-    if ts.State.sparkTypeFilter.get() is id
-      return 'icon-ok'
-    return ''
+  priorityText: -> ts.State.sparkPriorityFilter.getName()
 
-  hideFinished: ->
-    if ts.State.sparkFinishFilter.get()
-      return 'checked'
-    return ''
+  deadlineText: -> ts.consts.filter.DEADLINE[ts.State.sparkDeadlineFilter.getName()]
+
+  authorText: ->
+    ts.State.sparkAuthorFilter.getName()
+
+  ownerText: ->
+    ts.State.sparkOwnerFilter.getName()
+
+  orderText: ->
+    ts.State.sparkOrder.getName()
 
 _.extend Template.sparkContentEditor,
   rendered: ->
     ts.editor().panelInstance 'spark-content', hasPanel : true
 
 _.extend Template.sparkEdit,
-  rendered:
-    console.log 'spark edit rendered', @
-
   events:
     'click #edit-spark-cancel': (e) ->
       $('#edit-spark form')[0].reset()
@@ -162,11 +221,9 @@ _.extend Template.sparkEdit,
       content = nicEditors.findEditor('spark-edit-content').nicInstances?[0].getContent()
       spark = Sparks.findOne _id: id
       if spark.title != title
-        console.log 'title changed:', id, title
         Meteor.call 'updateSpark', id, title, 'title'
 
       if spark.content != content
-        console.log 'content changed:', id, content
         Meteor.call 'updateSpark', id, content, 'content'
 
       $('form', $node)?[0].reset()
@@ -174,7 +231,7 @@ _.extend Template.sparkEdit,
 
 _.extend Template.sparkInput,
   rendered: ->
-    console.log 'spark input rendered', @
+    #console.log 'spark input rendered', @
     usernames = _.pluck ts.members().fetch(), 'username'
     $node = $('#spark-owner')
 
@@ -227,7 +284,7 @@ _.extend Template.sparkInput,
       deadlineStr = $('input[name="deadline"]', $form).val()
 
 
-      console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
+      #console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
 
       Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
         $('.control-group', $form).removeClass 'error'

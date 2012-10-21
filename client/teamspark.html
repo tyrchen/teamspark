@@ -53,6 +53,8 @@
   <div class="navbar spark-controls">
     <div class="navbar-inner">
       <div class="container">
+        <div class="text">创建：</div>
+
         <div class="nav-collapse collapse">
           <ul class="nav spark-list">
             {{#each types}}
@@ -61,34 +63,27 @@
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>作者 <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-author">
-                <li data-id="" data-name=""><a href="#"><i class="{{isAuthorSelected all}}"></i> 全部</a></li>
-                {{#each ts.members}}
-                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isAuthorSelected _id}}"></i> {{username}}</a></li>
-                {{/each}}
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>过滤器 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><i class="icon-ok-circle"></i>完成: <span id="filter-finished">{{finishText}}</span></a></li>
+                <li><a href="#"><i class="icon-arrow-up"></i>优先级: <span id="filter-priority">{{priorityText}}</span></a></li>
+                <li><a href="#"><i class="icon-time"></i>截止日期: <span id="filter-deadline">{{deadlineText}}</span></a></li>
+                <li><a href="#"><i class="icon-list-ul"></i>类型: <span id="filter-spark-type">{{typeText}}</span></a></li>
+                <li><a href="#"><i class="icon-user"></i>作者: <span id="filter-author">{{authorText}}</span></a></li>
+                <li><a href="#"><i class="icon-user"></i>当前责任人: <span id="filter-owner">{{ownerText}}</span></a></li>
+                <li class="divider"></li>
+                <li><a href="#" id="clear-filter"><i class="icon-ban-circle"></i>清空全部过滤器</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>责任人 <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-owner">
-                <li data-id="" data-name=""><a href="#"><i class="{{isOwnerSelected all}}"></i>全部</a></li>
-                {{#each ts.members}}
-                <li data-id="{{_id}}" data-name="{{username}}"><a href="#"><i class="{{isOwnerSelected _id}}"></i>{{username}}</a></li>
-                {{/each}}
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort"></i>排序: {{orderText}} <b class="caret"></b></a>
+              <ul class="dropdown-menu" id="spark-sort">
+                <li><a href="#" data-id="createdAt" data-name="最近创建"><i class="icon-time"></i>最近创建</a></li>
+                <li><a href="#" data-id="updatedAt" data-name="最近更新"><i class="icon-time" style="color:#0044aa;"></i>最近更新</a></li>
+                <li><a href="#" data-id="deadline" data-name="最近截止"><i class="icon-time" style="color:#d14;"></i>最近截止</a></li>
+                <li><a href="#" data-id="priority" data-name="高优先级"><i class="icon-arrow-up"></i>高优先级</a></li>
               </ul>
             </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-list-ul"></i> <b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filter-spark-type">
-                <li data-id="all" data-name=""><a href="#"><i class="{{isTypeSelected all}}"></i>全部</a></li>
-                {{#each types}}
-                <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{isTypeSelected id}}"></i>{{name}}</a></li>
-                {{/each}}
-              </ul>
-            </li>
-            <li><a><input type="checkbox" id="hide-finished" checked="{{hideFinished}}" /> 隐藏已完成</a></li>
-
           </ul>
         </div>
       </div>

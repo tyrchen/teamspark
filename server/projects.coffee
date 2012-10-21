@@ -2,7 +2,7 @@ Meteor.methods
   createAudit: (content, projectId, sparkId=null) ->
     # auditTrail = { _id: uuid, userId: teamId, content: 'bla bla', teamId: teamId, projectId: projectId, createdAt: Date()}
     user = Meteor.user()
-    console.log content, projectId, sparkId
+    console.log 'create audit:', content, projectId, sparkId
     AuditTrails.insert
       userId: user._id
       content: content

@@ -30,7 +30,7 @@ _.extend Template.projects,
       parentId = $('select[name="parent"]', $form).val()
       if parentId is 'null'
         parentId = null
-      console.log "name: #{name}, desc: #{description}, parent: #{parentId}"
+      #console.log "name: #{name}, desc: #{description}, parent: #{parentId}"
       count = Projects.find({name: name, teamId: Meteor.user().teamId}).count()
 
       if not name or count > 0
@@ -62,15 +62,9 @@ _.extend Template.projects,
     return ''
 
   totalSparks: (id=null) ->
-    query = []
-    if ts.State.sparkFinishFilter.get()
-      query.push finished: false
-
+    query = ts.sparks.query(false)
     if id
       query.push projects: id
-
-    if ts.State.filterType.get() is 'user'
-      query.push owners: Meteor.user()._id
 
     Sparks.find($and: query).count()
 

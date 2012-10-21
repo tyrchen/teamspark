@@ -8,47 +8,14 @@
 
 _.extend Template.sparks,
   sparks: ->
+    query = ts.sparks.query()
 
-    project = ts.State.filterSelected.get()
     order = ts.State.sparkOrder.get()
-    type = ts.State.sparkTypeFilter.get()
-    priority = ts.State.sparkPriorityFilter.get()
-    author = ts.State.sparkAuthorFilter.get()
-    filterType = ts.State.filterType.get()
-    owner = ts.State.sparkOwnerFilter.get()
-    progress = ts.State.sparkProgressFilter.get()
-    finish = ts.State.sparkFinishFilter.get()
 
-    query = []
+    sort = {}
+    sort[order] = -1
 
-    if project isnt 'all'
-      query.push projects: project
-
-    if type isnt 'all'
-      query.push type: type
-
-    if priority isnt 'all'
-      query.push priority: priority
-
-    if author isnt 'all'
-      query.push authorId: author
-
-    if filterType is 'user'
-      query.push owners: Meteor.user()._id
-
-    if owner isnt 'all'
-      query.push currentOwnerId: owner
-
-    if progress isnt 'all'
-      query.push progress: progress
-
-    if finish
-      query.push finished: false
-
-    if order is 'createdAt'
-      Sparks.find {$and: query}, {sort: createdAt: -1}
-    else
-      Sparks.find {$and: query}, {sort: updatedAt: -1}
+    Sparks.find {$and: query}, {sort: sort}
 
 _.extend Template.spark,
 # spark = {
@@ -59,7 +26,7 @@ _.extend Template.spark,
   # updatedAt: Date(), teamId: teamId
   # }
   rendered: ->
-    console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
+    #console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
     $parent = $(@firstNode)
     $('.carousel', $parent).carousel
       interval: false
@@ -79,7 +46,6 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      console.log value, sparkId
       if value and sparkId
         Meteor.call 'updateSpark', sparkId, value, 'project'
     )
@@ -90,17 +56,10 @@ _.extend Template.spark,
       placement: 'right'
       name: 'sparktype'
       pk: null
-      source: ->
-        types = {}
-        console.log 'types:', types
-        _.each ts.sparks.types(), (item) ->
-          types[item.id] = item.name
-
-        return types
+      source: -> ts.consts.filter.TYPE()
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      console.log value, sparkId
       if value and sparkId
         Meteor.call 'updateSpark', sparkId, value, 'type'
     )
@@ -115,7 +74,6 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      console.log value, sparkId
       if value and sparkId
         Meteor.call 'updateSpark', sparkId, value, 'priority'
     )
@@ -130,7 +88,6 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      console.log value, sparkId
       Meteor.call 'updateSpark', sparkId, value, 'deadline'
     )
 
@@ -146,7 +103,6 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      console.log value, sparkId
       owners = _.map value.split(';'), (username) ->
         user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
         return user?._id
@@ -155,7 +111,7 @@ _.extend Template.spark,
       if owners and sparkId
         Meteor.call 'updateSpark', sparkId, owners, 'owners'
     ).on('shown', (e, editable) ->
-      console.log e, editable, $(editable.$content).addClass('editable-owners')
+      #console.log e, editable, $(editable.$content).addClass('editable-owners')
       usernames = _.pluck ts.members().fetch(), 'username'
 
       $(editable.$input).select2
@@ -189,14 +145,14 @@ _.extend Template.spark,
         container: 'modal'
         services: ['COMPUTER']
         (fpfiles) =>
-          console.log 'uploaded:', id, fpfiles
+          #console.log 'uploaded:', id, fpfiles
           Meteor.call 'uploadFiles', id, fpfiles
 
 
     'click .edit': (e) ->
       $node = $('#edit-spark')
       $node.data('id', @_id)
-      console.log 'spark id:', $node.data('id'), @title, @content
+      #console.log 'spark id:', $node.data('id'), @title, @content
       $('.modal-header h3', $node).val "编辑 #{@title}"
       $('#spark-edit-title', $node).val @title
 

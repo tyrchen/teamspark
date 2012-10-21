@@ -7,7 +7,6 @@ Meteor.methods
     # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
     # updatedAt: Date(), teamId: teamId
     # }
-    console.log 'createSpark'
     user = Meteor.user()
     project = Projects.findOne _id: projectId
     if project.parent
@@ -76,7 +75,6 @@ Meteor.methods
       content: content
       createdAt: now
 
-    console.log sparkId, user._id, content
     Sparks.update sparkId, $push: comments: comment
 
   supportSpark: (sparkId) ->
@@ -127,7 +125,7 @@ Meteor.methods
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
-    console.log 'update sparks:', sparkId, lists
+    #console.log 'update sparks:', sparkId, lists
     if lists.length <= 0
       return
 
@@ -149,13 +147,11 @@ Meteor.methods
     files  = []
 
     for file in lists
-      console.log 'mimetype:', file.mimetype, file.mimetype.indexOf('image')
       if file.mimetype.indexOf('image') >= 0
         images.push file
       else
         files.push file
 
-    console.log 'images:', images, 'files:', files
     command = {}
     if files.length > 0
       command.files = files
@@ -171,8 +167,8 @@ Meteor.methods
       audit.content += desc
       content1 += desc
 
-    console.log 'command:', command
-    Sparks.update sparkId, $pushAll: command, $push: {auditTrails: audit}
+    #console.log 'command:', command
+    Sparks.update sparkId, $pushAll: command, $push: {auditTrails: audit}, $set: {updatedAt: ts.now()}
 
     Meteor.call 'createAudit', content1, spark.projects[0]
 
@@ -192,10 +188,13 @@ Meteor.methods
         when 'content' then "内容为: #{v}"
         when 'type' then "类型为: #{ts.sparks.type(v).name}"
 
-    console.log 'updateSpark: ', value, field
+    #console.log 'updateSpark: ', value, field
     fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content', 'type']
     if not _.find(fields, (item) -> item is field)
       return
+
+
+    command = {updatedAt: ts.now()}
 
     spark = Sparks.findOne _id: sparkId
     if not ts.sparks.writable spark
@@ -223,11 +222,11 @@ Meteor.methods
       audit.content += info
       content1 += info
 
-      Sparks.update sparkId, $set: {projects: projects}, $push: {auditTrails: audit}
+      command['projects'] = projects
+      Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
     else if field is 'owners'
-      command = {}
       users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
-      console.log 'new users:', users
+      #console.log 'new users:', users
       command['owners'] = value
       if not _.find(value, (id) -> spark.currentOwnerId is id)
         if value.length > 0
@@ -256,7 +255,6 @@ Meteor.methods
       else
         content1 += info
 
-      command = {}
       command[field] = formatValue()
       Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
 

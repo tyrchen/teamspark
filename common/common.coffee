@@ -145,6 +145,50 @@ ts.sparks.nextOwner = (spark) ->
   else
     return null
 
+ts.sparks.query = (needProject=true) ->
+  project = ts.State.filterSelected.get()
+  filterType = ts.State.filterType.get()
+
+  type = ts.State.sparkTypeFilter.get()
+  priority = ts.State.sparkPriorityFilter.get()
+  author = ts.State.sparkAuthorFilter.get()
+  owner = ts.State.sparkOwnerFilter.get()
+  progress = ts.State.sparkProgressFilter.get()
+  deadline = ts.State.sparkDeadlineFilter.get()
+  finish = ts.State.sparkFinishFilter.get()
+
+  query = []
+
+  if needProject and project isnt 'all'
+    query.push projects: project
+
+  if filterType is 'user'
+    query.push owners: Meteor.user()._id
+
+  if type isnt 'all'
+    query.push type: type
+
+  if priority isnt 'all'
+    query.push priority: priority
+
+  if author isnt 'all'
+    query.push authorId: author
+
+  if owner isnt 'all'
+    query.push currentOwnerId: owner
+
+  if progress isnt 'all'
+    query.push progress: progress
+
+  if deadline isnt 'all'
+    query.push deadline: $lte: deadline
+
+  if finish
+    query.push finished: false
+
+  console.log 'query:', query
+  return query
+
 ts.audits = ts.audits || {}
 ts.audits.all = (userId=null, projectId=null) ->
   query = []
