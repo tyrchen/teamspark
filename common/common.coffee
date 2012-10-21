@@ -186,7 +186,6 @@ ts.sparks.query = (needProject=true) ->
   if finish
     query.push finished: false
 
-  console.log 'query:', query
   return query
 
 ts.audits = ts.audits || {}

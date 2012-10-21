@@ -1,4 +1,4 @@
-`ts = ts || {}
+ts = ts || {}
 ts.setEditable = (options) ->
   defaults =
     type: 'select'
