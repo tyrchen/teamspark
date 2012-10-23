@@ -160,7 +160,11 @@ ts.sparks.query = (needProject=true) ->
   query = []
 
   if needProject and project isnt 'all'
-    query.push projects: project
+    p = Projects.findOne _id: project
+    if p?.parent
+      query.push projects: project
+    else
+      query.push projects: [project]
 
   if filterType is 'user'
     query.push owners: Meteor.user()._id

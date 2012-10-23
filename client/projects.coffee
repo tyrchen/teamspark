@@ -64,7 +64,11 @@ _.extend Template.projects,
   totalSparks: (id=null) ->
     query = ts.sparks.query(false)
     if id
-      query.push projects: id
+      p = Projects.findOne _id: id
+      if p?.parent
+        query.push projects: id
+      else
+        query.push projects: [id]
 
     Sparks.find($and: query).count()
 
