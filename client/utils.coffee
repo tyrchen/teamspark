@@ -23,3 +23,9 @@ ts.setEditable = (options) ->
   ).on('render', (e, editable) ->
     defaults.renderCallback(e, editable)
   )
+
+ts.isIphone = ->
+  navigator.userAgent.match(/iPhone|iPod/i)?
+
+ts.isIpad = ->
+  navigator.userAgent.match(/iPad/i)?

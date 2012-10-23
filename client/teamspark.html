@@ -17,6 +17,9 @@
       </div>
       {{/if}}
 
+      {{# if ts.isIphone }}
+        {{> iphone }}
+      {{else}}
       <div class="span2 project-panel stretch sidebar-nav attraction">
         {{>projects}}
       </div>
@@ -42,6 +45,7 @@
       <div class="span3 activity-panel stretch attraction">
         {{> activities}}
       </div>
+      {{/if}}
     </div>
     {{>memberDialog}}
   {{else}}
