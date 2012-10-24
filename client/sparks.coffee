@@ -141,7 +141,6 @@ _.extend Template.spark,
     'click .upload': (e) ->
       id = @_id
       filepicker.pickMultiple
-        extensions: ['.png', '.jpg', '.gif', '.doc', '.xls', '.ppt', '.docx', '.pptx', '.xlsx', '.pdf', '.txt']
         container: 'modal'
         services: ['COMPUTER']
         (fpfiles) =>
