@@ -27,7 +27,11 @@ if Meteor.is_client
     teamId = ts.State.teamId.get()
     Meteor.subscribe 'teams'
     if teamId
-      Meteor.subscribe 'projects', teamId
+      Meteor.subscribe 'projects', teamId, ->
+        console.log 'projects loaded'
+        project = Projects.findOne {}
+        if project
+          Router.setProject project.name
       Meteor.subscribe 'sparks', teamId, ->
         console.log 'sparks loaded'
         ts.State.loaded.set true

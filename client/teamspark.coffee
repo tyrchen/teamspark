@@ -300,3 +300,30 @@ _.extend Template.sparkInput,
         $('.control-group', $form).removeClass 'error'
         $form[0].reset()
         $('#add-spark').modal 'hide'
+
+
+
+TsRouter = Backbone.Router.extend
+  routes:
+    'projects/:project_name': 'main'
+
+  main: (project_name) ->
+    console.log 'project_name:', project_name, Meteor.user()
+    project = {_id: 'all', name: '全部'}
+
+    if  project_name isnt '全部' and Meteor.userLoaded()
+      project = Projects.findOne name:project_name, teamId: Meteor.user().teamId
+
+      ts.State.filterSelected.set
+        id: project._id
+        name: project: name
+
+  setProject: (project_name) ->
+    if not project_name
+      project_name = '全部'
+    this.navigate("/projects/#{project_name}", true)
+
+Router = new TsRouter;
+
+Meteor.startup ->
+  Backbone.history.start pushState: true

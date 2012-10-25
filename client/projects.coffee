@@ -10,14 +10,8 @@ _.extend Template.projects,
 
 
     'click .filter-project': (e) ->
-      $node = $(e.currentTarget)
-      id = $node.data('id')
-      name = $node.data('name')
-
-      if id == ''
-        ts.State.filterSelected.set {id: 'all', name: 'all'}
-      else
-        ts.State.filterSelected.set {id: id, name: name}
+      e.preventDefault()
+      Router.setProject(@name)
 
     'click #add-project': (e) ->
       $('#add-project-dialog').modal()
