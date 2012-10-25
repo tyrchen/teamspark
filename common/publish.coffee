@@ -28,8 +28,10 @@ if Meteor.is_client
     Meteor.subscribe 'teams'
     if teamId
       Meteor.subscribe 'projects', teamId
-      Meteor.subscribe 'sparks', teamId
-      Meteor.subscribe 'auditTrails', teamId
+      Meteor.subscribe 'sparks', teamId, ->
+        console.log 'sparks loaded'
+        ts.State.loaded.set true
+      #Meteor.subscribe 'auditTrails', teamId
 
 
 

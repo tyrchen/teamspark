@@ -29,6 +29,44 @@ body .modal {
 // teamspark specific css
 
 // common css
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background-color: #ff7f7;
+  p, h1 {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+  }
+  p {font-size: 16px;}
+  h1 {
+    width: 300px;
+    left: 40%;
+    top: 40%;
+    color: white;
+  }
+}
+
+.container-fluid {
+  background-color: #383838;
+  #login-buttons {
+    color:white;
+    display: block;
+    line-height: auto;
+    position: absolute;
+    top: 30%;
+    left: 46%;
+    width: 200px;
+    #login-dropdown-list {
+      position: relative;
+      top: auto;
+      left: auto;
+    }
+  }
+}
 
 .insignificant { color: #d3d3d3; font-size: 75%; margin: 0 5px;}
 
@@ -104,21 +142,6 @@ img.avatar-small {width:20px; height: 20px;}
       -moz-border-radius-bottomleft: 0px;
       -moz-border-radius-topleft: 0px;
     }
-  }
-}
-
-.orphan {
-  opacity: 0.4;
-  .orphan-notice {
-    z-index: 999;
-    border-radius: 5px;
-    border: 1px solid #eee;
-    opacity: 1;
-    position: absolute;
-    top: 48%;
-    left: 30%;
-    width: 40%;
-    text-align: center;
   }
 }
 

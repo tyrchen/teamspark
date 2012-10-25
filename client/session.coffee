@@ -33,6 +33,10 @@ _.extend ts.State,
       else
         return teamId
 
+  loaded:
+    get: -> ts.getSession('loaded') || false
+    set: (value) -> ts.setSession 'loaded', value
+
   # filter the sparks by current owner or team. Can be 'user' | 'team'
   filterType:
     get: -> ts.getSession('filterType') || 'team'

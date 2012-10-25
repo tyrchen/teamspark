@@ -70,10 +70,20 @@ _.extend Template.content,
   projects: -> Projects.find()
   teamName: -> ts.currentTeam()?.name
   isOrphan: ->
-    if not Meteor.user().teamId
+    if Meteor.userLoaded() and not Meteor.user().teamId
       return 'orphan'
     return ''
 
+_.extend Template.login,
+  events:
+    'click #login-buttons-weibo': (e) ->
+      Meteor.loginWithWeibo()
+
+    'click #login-buttons-github': (e) ->
+      Meteor.loginWithGithub()
+
+    'click #login-buttons-google': (e) ->
+      Meteor.loginWithGoogle()
 
 _.extend Template.sparkFilter,
   rendered: ->
