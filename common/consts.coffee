@@ -19,7 +19,7 @@ ts.consts.EXPIRE_IN_2_WEEKS = 14 * 24 * 3600 * 1000
 ts.consts.EXPIRE_INFINITE = 365 * 24 * 3600 * 1000
 
 ts.consts.filter = ts.consts.filter || {}
-ts.consts.filter.FINISHED = {true: '过滤已完成', false: '全部'}
+ts.consts.filter.FINISHED = {0: '全部', 1: '未完成', 2: '已完成'}
 ts.consts.filter.PRIORITY = {1:1, 2:2, 3:3, 4:4, 5:5}
 ts.consts.filter.DEADLINE = {0: '全部', 1: '3天内', 2: '一周内', 3: '两周内'}
 ts.consts.filter.TYPE = ->

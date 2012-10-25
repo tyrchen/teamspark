@@ -187,8 +187,11 @@ ts.sparks.query = (needProject=true) ->
   if deadline isnt 'all'
     query.push deadline: $lte: deadline
 
-  if finish
-    query.push finished: false
+  if finish isnt 0
+    if finish is 1
+      query.push finished: false
+    else
+      query.push finished: true
 
   return query
 

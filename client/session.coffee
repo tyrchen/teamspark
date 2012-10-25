@@ -91,7 +91,7 @@ _.extend ts.State,
 
   sparkFinishFilter:
     get: -> ts.getSession('sparkFinishFilter')?.id
-    getName: -> ts.getSession('sparkFinishFilter')?.name || '过滤已完成'
+    getName: -> ts.getSession('sparkFinishFilter')?.name || '未完成'
     set: (value) -> ts.setSession 'sparkFinishFilter', value
 
   sparkDeadlineFilter:
@@ -107,7 +107,7 @@ _.extend ts.State,
     ts.State.sparkAuthorFilter.set null
     ts.State.sparkPriorityFilter.set null
     ts.State.sparkTypeFilter.set null
-    ts.State.sparkFinishFilter.set {id: true, name: '过滤已完成'}
+    ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
@@ -125,4 +125,4 @@ _.extend ts.State,
     set: (value)-> ts.setSession 'activityType', value
 
 Meteor.startup ->
-  ts.State.sparkFinishFilter.set {id: true, name: '过滤已完成'}
+  ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}

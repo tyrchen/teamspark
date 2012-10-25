@@ -92,10 +92,12 @@ _.extend Template.sparkFilter,
       value: -> ts.State.sparkFinishFilter.get()
       source: -> ts.consts.filter.FINISHED
       renderCallback: (e, editable) ->
-        if editable.value is 'true'
-          value = {id: true, name: '过滤已完成'}
-        else
-          value = {id: false, name: '全部'}
+        value = parseInt editable.value
+        switch value
+          when 0 then value = {id: 0, name: '全部'}
+          when 1 then value = {id: 1, name: '未完成'}
+          when 2 then value = {id: 2, name: '已完成'}
+
         ts.State.sparkFinishFilter.set value
 
     ts.setEditable
@@ -311,16 +313,19 @@ TsRouter = Backbone.Router.extend
     console.log 'project_name:', project_name, Meteor.user()
     project = {_id: 'all', name: '全部'}
 
-    if  project_name isnt '全部' and Meteor.userLoaded()
+    if  project_name isnt '全部' and Meteor.user().teamId
       project = Projects.findOne name:project_name, teamId: Meteor.user().teamId
-
-      ts.State.filterSelected.set
-        id: project._id
-        name: project: name
+      if project
+        ts.State.filterSelected.set
+          id: project._id
+          name: project: name
 
   setProject: (project_name) ->
+    console.log 'setProject:', project_name, Meteor.user()
     if not project_name
       project_name = '全部'
+    # TODO: this is a workaround to force navigate to the proper location.
+    this.navigate('/', true)
     this.navigate("/projects/#{project_name}", true)
 
 Router = new TsRouter;
