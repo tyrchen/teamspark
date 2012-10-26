@@ -318,7 +318,7 @@ TsRouter = Backbone.Router.extend
       if project
         ts.State.filterSelected.set
           id: project._id
-          name: project: name
+          name: project.name
 
   setProject: (project_name) ->
     console.log 'setProject:', project_name, Meteor.user()
