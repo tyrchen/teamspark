@@ -6,8 +6,13 @@ ts.setSession = (name, value) ->
   Session.set name, value
 
 
-ts.members = ->
+ts.members = {}
+ts.members.all = ->
   Meteor.users.find teamId: ts.State.teamId.get()
+
+ts.members.ordered = ->
+  return ts.members.all().fetch()
+
 
 ts.editor = ->
   new nicEditor

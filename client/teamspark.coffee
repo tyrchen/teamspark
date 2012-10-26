@@ -244,7 +244,7 @@ _.extend Template.sparkEdit,
 _.extend Template.sparkInput,
   rendered: ->
     #console.log 'spark input rendered', @
-    usernames = _.pluck ts.members().fetch(), 'username'
+    usernames = _.pluck ts.members.all().fetch(), 'username'
     $node = $('#spark-owner')
 
     $node.select2

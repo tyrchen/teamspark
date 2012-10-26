@@ -112,7 +112,7 @@ _.extend Template.spark,
         Meteor.call 'updateSpark', sparkId, owners, 'owners'
     ).on('shown', (e, editable) ->
       #console.log e, editable, $(editable.$content).addClass('editable-owners')
-      usernames = _.pluck ts.members().fetch(), 'username'
+      usernames = _.pluck ts.members.all().fetch(), 'username'
 
       $(editable.$input).select2
         tags: usernames

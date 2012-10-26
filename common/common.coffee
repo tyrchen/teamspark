@@ -39,6 +39,7 @@ ts.projects.writable = (project) ->
 
 ts.projects.hasProject = -> Projects.find().count()
 ts.projects.all = -> Projects.find()
+ts.projects.ordered = -> ts.projects.all()
 ts.projects.parents = -> Projects.find {parent: null}, {sort: {createdAt: 1}}
 ts.projects.children = (id)-> Projects.find parent: id
 

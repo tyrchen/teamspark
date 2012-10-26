@@ -14,7 +14,7 @@
         <div class="control-group">
           <label class="control-label">已有成员: </label>
           <ul id="existing-members">
-            {{#each ts.members}}
+            {{#each ts.members.all}}
             <li data-id="{{_id}}">
               <img class="avatar" src="{{avatar}}" alt="{{username}}" />
             </li>

@@ -1,11 +1,11 @@
 <template name="activities">
   <div class="activity-list">
     {{#if isTeamActivity}}
-      {{#each ts.members}}
+      {{#each ts.members.ordered}}
         {{>member}}
       {{/each}}
     {{else}}
-      {{#each ts.projects.all}}
+      {{#each ts.projects.ardered}}
         {{>project}}
       {{/each}}
     {{/if}}

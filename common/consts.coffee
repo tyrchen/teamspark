@@ -31,7 +31,7 @@ ts.consts.filter.TYPE = ->
 
 ts.consts.filter.MEMBERS = ->
   members = {}
-  _.each ts.members().fetch(), (item) ->
+  _.each ts.members.all().fetch(), (item) ->
     members[item._id] = item.username
   members['all'] = '全部'
   return members
