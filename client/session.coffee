@@ -111,7 +111,7 @@ _.extend ts.State,
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
-    getName: -> ts.getSession('sparkToCreate')?.name || '点子'
+    getName: -> ts.getSession('sparkToCreate')?.name || '想法'
     set: (value) -> ts.setSession 'sparkToCreate', value
 
   # activity display type. can be 'team' | 'project'

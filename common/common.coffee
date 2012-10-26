@@ -46,7 +46,7 @@ ts.projects.children = (id)-> Projects.find parent: id
 ts.sparks = ts.sparks || {}
 ts.sparks.types = ->
   [
-    {name: '点子', id: 'idea', icon: 'icon-magic'},
+    {name: '想法', id: 'idea', icon: 'icon-magic'},
     {name: 'BUG', id: 'bug', icon: 'icon-exclamation-sign'},
     {name: '需求', id: 'feature', icon: 'icon-money'},
     {name: '任务', id: 'task', icon: 'icon-inbox'},
