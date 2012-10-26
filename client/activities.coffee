@@ -29,6 +29,13 @@ _.extend Template.member,
   totalUnfinished: (projectId=null) ->
     ts.sparks.totalUnfinished projectId, @_id
 
+  totalFinished: (projectId=null) ->
+    ts.sparks.totalFinished projectId, @_id
+
+  totalSubmitted: (projectId=null) ->
+    console.log 'total submitted:', @_id
+    ts.sparks.totalSubmitted @_id, projectId
+
   totalImportant: (projectId=null) ->
     ts.sparks.totalImportant projectId, @_id
 

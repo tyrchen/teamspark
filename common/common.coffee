@@ -72,17 +72,36 @@ ts.sparks.writable = (spark) ->
 
 #ts.sparks.total = (projectId) -> Sparks.find(projects: projectId).count()
 #ts.sparks.totalFinished = (projectId) -> Sparks.find(projects: projectId, finished: true).count()
+ts.sparks.totalSubmitted = (authorId, projectId=null) ->
+  ts.sparks.submittedItems(authorId, projectId).count()
+
+ts.sparks.submittedItems = (authorId, projectId=null) ->
+  query = [authorId: authorId]
+  if projectId
+    query.push projects: projectId
+
+  Sparks.find $and: query
 
 ts.sparks.totalUnfinished = (projectId=null, ownerId=null) ->
   ts.sparks.unfinishedItems(projectId, ownerId).count()
 
 ts.sparks.unfinishedItems = (projectId=null, ownerId=null) ->
-  query = [finished: false]
+  ts.sparks.filteredFinishItems projectId, ownerId
+
+ts.sparks.totalFinished = (projectId=null, ownerId=null) ->
+  ts.sparks.finishedItems(projectId, ownerId).count()
+
+ts.sparks.finishedItems = (projectId=null, ownerId=null) ->
+  ts.sparks.filteredFinishItems projectId, ownerId, true
+
+
+ts.sparks.filteredFinishItems = (projectId=null, ownerId=null, finished=false) ->
+  query = [finished: finished]
   if projectId
     query.push projects: projectId
 
   if ownerId
-    query.push currentOwnerId: ownerId
+    query.push owners: ownerId
 
   Sparks.find $and: query
 
