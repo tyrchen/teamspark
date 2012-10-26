@@ -310,7 +310,6 @@ TsRouter = Backbone.Router.extend
     'projects/:project_name': 'main'
 
   main: (project_name) ->
-    console.log 'project_name:', project_name, Meteor.user()
     project = {_id: 'all', name: '全部'}
 
     if  project_name isnt '全部' and Meteor.user().teamId
@@ -321,7 +320,6 @@ TsRouter = Backbone.Router.extend
           name: project.name
 
   setProject: (project_name) ->
-    console.log 'setProject:', project_name, Meteor.user()
     if not project_name
       project_name = '全部'
     # TODO: this is a workaround to force navigate to the proper location.

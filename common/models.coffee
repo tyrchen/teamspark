@@ -15,3 +15,9 @@ Sparks = new Meteor.Collection 'sparks'
 
 # auditTrail = { _id: uuid, userId: userId, content: 'bla bla', teamId: teamId, projectId: projectId, sparkId: sparkId, createdAt: Date()}
 AuditTrails = new Meteor.Collection 'auditTrails'
+
+# notification = {
+# _id: uuid, recipientId: userId, level: 1-5|debug|info|warning|important|urgent
+# type: 1-5 | user | spark | project | team | site
+# title: 'bla', content: 'html bla' }
+Notifications = new Meteor.Collection 'notifications'

@@ -19,8 +19,11 @@ if Meteor.is_server
   Meteor.publish 'sparks', (teamId) ->
     Sparks.find {teamId: teamId}, {sort: 'updateddAt': -1}
 
-  Meteor.publish 'auditTrails', (teamId) ->
-    AuditTrails.find teamId: teamId
+  #Meteor.publish 'auditTrails', (teamId) ->
+  #  AuditTrails.find teamId: teamId
+
+  Meteor.publish 'notifications', (userId) ->
+    Notifications.find {recipientId: $in: [userId, null]}, {sort: 'level': -1}
 
 if Meteor.is_client
   Meteor.autosubscribe ->
@@ -36,6 +39,8 @@ if Meteor.is_client
         console.log 'sparks loaded'
         ts.State.loaded.set true
       #Meteor.subscribe 'auditTrails', teamId
+      Meteor.subscribe 'notifications', Meteor.userId(), ->
+        console.log 'notifications loaded'
 
 
 

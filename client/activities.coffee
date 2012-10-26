@@ -33,7 +33,6 @@ _.extend Template.member,
     ts.sparks.totalFinished projectId, @_id
 
   totalSubmitted: (projectId=null) ->
-    console.log 'total submitted:', @_id
     ts.sparks.totalSubmitted @_id, projectId
 
   totalImportant: (projectId=null) ->
