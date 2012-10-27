@@ -6,7 +6,7 @@ resetData = ->
     users = Meteor.users.find().fetch()
     _.each users, (user) ->
       totalCreated = Sparks.find(authorId: user._id).count() * ts.consts.points.CREATE_SPARK
-      totalFinished = Sparks.find(owners: user._id).count() * ts.consts.points.FINISH_SPARK
+      totalFinished = Sparks.find({owners: user._id, finished: true}).count() * ts.consts.points.FINISH_SPARK
       Meteor.users.update user._id, $set: points: totalCreated + totalFinished
 
   if Teams.find().count() is 0 and user?
