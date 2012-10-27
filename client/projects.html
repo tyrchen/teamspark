@@ -7,7 +7,7 @@
         <a class="btn btn-small btn-info" id="add-project" title="添加项目"><i class="icon-plus-sign"></i></a>
       </div>
     </li>
-    {{#each ts.projects.parents}}
+    {{#each parentProjects}}
     <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="/{{name}}">{{ name }} ({{totalSparks _id}})</a></li>
       {{#each childProjects _id}}
       <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalSparks _id}})</a></li>

@@ -55,16 +55,22 @@ _.extend Template.projects,
       return 'active'
     return ''
 
-  totalSparks: (id=null) ->
+  totalSparks: (id=null, showAll=false) ->
     query = ts.sparks.query(false)
     if id
       p = Projects.findOne _id: id
-      if p?.parent
+      if showAll or p?.parent
         query.push projects: id
       else
         query.push projects: [id]
 
     Sparks.find($and: query).count()
 
+  parentProjects: ->
+    projects = ts.projects.parents().fetch()
+    _.sortBy projects, (item) -> -Template.projects.totalSparks(item._id, true)
 
-  childProjects: (id)-> ts.projects.children id
+  childProjects: (id)->
+    projects = ts.projects.children(id).fetch()
+    _.sortBy projects, (item) -> -Template.projects.totalSparks(item._id)
+
