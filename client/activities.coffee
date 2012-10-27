@@ -16,6 +16,11 @@ _.extend Template.activities,
       return 'active'
     return ''
 
+  orderedMembers: ->
+    all = ts.members.all().fetch()
+
+  orderedProjects: ->
+    all = ts.projects.all().fetch()
 
 _.extend Template.member,
   events:

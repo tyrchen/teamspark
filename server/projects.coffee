@@ -10,6 +10,9 @@ Meteor.methods
       projectId: projectId
       createdAt: ts.now()
 
+  addPoints: (count) ->
+    Meteor.users.update Meteor.userId(), $inc: points: count
+
   createProject: (name, description, parentId) ->
     #{ _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null, parentId: null, teamId: teamId, createdAt: Date() }
     user = Meteor.user()

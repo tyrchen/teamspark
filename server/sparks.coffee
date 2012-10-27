@@ -56,6 +56,7 @@ Meteor.methods
     sparkType = _.find ts.sparks.types(), (item) -> item.id is type
 
     Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{title}", projectId
+    Meteor.call 'addPoints', ts.consts.points.CREATE_SPARK
 
   createComment: (sparkId, content) ->
     # comments = {_id: uuid(), authorId: userId, content: content}
@@ -76,6 +77,7 @@ Meteor.methods
       createdAt: now
 
     Sparks.update sparkId, $push: comments: comment
+    Meteor.call 'addPoints', ts.consts.points.COMMENT
 
   supportSpark: (sparkId) ->
     spark = Sparks.findOne _id: sparkId
@@ -86,12 +88,14 @@ Meteor.methods
 
     if ts.sparks.hasSupported spark
       Sparks.update sparkId, $pull: supporters: user._id
-      content = "#{user.username} 支持 #{spark.title}"
+      #content = "#{user.username} 取消支持 #{spark.title}"
+      Meteor.call 'addPoints', -1 * ts.consts.points.SUPPORT
     else
-      content = "#{user.username} 取消支持 #{spark.title}"
+      #content = "#{user.username} 支持 #{spark.title}"
       Sparks.update sparkId, $push: supporters: user._id
+      Meteor.call 'addPoints', ts.consts.points.SUPPORT
 
-    Meteor.call 'createAudit', content, projectId
+    #Meteor.call 'createAudit', content, projectId
 
   finishSpark: (sparkId) ->
     spark = Sparks.findOne _id: sparkId
@@ -122,6 +126,7 @@ Meteor.methods
 
 
     Meteor.call 'createAudit', content1, spark.projects[0]
+    Meteor.call 'addPoints', ts.consts.points.FINISH_SPARK
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]

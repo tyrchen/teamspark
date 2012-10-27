@@ -4,7 +4,7 @@ if Meteor.is_server
 
   Meteor.publish null, ->
     # publish desired user data to client
-    Meteor.users.find {}, fields:
+    Meteor.users.find {}, {fields: {
       profile: 1
       username: 1
       teamId: 1
@@ -12,6 +12,8 @@ if Meteor.is_server
       url: 1
       location: 1
       description: 1
+      points: 1
+    }, sort: {points: -1}}
 
   Meteor.publish 'projects', (teamId) ->
     Projects.find teamId: teamId

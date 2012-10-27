@@ -5,7 +5,7 @@
         {{>member}}
       {{/each}}
     {{else}}
-      {{#each ts.projects.ardered}}
+      {{#each ts.projects.ordered}}
         {{>project}}
       {{/each}}
     {{/if}}
@@ -21,7 +21,7 @@
   <div class="member">
     <div class="author-info clearfix">
       <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
-      <h5>{{username}}</h5>
+      <h5>{{username}} <small>贡献: {{points}}点</small></h5>
       <p>{{description}}</p>
     </div>
     <div class="navbar">
