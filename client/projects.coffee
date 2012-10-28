@@ -68,9 +68,9 @@ _.extend Template.projects,
 
   parentProjects: ->
     projects = ts.projects.parents().fetch()
-    _.sortBy projects, (item) -> -Template.projects.totalSparks(item._id, true)
+    #_.sortBy projects, (item) -> -Template.projects.totalSparks(item._id, true)
 
   childProjects: (id)->
     projects = ts.projects.children(id).fetch()
-    _.sortBy projects, (item) -> -Template.projects.totalSparks(item._id)
+    #_.sortBy projects, (item) -> -Template.projects.totalSparks(item._id)
 

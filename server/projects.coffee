@@ -59,8 +59,13 @@ Meteor.methods
 
   updateProject: (id, description) ->
     # update project description
-    return
+    return ''
 
   moveProject: (id, newParentId) ->
     # update project parent. need to consider spark project changes
-    return
+    return ''
+
+  removeProject: (id) ->
+    project = Projects.findOne _id: id
+    if not project?.parent and Sparks.find(projects:id).count() is 0
+      Projects.remove id
