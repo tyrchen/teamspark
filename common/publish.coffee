@@ -15,6 +15,9 @@ if Meteor.is_server
       points: 1
     }, sort: {points: -1}}
 
+  Meteor.publish 'profiles', (teamId) ->
+    Profiles.find teamId: teamId
+
   Meteor.publish 'projects', (teamId) ->
     Projects.find teamId: teamId
 
@@ -44,6 +47,8 @@ if Meteor.is_client
       Meteor.subscribe 'notifications', Meteor.userId(), ->
         console.log 'notifications loaded'
 
+      Meteor.subscribe 'profiles', teamId, ->
+        console.log 'profiles loaded'
 
 
 

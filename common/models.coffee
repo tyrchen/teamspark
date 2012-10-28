@@ -1,6 +1,9 @@
 # team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date()}
 Teams = new Meteor.Collection 'teams'
 
+# profile = {_id: uuid, userId: userId, online: true/false, teamId: teamId, lastActive: new Date(), totalSeconds: integer}
+Profiles = new Meteor.Collection 'profiles'
+
 # project = { _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null, parent: null, teamId: teamId, createdAt: Date() }
 Projects = new Meteor.Collection 'projects'
 

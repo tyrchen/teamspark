@@ -2,6 +2,15 @@
 
 resetData = ->
   user = Meteor.users.findOne username: '陈天_Tyr'
+  if Profiles.find().count() is 0
+    users = Meteor.users.find().fetch()
+    _.each users, (user) ->
+      Profiles.insert
+        userId: user._id
+        username: user.username
+        online: false
+        teamId: user.teamId
+
   if not user.points
     users = Meteor.users.find().fetch()
     _.each users, (user) ->
@@ -51,6 +60,7 @@ createUserHook = ->
       user.avatar = ''
       user.url = user.profile.link
       user.location = ''
+
     return user
 
 Meteor.startup ->

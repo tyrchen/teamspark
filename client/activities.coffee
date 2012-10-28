@@ -46,6 +46,18 @@ _.extend Template.member,
   totalUrgent: (projectId=null) ->
     ts.sparks.totalUrgent projectId, @_id
 
+  onlineClass: ->
+    profile = Profiles.findOne userId: @_id
+    if profile?.online
+      return 'online'
+    return 'offline'
+
+  onlineTime: ->
+    profile = Profiles.findOne userId: @_id
+    if profile?.totalSeconds
+      return ts.formatTime profile.totalSeconds
+    return '0秒'
+
 _.extend Template.project,
   events:
     'click .project': (e) ->

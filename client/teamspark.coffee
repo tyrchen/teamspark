@@ -354,3 +354,14 @@ Router = new TsRouter;
 
 Meteor.startup ->
   Backbone.history.start pushState: true
+  $(window).focus ->
+    profile = Profiles.findOne userId: Meteor.userId()
+    #console.log 'online:', profile.username
+    if not profile.online
+      Meteor.call 'online', true
+
+  $(window).blur ->
+    profile = Profiles.findOne userId: Meteor.userId()
+    #console.log 'offline:', profile.username
+    if profile.online
+      Meteor.call 'online', false

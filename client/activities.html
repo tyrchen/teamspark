@@ -18,10 +18,11 @@
   </div>
 </template>
 <template name="member">
-  <div class="member">
+  <div class="member {{onlineClass}}">
     <div class="author-info clearfix">
       <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
-      <h5>{{username}} <small>贡献: {{points}}点</small></h5>
+      <h5>{{username}}</h5>
+      <p><small>贡献: {{points}}点, 在线: {{onlineTime}}</small></p>
       <p>{{description}}</p>
     </div>
     <div class="navbar">
