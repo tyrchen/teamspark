@@ -1,4 +1,12 @@
 Meteor.methods
+  initProfileTime: ->
+    profiles = Profiles.find().fetch()
+    _.each profiles, (p) ->
+      totalCreated = Sparks.find(authorId: p.userId).count()
+      totalFinished = Sparks.find(finished: true, owners: p.userId).count()
+      seconds = totalCreated * 120 + totalFinished * 240
+      Profiles.update {userId: p.userId}, {$set: totalSeconds: seconds}
+Meteor.methods
   createAudit: (content, projectId, sparkId=null) ->
     # auditTrail = { _id: uuid, userId: teamId, content: 'bla bla', teamId: teamId, projectId: projectId, createdAt: Date()}
     user = Meteor.user()
