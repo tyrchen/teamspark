@@ -74,6 +74,12 @@ _.extend Template.content,
       return 'orphan'
     return ''
 
+  connectStatus: ->
+    status = Meteor.status()
+    if not status.connected
+      nextRetry = moment(status.retryTime).fromNow()
+      return "<span class='label label-important'>连接中断, 系统会在#{nextRetry}重连)</span>"
+    return ''
 _.extend Template.login,
   events:
     'click #login-buttons-weibo': (e) ->
