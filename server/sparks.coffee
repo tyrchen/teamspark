@@ -180,7 +180,7 @@ Meteor.methods
   updateSpark: (sparkId, value, field) ->
     formatValue = ->
       switch field
-        when 'deadline' then new Date(value)
+        when 'deadline' then (new Date(value)).getTime()
         when 'priority' then parseInt value
         else value
 

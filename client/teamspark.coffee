@@ -180,13 +180,31 @@ _.extend Template.sparkFilter,
         ts.State.sparkOwnerFilter.set {id: user._id, name: user.username}
 
   events:
-    'click .spark-list > li': (e) ->
+    'click .spark-list .dropdown-menu > li': (e) ->
       $node = $(e.currentTarget)
+      # close the dropdown menu. This is a workaround...need to find an elegant way to do this
+      $node.closest('.dropdown').removeClass('open')
       id = $node.data('id')
       name = $node.data('name')
 
       ts.State.sparkToCreate.set {id: id, name: name}
       $('#add-spark').modal()
+
+    'click .shortcut': (e) ->
+      type = $(e.currentTarget).data('id')
+      console.log 'short cut:', type
+      switch type
+        when 'upcoming'
+          ts.State.clearFilters()
+          ts.State.sparkDeadlineFilter.set {id: ts.consts.EXPIRE_IN_3_DAYS, name: 1}
+        when 'created'
+          ts.State.clearFilters()
+          user = Meteor.user()
+          ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
+        when 'finished'
+          ts.State.clearFilters()
+          ts.State.sparkFinishFilter.set {id: 2, name: '已完成'}
+
 
     'click #clear-filter': (e) ->
       ts.State.clearFilters()

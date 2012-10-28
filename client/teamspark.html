@@ -61,18 +61,25 @@
   <div class="navbar spark-controls">
     <div class="navbar-inner">
       <div class="container">
-        <div class="text">创建：</div>
-
         <div class="nav-collapse collapse">
           <ul class="nav spark-list">
-            {{#each types}}
-            <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
-            {{/each}}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>创建 <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                {{#each types}}
+                <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
+                {{/each}}
+              </ul>
+            </li>
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>过滤器 <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>筛选任务 <b class="caret"></b></a>
               <ul class="dropdown-menu">
+                <li><a class="shortcut" href="#" data-id="upcoming" data-name="即将到期的任务"><i class="icon-time" style="color:#d14;"></i>即将到期的任务</a></li>
+                <li><a class="shortcut" href="#" data-id="created" data-name="我创建的任务"><i class="icon-user" style="color:#228b22;"></i>我创建的任务</a></li>
+                <li><a class="shortcut" href="#" data-id="finished" data-name="我完成的任务"><i class="icon-ok" style="color:#000080;"></i>我完成的任务</a></li>
+                <li class="divider"></li>
                 <li><a href="#"><i class="icon-ok-circle"></i>完成: <span id="filter-finished">{{finishText}}</span></a></li>
                 <li><a href="#"><i class="icon-arrow-up"></i>优先级: <span id="filter-priority">{{priorityText}}</span></a></li>
                 <li><a href="#"><i class="icon-time"></i>截止日期: <span id="filter-deadline">{{deadlineText}}</span></a></li>
@@ -80,7 +87,7 @@
                 <li><a href="#"><i class="icon-user"></i>作者: <span id="filter-author">{{authorText}}</span></a></li>
                 <li><a href="#"><i class="icon-user"></i>当前责任人: <span id="filter-owner">{{ownerText}}</span></a></li>
                 <li class="divider"></li>
-                <li><a href="#" id="clear-filter"><i class="icon-ban-circle"></i>清空全部过滤器</a></li>
+                <li><a href="#" id="clear-filter"><i class="icon-ban-circle"></i>清空筛选</a></li>
               </ul>
             </li>
             <li class="dropdown">

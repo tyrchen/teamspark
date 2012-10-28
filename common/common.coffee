@@ -4,6 +4,8 @@ ts.now = ->
   (new Date()).getTime()
 
 ts.formatDate = (date) ->
+  # to ensure date is a Date instance
+  date = new Date(date)
   y = date.getFullYear()
   m = date.getMonth() + 1
   d = date.getDate()
@@ -205,7 +207,7 @@ ts.sparks.query = (needProject=true) ->
     query.push progress: progress
 
   if deadline isnt 'all'
-    query.push deadline: $lte: deadline
+    query.push deadline: {$gt: ts.now(), $lte: deadline + ts.now()}
 
   if finish isnt 0
     if finish is 1
