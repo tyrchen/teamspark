@@ -20,3 +20,11 @@ Meteor.methods
             finishers.push userId
 
       Sparks.update spark._id, $set: {finishers: finishers}, $pullAll: {owners: finishers}
+
+  initProfileTime: ->
+    profiles = Profiles.find().fetch()
+    _.each profiles, (p) ->
+      totalCreated = Sparks.find(authorId: p.userId).count()
+      totalFinished = Sparks.find(finished: true, owners: p.userId).count()
+      seconds = totalCreated * 120 + totalFinished * 240
+      Profiles.update {userId: p.userId}, {$set: totalSeconds: seconds}

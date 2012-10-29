@@ -22,6 +22,9 @@ Meteor.methods
         if not isOnline
           # online to offline, calculate the seconds user spent on team spark
           seconds = Math.floor((now - profile.lastActive)/1000)
+          if seconds > 900
+            # for most cases user do any operation should not exceed 15 mins
+            seconds = 900
           Profiles.update {userId: profile.userId}, {$set: {online: isOnline}, $inc: {totalSeconds: seconds}}
         else
           # offline to online, start record time spent
