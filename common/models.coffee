@@ -22,5 +22,5 @@ AuditTrails = new Meteor.Collection 'auditTrails'
 # notification = {
 # _id: uuid, recipientId: userId, level: 1-5|debug|info|warning|important|urgent
 # type: 1-5 | user | spark | project | team | site
-# title: 'bla', content: 'html bla' }
+# title: 'bla', content: 'html bla', url: 'url', createdAt: new Date(), readAt: new Date(), visitedAt: new Date() }
 Notifications = new Meteor.Collection 'notifications'

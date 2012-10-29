@@ -1,3 +1,9 @@
+.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
 /* CSS declarations go here */
 html, body {
   width: 100%;
@@ -24,6 +30,76 @@ body .modal {
   padding: 5px 0px;
 }
 
+//notification-icon hovers to show dropdown-menu
+.notification-list {
+  .nav {
+    position: relative;
+    left: 0;
+    display: block;
+    float: left;
+    margin: 0 10px 0 0;
+  }
+}
+.has-unread{
+
+  &:hover{
+    .dropdown-menu{
+      display: block;
+      margin: 0;
+    }
+  }
+  .dropdown-menu{
+    width: 280px;
+    li{
+      position: relative;
+      .mark-read{
+        position: absolute;
+        display: none;
+        padding: 0;
+        right: 4px;
+        top:50%;
+        margin-top: -8px;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        vertical-align: middle;
+        .border-radius(10px);
+        i{
+          margin: 0;
+          color: #fdfdfd;
+        }
+      }
+      &:hover{
+        background:#E84C31;
+        a{
+          color: #fdfdfd;
+        }
+        .mark-read{
+          display: block;
+          &:hover{
+            background:  darken(#E84C31, 20%);
+          }
+        }
+      }
+      &.divider{
+        background: #E5E5E5;
+      }
+    }
+    a{
+      font-size: 12px;
+      white-space:normal;
+    }
+    .show-more{
+      text-align: center;
+      a{
+        color: #999;
+        &:hover{
+          color: #fdfdfd;
+        }
+      }
+    }
+  }
+}
 
 
 // teamspark specific css

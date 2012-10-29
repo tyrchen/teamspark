@@ -8,7 +8,7 @@
       </div>
     </li>
     {{#each parentProjects}}
-    <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="/{{name}}">{{ name }} ({{totalSparks _id}})</a></li>
+    <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalSparks _id}})</a></li>
       {{#each childProjects _id}}
       <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalSparks _id}})</a></li>
       {{/each}}

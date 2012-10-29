@@ -189,8 +189,11 @@ ts.sparks.query = (needProject=true) ->
   deadline = ts.State.sparkDeadlineFilter.get()
   finish = ts.State.sparkFinishFilter.get()
 
+  showSpark = ts.State.showSpark.get()
+
   user = Meteor.user()
   query = []
+
 
   if needProject and project isnt 'all'
     p = Projects.findOne _id: project

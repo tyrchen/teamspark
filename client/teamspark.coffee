@@ -327,11 +327,30 @@ _.extend Template.sparkInput,
         $form[0].reset()
         $('#add-spark').modal 'hide'
 
+_.extend Template.notifications,
+  events:
+    'click .notification > a': (e) ->
+      e.preventDefault()
+      Meteor.call 'notificationRead', @_id
+      Router.setSpark(@sparkId)
+
+  totalUnread: ->
+    Notifications.find(readAt:null).count()
+
+  hasUnread: ->
+    if Template.notifications.totalUnread() > 0
+      return 'has-unread'
+    return ''
+
+  topNotifications: ->
+    Notifications.find {readAt:null}, {sort: createdAt: -1}
+
 
 
 TsRouter = Backbone.Router.extend
   routes:
     'projects/:project_name': 'main'
+    'sparks/:spark_id': 'spark'
 
   main: (project_name) ->
     project_name = decodeURIComponent(project_name)
@@ -357,12 +376,25 @@ TsRouter = Backbone.Router.extend
           id: project._id
           name: project.name
 
+  spark: (spark_id) ->
+    Meteor.autorun (handle) ->
+      spark = Sparks.findOne _id: spark_id
+      if not spark
+        return
+
+      handle.stop()
+      console.log 'find spark:', spark
+      ts.State.showSpark.set spark_id
+
   setProject: (project_name) ->
     console.log 'set project:', project_name
     if not project_name
       project_name = '全部'
     # TODO: this is a workaround to force navigate to the proper location.
     this.navigate("/projects/#{project_name}", true)
+
+  setSpark: (id) ->
+    this.navigate("/sparks/#{id}", true)
 
 Router = new TsRouter;
 

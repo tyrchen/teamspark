@@ -58,17 +58,36 @@ Meteor.methods
 
     Meteor.call 'createAudit', "#{user.username}创建了新的项目：#{name}", projectId
 
+    recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+    content = "#{user.username}创建了项目#{name}"
+    Meteor.call 'notify', recipients, content, content, null
     return projectId
 
   updateProject: (id, description) ->
     # update project description
+    user = Meteor.user()
+    project = Projects.findOne _id: id
+    recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+    content = "#{user.username}修改了项目#{project.name}的描述"
+    Meteor.call 'notify', recipients, content, content, null
     return ''
 
   moveProject: (id, newParentId) ->
     # update project parent. need to consider spark project changes
+    user = Meteor.user()
+    project = Projects.findOne _id: id
+    parent = Projects.findOne _id: newParentId
+    recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+    content = "#{user.username}修改了项目#{project.name}的上级项目为#{parent.name}"
+    Meteor.call 'notify', recipients, content, content, null
     return ''
 
   removeProject: (id) ->
+    user = Meteor.user()
     project = Projects.findOne _id: id
     if not project?.parent and Sparks.find(projects:id).count() is 0
       Projects.remove id
+
+      recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+      content = "#{user.username}删除了项目#{project.name}"
+      Meteor.call 'notify', recipients, content, content, null

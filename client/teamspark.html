@@ -12,6 +12,7 @@
   {{#if loggedIn }}
     {{#if ts.State.loaded.get }}
     <div class="row-fluid stretch">
+      {{{connectStatus}}}
       {{#if isOrphan}}
         <div class="overlay"><h1>您还没有加入任何团队，请等待您的team leader审批</h1></div>
       {{else}}
@@ -25,7 +26,8 @@
       <div class="span7 spark-panel stretch">
         <header>
           <h4>
-            {{teamName}} {{{connectStatus}}}
+            {{teamName}}
+            {{>notifications}}
             <div class="btn-group pull-right" id="user-settings">
               {{# if ts.isStaff ts.currentTeam }}
               <a class="btn btn-info btn-small" id="manage-member" title="管理团队成员"><i class="icon-plus"></i></a>
@@ -104,4 +106,28 @@
       </div>
     </div>
   </div>
+</template>
+
+<template name="notifications">
+  {{#if hasUnread}}
+  <div class="nav-collapse collapse notification-list" style="display: inline-block; margin:0px;">
+    <ul class="nav">
+      <li class="{{hasUnread}}">
+        <a href="#" class="user-notification" title="通知">
+          <span class="bubble badge badge-important" style="font-size: 16px;">{{totalUnread}}</span>
+        </a>
+
+        <ul class="dropdown-menu">
+          {{#each topNotifications}}
+          <li class="notification">
+            <a href="#">{{title}}</a>
+          </li>
+          {{showNotification}}
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+  </div>
+  {{/if}}
+
 </template>
