@@ -229,7 +229,7 @@ ts.sparks.query = (needProject=true) ->
         query.push finishers: user._id
       query.push finished: true
 
-  console.log 'query:', query
+  #console.log 'query:', query
   return query
 
 ts.audits = ts.audits || {}

@@ -25,6 +25,6 @@ Meteor.methods
     profiles = Profiles.find().fetch()
     _.each profiles, (p) ->
       totalCreated = Sparks.find(authorId: p.userId).count()
-      totalFinished = Sparks.find(finished: true, owners: p.userId).count()
+      totalFinished = Sparks.find(finished: true, finishers: p.userId).count()
       seconds = totalCreated * 120 + totalFinished * 240
       Profiles.update {userId: p.userId}, {$set: totalSeconds: seconds}
