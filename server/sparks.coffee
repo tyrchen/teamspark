@@ -1,8 +1,8 @@
 Meteor.methods
   createSpark: (title, content, type, projectId, owners, priority, deadlineStr='') ->
     # spark = {
-    # _id: uuid, type: 'idea', authorId: userId, auditTrails: [], comments: []
-    # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
+    # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
+    # owners: [userId, ...], finishers: [userId, ...], progress: 10
     # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
     # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
     # updatedAt: Date(), teamId: teamId
@@ -19,13 +19,6 @@ Meteor.methods
     if not ts.projects.writable project
       throw new ts.exp.AccessDeniedException('Only team members can add spark to a team project')
 
-    if owners.length > 0
-      currentOwnerId = owners[0]
-      nextStep = 1
-    else
-      currentOwnerId = null
-      nextStep = 0
-
     if deadlineStr
       deadline = (new Date(deadlineStr)).getTime()
     else
@@ -38,14 +31,13 @@ Meteor.methods
       authorId: user._id
       auditTrails: []
       comments: []
-      currentOwnerId: currentOwnerId
-      nextStep: nextStep
       owners: owners
       progress: 0
       title: title
       content: content
       priority: priority
       supporters: []
+      finishers: []
       finished: false
       projects: projects
       deadline: deadline
@@ -104,29 +96,34 @@ Meteor.methods
 
     user = Meteor.user()
 
-    if spark.currentOwnerId
-      if spark.currentOwnerId isnt user._id
+    if spark.owners[0]
+      if spark.owners[0] isnt user._id
         throw new ts.exp.AccessDeniedException 'Only current owner can finish the spark'
+    else
+      throw new ts.exp.AccessDeniedException 'Spark already finished or not assigned yet'
 
     audit =
       _id: Meteor.uuid()
       authorId: user._id
       createdAt: ts.now()
 
-    if spark.currentOwnerId and spark.owners.length - 1 >= spark.nextStep
-      nextId = spark.owners[spark.nextStep]
+    currentId = spark.owners[0]
+    finishers = spark.finishers
+    if spark.owners[1]
+      nextId = spark.owners[1]
       nextOwner = Meteor.users.findOne _id: nextId
       audit.content = "#{user.username} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
       content1 = "#{user.username} 对 #{spark.title} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
-      Sparks.update sparkId, $set: {currentOwnerId: nextId}, $inc: {nextStep: 1}, $push: {auditTrails: audit}
     else
       audit.content = "#{user.username} 将任务标记为完成"
       content1 = "#{user.username} 将任务 #{spark.title} 标记为完成"
-      Sparks.update sparkId, $set: {currentOwnerId: null, finished: true}, $push: {auditTrails: audit}
+
+    Sparks.update sparkId, $pull: {owners: currentId}, $push: {auditTrails: audit}, $addToSet: {finishers: currentId}
 
 
     Meteor.call 'createAudit', content1, spark.projects[0]
-    Meteor.call 'addPoints', ts.consts.points.FINISH_SPARK
+    if currentId not in finishers
+      Meteor.call 'addPoints', ts.consts.points.FINISH_SPARK
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
@@ -233,11 +230,6 @@ Meteor.methods
       users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
       #console.log 'new users:', users
       command['owners'] = value
-      if not _.find(value, (id) -> spark.currentOwnerId is id)
-        if value.length > 0
-          command['currentOwnerId'] = value[0]
-        else
-          command['currentOwnerId'] = null
 
       if value.length > 0
         # if owners updated, spark should be changed back to unfinished

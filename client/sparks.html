@@ -85,9 +85,14 @@
         <div class="modal-footer">
           <ul class="nav pull-left owners">
             {{#if allocated}}
-              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>给{{#if finished}}(已完成){{/if}}：<ul>{{{showOwners}}}</ul>
+              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>给: <ul>{{{showOwners}}}</ul>
             {{else}}
               <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>
+            {{/if}}
+          </ul>
+          <ul class="nav pull-left finishers">
+            {{#if finishers}}
+            已完成: {{{showFinishers}}}
             {{/if}}
           </ul>
           <ul class="nav pull-right">

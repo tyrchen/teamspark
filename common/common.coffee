@@ -130,7 +130,7 @@ ts.sparks.importantItems = (projectId=null, ownerId=null) ->
     query.push projects: projectId
 
   if ownerId
-    query.push currentOwnerId: ownerId
+    query.push owners: ownerId
 
   Sparks.find $and: query
 
@@ -148,7 +148,7 @@ ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
     query.push projects: projectId
 
   if ownerId
-    query.push currentOwnerId: ownerId
+    query.push owners: ownerId
 
   Sparks.find query
 
@@ -168,14 +168,8 @@ ts.sparks.allOwners = (spark) ->
   _.map spark.owners, (id) -> Meteor.users.findOne id
 
 ts.sparks.currentOwner = (spark) ->
-  if spark.currentOwnerId
-    return Meteor.users.findOne spark.currentOwnerId
-  else
-    return null
-
-ts.sparks.nextOwner = (spark) ->
-  if spark.currentOwnerId and spark.owners.length - 1 > spark.nextStep
-    Meteor.users.findOne spark.owners[spark.nextStep]
+  if spark.owners[0]
+    return Meteor.users.findOne spark.owners[0]
   else
     return null
 
@@ -191,6 +185,7 @@ ts.sparks.query = (needProject=true) ->
   deadline = ts.State.sparkDeadlineFilter.get()
   finish = ts.State.sparkFinishFilter.get()
 
+  user = Meteor.user()
   query = []
 
   if needProject and project isnt 'all'
@@ -200,8 +195,9 @@ ts.sparks.query = (needProject=true) ->
     else
       query.push projects: [project]
 
-  if filterType is 'user'
-    query.push owners: Meteor.user()._id
+  # only filter owners if the spark is not finished
+  if filterType is 'user' and finish isnt 2
+    query.push owners: user._id
 
   if type isnt 'all'
     query.push type: type
@@ -213,7 +209,7 @@ ts.sparks.query = (needProject=true) ->
     query.push authorId: author
 
   if owner isnt 'all'
-    query.push currentOwnerId: owner
+    query.push 'owners': owner
 
   if progress isnt 'all'
     query.push progress: progress
@@ -225,8 +221,11 @@ ts.sparks.query = (needProject=true) ->
     if finish is 1
       query.push finished: false
     else
+      if filterType is 'user'
+        query.push finishers: user._id
       query.push finished: true
 
+  console.log 'query:', query
   return query
 
 ts.audits = ts.audits || {}

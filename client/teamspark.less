@@ -261,10 +261,9 @@ img.avatar-small {width:20px; height: 20px;}
     }
     .modal-footer {
       text-align: left;
-      .owners {
+      .owners, .finishers {
         ul {display: inline-block; margin: 0 0 0 5px;}
         li {
-          opacity: 0.6;
           &:after {content: '>'; margin: 0 3px;}
           &:last-child:after {content: ''; margin: 0px;}
           &.active {
@@ -275,6 +274,7 @@ img.avatar-small {width:20px; height: 20px;}
           }
         }
       }
+      .finishers { margin: 0 0 0 20px;}
     }
   }
   .carousel {

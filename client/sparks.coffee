@@ -1,11 +1,3 @@
-# spark = {
-# _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
-# currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
-# title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
-# finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
-# updatedAt: Date(), teamId: teamId
-# }
-
 _.extend Template.sparks,
   sparks: ->
     query = ts.sparks.query()
@@ -18,13 +10,6 @@ _.extend Template.sparks,
     Sparks.find {$and: query}, {sort: sort}
 
 _.extend Template.spark,
-# spark = {
-  # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
-  # currentOwnerId: userId, nextStep: 1, owners: [userId, ...], progress: 10
-  # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
-  # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
-  # updatedAt: Date(), teamId: teamId
-  # }
   rendered: ->
     #console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
     $parent = $(@firstNode)
@@ -213,21 +198,21 @@ _.extend Template.spark,
     items = []
     owners = _.map @owners, (id) -> Meteor.users.findOne _id: id
 
-    currentOwnerId = @currentOwnerId
+    currentId = owners[0]
     owners.forEach (item) ->
-      if currentOwnerId is item._id
-        active = 'active'
-      else
-        active = ''
+      items.push "<li><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
+    return items.join('\n')
 
-      items.push "<li class='#{active}'><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
+  showFinishers: ->
+    items = []
+    finishers = _.map @finishers, (id) -> Meteor.users.findOne _id: id
+    finishers.forEach (item) ->
+      items.push "<li><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
+
     return items.join('\n')
 
   allocated: ->
-    @finished or @currentOwnerId
-
-  nextOwner: ->
-    ts.sparks.nextOwner @
+    @owners
 
   supporttedUsers: ->
     Meteor.users.find _id: $in: @supporters
@@ -291,10 +276,10 @@ _.extend Template.spark,
     if @finished
       return false
 
-    if not @currentOwnerId
+    if not @owners[0]
       if ts.isStaff()
         return true
-    else if @currentOwnerId is Meteor.user()._id
+    else if @owners[0] is Meteor.user()._id
       return true
 
     return false
