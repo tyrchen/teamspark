@@ -111,12 +111,16 @@ ts.sparks.finishedItems = (projectId=null, ownerId=null) ->
 
 
 ts.sparks.filteredFinishItems = (projectId=null, ownerId=null, finished=false) ->
-  query = [finished: finished]
+  #query = [finished: finished]
+  query = []
   if projectId
     query.push projects: projectId
 
   if ownerId
-    query.push owners: ownerId
+    if finished
+      query.push finishers: ownerId
+    else
+      query.push owners: ownerId
 
   Sparks.find $and: query
 
