@@ -334,26 +334,41 @@ TsRouter = Backbone.Router.extend
     'projects/:project_name': 'main'
 
   main: (project_name) ->
-    project = {_id: 'all', name: '全部'}
+    project_name = decodeURIComponent(project_name)
 
-    if  project_name isnt '全部' and Meteor.user().teamId
+    project = {_id: 'all', name: '全部'}
+    if project_name is '全部'
+      return
+
+    # here we need to delay initial url parsing since data hasn't arrived
+    Meteor.autorun (handle)->
+      project = null
+      if not Meteor.user().teamId
+        return
       project = Projects.findOne name:project_name, teamId: Meteor.user().teamId
+      if not project
+        return
+
+      handle.stop()
+
+      console.log 'project:', project, Meteor.user(), Projects.find().count()
       if project
         ts.State.filterSelected.set
           id: project._id
           name: project.name
 
   setProject: (project_name) ->
+    console.log 'set project:', project_name
     if not project_name
       project_name = '全部'
     # TODO: this is a workaround to force navigate to the proper location.
-    this.navigate('/', true)
     this.navigate("/projects/#{project_name}", true)
 
 Router = new TsRouter;
 
 Meteor.startup ->
   Backbone.history.start pushState: true
+
   $(window).focus ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'online:', profile.username
