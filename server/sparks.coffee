@@ -65,8 +65,6 @@ Meteor.methods
     now = ts.now()
     user = Meteor.user()
 
-    sparkType = ts.sparks.type spark
-
     comment =
       _id: Meteor.uuid()
       authorId: user._id
@@ -77,7 +75,7 @@ Meteor.methods
     Meteor.call 'addPoints', ts.consts.points.COMMENT
 
     recipients = _.union [spark.authorId], spark.owners, _.pluck(spark.comments, 'authorId')
-    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}有了新评论", "#{user.username}评论道: #{content}.", sparkId
+    Meteor.call 'notify', recipients, "#{user.username}评论了#{spark.title}", "#{user.username}评论道: #{content}.", sparkId
 
 
   supportSpark: (sparkId) ->
@@ -86,7 +84,6 @@ Meteor.methods
       throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
 
     user = Meteor.user()
-    sparkType = ts.sparks.type spark
 
     if ts.sparks.hasSupported spark
       Sparks.update sparkId, $pull: supporters: user._id
@@ -99,7 +96,7 @@ Meteor.methods
 
       # TODO: later we should delete notification once user unsupport it.
       recipient = [spark.authorId]
-      Meteor.call 'notify', recipient, "#{sparkType.name}#{spark.title}有了新的支持者", content, sparkId
+      Meteor.call 'notify', recipient, "#{user.username}支持了#{spark.title}", content, sparkId
 
     #Meteor.call 'createAudit', content, projectId
 
@@ -111,7 +108,6 @@ Meteor.methods
       throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
 
     user = Meteor.user()
-    sparkType = ts.sparks.type spark
 
     if spark.owners[0]
       if spark.owners[0] isnt user._id
@@ -146,7 +142,7 @@ Meteor.methods
       Meteor.call 'addPoints', ts.consts.points.FINISH_SPARK
 
     recipients = _.union [spark.authorId], spark.owners
-    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}被完成", audit.content, sparkId
+    Meteor.call 'notify', recipients, "#{user.username}完成了#{spark.title}", audit.content, sparkId
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
@@ -159,7 +155,6 @@ Meteor.methods
       throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
 
     user = Meteor.user()
-    sparkType = ts.sparks.type spark
 
     audit =
       _id: Meteor.uuid()
@@ -199,7 +194,7 @@ Meteor.methods
     Meteor.call 'createAudit', content1, spark.projects[0]
 
     recipients = _.union [spark.authorId], spark.owners
-    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}有了新的文件", audit.content, sparkId
+    Meteor.call 'notify', recipients, "#{user.username}在#{spark.title}里上传了新的文件", audit.content, sparkId
 
   updateSpark: (sparkId, value, field) ->
     formatValue = ->
@@ -230,7 +225,6 @@ Meteor.methods
       throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
 
     user = Meteor.user()
-    sparkType = ts.sparks.type spark
 
     audit =
       _id: Meteor.uuid()
@@ -286,4 +280,4 @@ Meteor.methods
     Meteor.call 'createAudit', content1, spark.projects[0]
 
     recipients = _.union [spark.authorId], spark.owners
-    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}被修改", audit.content, sparkId
+    Meteor.call 'notify', recipients, "#{user.username}修改了#{spark.title}", audit.content, sparkId
