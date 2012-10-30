@@ -113,7 +113,12 @@ Meteor.methods
       if spark.owners[0] isnt user._id
         throw new ts.exp.AccessDeniedException 'Only current owner can finish the spark'
     else
-      throw new ts.exp.AccessDeniedException 'Spark already finished or not assigned yet'
+      if spark.finishers and not spark.finished
+        # fix spark not finished issue
+        Sparks.update sparkId, $set: {finished: true}
+        return
+      else
+        throw new ts.exp.AccessDeniedException 'Spark already finished or not assigned yet'
 
     audit =
       _id: Meteor.uuid()
