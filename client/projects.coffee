@@ -11,7 +11,11 @@ _.extend Template.projects,
 
     'click .filter-project': (e) ->
       e.preventDefault()
-      Router.setProject(@name)
+
+      # TODO: fix me. this is a workaround to clear notification entry and show sparks
+      ts.State.showSpark.set null
+
+      Router.setProject @name
 
     'click #add-project': (e) ->
       $('#add-project-dialog').modal()

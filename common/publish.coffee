@@ -28,7 +28,7 @@ if Meteor.is_server
   #  AuditTrails.find teamId: teamId
 
   Meteor.publish 'notifications', (userId) ->
-    Notifications.find {recipientId: $in: [userId, null]}, {sort: 'level': -1}
+    Notifications.find {recipientId: userId}, {sort: 'createdAt': -1}
 
 if Meteor.is_client
   Meteor.autosubscribe ->

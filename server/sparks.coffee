@@ -77,7 +77,7 @@ Meteor.methods
     Meteor.call 'addPoints', ts.consts.points.COMMENT
 
     recipients = _.union [spark.authorId], spark.owners, _.pluck(spark.comments, 'authorId')
-    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}有了新评论", "#{user.username}评论道: #{content}. 详细信息: ", sparkId
+    Meteor.call 'notify', recipients, "#{sparkType.name}#{spark.title}有了新评论", "#{user.username}评论道: #{content}.", sparkId
 
 
   supportSpark: (sparkId) ->
@@ -98,7 +98,7 @@ Meteor.methods
       Meteor.call 'addPoints', ts.consts.points.SUPPORT
 
       # TODO: later we should delete notification once user unsupport it.
-      recipient = spark.authorId
+      recipient = [spark.authorId]
       Meteor.call 'notify', recipient, "#{sparkType.name}#{spark.title}有了新的支持者", content, sparkId
 
     #Meteor.call 'createAudit', content, projectId

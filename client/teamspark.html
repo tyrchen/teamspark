@@ -41,7 +41,15 @@
         {{>sparkFilter}}
         {{>sparkInput}}
         {{>sparkEdit}}
-        {{> sparks}}
+        {{#if showSingleSpark}}
+          <div class="sparks">
+            {{#with singleSpark}}
+            {{>spark}}
+            {{/with}}
+          </div>
+        {{else}}
+          {{> sparks}}
+        {{/if}}
       </div>
       <div class="span3 activity-panel stretch attraction">
         {{> activities}}

@@ -74,12 +74,29 @@ _.extend Template.content,
       return 'orphan'
     return ''
 
+  showSingleSpark: ->
+    ts.State.showSpark.get()
+
+  singleSpark: ->
+    return ts.State.showSpark.get()
+
   connectStatus: ->
     status = Meteor.status()
     if not status.connected
       nextRetry = moment(status.retryTime).fromNow()
-      return "<span class='label label-important'>连接中断, 系统会在#{nextRetry}重连)</span>"
-    return ''
+      if window.errorNotice
+        window.errorNotice.pnotify_display()
+      else
+        window.errorNotice = $.pnotify
+          title: "正在重新连接",
+          text: "连接中断, 系统会在#{nextRetry}重连服务器)。 这可能是因为网络不稳或者管理员正在部署导致，您可以刷新此页立即重新连接"
+          type: 'error'
+          hide: false
+          closer: false
+          sticker: false
+    else
+      window.errorNotice?.pnotify_remove?()
+
 _.extend Template.login,
   events:
     'click #login-buttons-weibo': (e) ->
@@ -332,7 +349,7 @@ _.extend Template.notifications,
     'click .notification > a': (e) ->
       e.preventDefault()
       Meteor.call 'notificationRead', @_id
-      Router.setSpark(@sparkId)
+      Router.setSpark @sparkId
 
   totalUnread: ->
     Notifications.find(readAt:null).count()
@@ -345,6 +362,13 @@ _.extend Template.notifications,
   topNotifications: ->
     Notifications.find {readAt:null}, {sort: createdAt: -1}
 
+  showNotification: ->
+    if not @visitedAt
+      Meteor.call 'notificationVisited', @_id
+      $.pnotify
+        title: "<a href='#'>#{@title}</a>",
+        text: @content,
+        type: ts.consts.notifications[@level]
 
 
 TsRouter = Backbone.Router.extend
@@ -383,8 +407,7 @@ TsRouter = Backbone.Router.extend
         return
 
       handle.stop()
-      console.log 'find spark:', spark
-      ts.State.showSpark.set spark_id
+      ts.State.showSpark.set spark
 
   setProject: (project_name) ->
     console.log 'set project:', project_name
@@ -404,11 +427,11 @@ Meteor.startup ->
   $(window).focus ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'online:', profile.username
-    if not profile.online
+    if profile and not profile.online
       Meteor.call 'online', true
 
   $(window).blur ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'offline:', profile.username
-    if profile.online
+    if profile and profile.online
       Meteor.call 'online', false

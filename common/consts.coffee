@@ -47,3 +47,6 @@ ts.consts.points.CREATE_SPARK = 4
 ts.consts.points.FINISH_SPARK = 16
 ts.consts.points.COMMENT = 2
 ts.consts.points.SUPPORT = 1
+
+# notification
+ts.consts.notifications = {1: 'success', 2: 'info', 3: '', 4: 'error', 5: ''}
