@@ -131,11 +131,13 @@ Meteor.methods
       nextOwner = Meteor.users.findOne _id: nextId
       audit.content = "#{user.username} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
       content1 = "#{user.username} 对 #{spark.title} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
+      finished = false
     else
       audit.content = "#{user.username} 将任务标记为完成"
       content1 = "#{user.username} 将任务 #{spark.title} 标记为完成"
+      finished = true
 
-    Sparks.update sparkId, $pull: {owners: currentId}, $push: {auditTrails: audit}, $addToSet: {finishers: currentId}
+    Sparks.update sparkId, $set: {finished: finished}, $pull: {owners: currentId}, $push: {auditTrails: audit}, $addToSet: {finishers: currentId}
 
 
     Meteor.call 'createAudit', content1, spark.projects[0]
