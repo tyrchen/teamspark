@@ -66,7 +66,28 @@ _.extend Template.content,
     'click #logout': (e) ->
       Meteor.logout()
 
-  loggedIn: -> Meteor.userId
+    'click #spark-board': (e) ->
+      e.preventDefault()
+
+      name = ts.State.filterSelected.getName()
+      ts.State.showContent.set 'sparks'
+      Router.setProject name
+
+    'click #schedule-board': (e) ->
+      e.preventDefault()
+
+      name = ts.State.filterSelected.getName()
+      ts.State.showContent.set 'schedule'
+      Router.setProject name
+
+    'click #chart-board': (e) ->
+      e.preventDefault()
+
+      name = ts.State.filterSelected.getName()
+      ts.State.showContent.set 'charts'
+      Router.setProject name
+
+  loggedIn: -> Meteor.userId()
   projects: -> Projects.find()
   teamName: -> ts.currentTeam()?.name
   isOrphan: ->
@@ -79,6 +100,22 @@ _.extend Template.content,
 
   singleSpark: ->
     return ts.State.showSpark.get()
+
+  showSparks: ->
+    if ts.State.showContent.get() is 'sparks'
+      return 'active'
+    return ''
+
+  showSchedule: ->
+    if ts.State.showContent.get() is 'schedule'
+      return 'active'
+    return ''
+
+  showCharts: ->
+    if ts.State.showContent.get() is 'charts'
+      return 'active'
+    return ''
+
 
   connectStatus: ->
     status = Meteor.status()
@@ -371,59 +408,7 @@ _.extend Template.notifications,
         type: ts.consts.notifications[@level]
 
 
-TsRouter = Backbone.Router.extend
-  routes:
-    'projects/:project_name': 'main'
-    'sparks/:spark_id': 'spark'
-
-  main: (project_name) ->
-    project_name = decodeURIComponent(project_name)
-
-    project = {_id: 'all', name: '全部'}
-    if project_name is '全部'
-      return
-
-    # here we need to delay initial url parsing since data hasn't arrived
-    Meteor.autorun (handle)->
-      project = null
-      if not Meteor.user().teamId
-        return
-      project = Projects.findOne name:project_name, teamId: Meteor.user().teamId
-      if not project
-        return
-
-      handle.stop()
-
-      console.log 'project:', project, Meteor.user(), Projects.find().count()
-      if project
-        ts.State.filterSelected.set
-          id: project._id
-          name: project.name
-
-  spark: (spark_id) ->
-    Meteor.autorun (handle) ->
-      spark = Sparks.findOne _id: spark_id
-      if not spark
-        return
-
-      handle.stop()
-      ts.State.showSpark.set spark
-
-  setProject: (project_name) ->
-    console.log 'set project:', project_name
-    if not project_name
-      project_name = '全部'
-    # TODO: this is a workaround to force navigate to the proper location.
-    this.navigate("/projects/#{project_name}", true)
-
-  setSpark: (id) ->
-    this.navigate("/sparks/#{id}", true)
-
-Router = new TsRouter;
-
 Meteor.startup ->
-  Backbone.history.start pushState: true
-
   $(window).focus ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'online:', profile.username

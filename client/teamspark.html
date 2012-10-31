@@ -11,54 +11,70 @@
 <template name="content">
   {{#if loggedIn }}
     {{#if ts.State.loaded.get }}
-    <div class="row-fluid stretch">
-      {{{connectStatus}}}
-      {{#if isOrphan}}
-        <div class="overlay"><h1>您还没有加入任何团队，请等待您的team leader审批</h1></div>
-      {{else}}
+      <div class="row-fluid stretch">
+        {{{connectStatus}}}
 
-      {{# if ts.isIphone }}
-        {{> iphone }}
-      {{else}}
-      <div class="span2 project-panel stretch sidebar-nav attraction">
-        {{>projects}}
-      </div>
-      <div class="span7 spark-panel stretch">
-        <header>
-          <h4>
-            {{teamName}}
-            {{>notifications}}
-            <div class="btn-group pull-right" id="user-settings">
-              {{# if ts.isStaff ts.currentTeam }}
-              <a class="btn btn-info btn-small" id="manage-member" title="管理团队成员"><i class="icon-plus"></i></a>
-              {{/if}}
-              <a class="btn btn-info btn-small" id="edit-profile" title="编辑个人资料"><i class="icon-cogs"></i></a>
-              <a class="btn btn-info btn-small" id="logout" title="退出登录"><i class="icon-signout"></i></a>
-
-            </div>
-          </h4>
-        </header>
-        {{>sparkFilter}}
-        {{>sparkInput}}
-        {{>sparkEdit}}
-        {{#if showSingleSpark}}
-          <div class="sparks">
-            {{#with singleSpark}}
-            {{>spark}}
-            {{/with}}
-          </div>
+        {{#if isOrphan}}
+          <div class="overlay"><h1>您还没有加入任何团队，请等待您的team leader审批</h1></div>
         {{else}}
-          {{> sparks}}
-        {{/if}}
-      </div>
-      <div class="span3 activity-panel stretch attraction">
-        {{> activities}}
-      </div>
-      {{/if}}
 
-      {{/if}}
-    </div>
-    {{>memberDialog}}
+          <div class="span2 project-panel stretch sidebar-nav attraction">
+            {{>projects}}
+          </div>
+
+          <div class="span7 spark-panel stretch">
+            <header>
+              <h4>
+                {{teamName}}
+                {{>notifications}}
+                <div class="btn-group pull-right" id="user-settings">
+                  {{# if ts.isStaff ts.currentTeam }}
+                  <a class="btn btn-info btn-small" id="manage-member" title="管理团队成员"><i class="icon-plus"></i></a>
+                  {{/if}}
+                  <a class="btn btn-info btn-small" id="edit-profile" title="编辑个人资料"><i class="icon-cogs"></i></a>
+                  <a class="btn btn-info btn-small" id="logout" title="退出登录"><i class="icon-signout"></i></a>
+
+                </div>
+              </h4>
+            </header>
+            {{#if showCharts}}
+              {{> charts}}
+            {{else}}
+              {{#if showSchedule}}
+                {{> schedule}}
+              {{else}}
+                {{>sparkFilter}}
+                {{>sparkInput}}
+                {{>sparkEdit}}
+                {{#if showSingleSpark}}
+                  <div class="sparks">
+                    {{#with singleSpark}}
+                    {{>spark}}
+                    {{/with}}
+                  </div>
+                {{else}}
+                  {{> sparks}}
+                {{/if}}
+              {{/if}}
+            {{/if}}
+            <div class="toolbar-bottom">
+              <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
+                <button class="btn {{ showSparks }}" id="spark-board" title="任务墙"><i class="icon-tasks"></i>任务墙</button>
+                <button class="btn {{ showSchedule }}" id="schedule-board" title="进度板"><i class="icon-calendar"></i>进度板</button>
+                <button class="btn {{ showCharts }}" id="chart-board" title="统计表"><i class="icon-dashboard"></i>统计表</button>
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="span3 activity-panel stretch attraction">
+            {{> activities}}
+          </div>
+        {{/if}}
+
+      </div>
+      {{>memberDialog}}
     {{else}}
       <div class="overlay"><h1>努力加载中...</h1></div>
     {{/if}}

@@ -138,5 +138,10 @@ _.extend ts.State,
     get: -> ts.getSession('showSpark') || null
     set: (value) -> ts.setSession 'showSpark', value
 
+  showContent:
+    get: -> ts.getSession('showContent') || 'sparks'
+    set: (value) -> ts.setSession 'showContent', value
+
+
 Meteor.startup ->
   ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
