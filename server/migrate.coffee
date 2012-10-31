@@ -21,10 +21,16 @@ Meteor.methods
 
       Sparks.update spark._id, $set: {finishers: finishers}, $pullAll: {owners: finishers}
 
-  initProfileTime: ->
+  migrateProfileTime: ->
     profiles = Profiles.find().fetch()
     _.each profiles, (p) ->
       totalCreated = Sparks.find(authorId: p.userId).count()
       totalFinished = Sparks.find(finished: true, finishers: p.userId).count()
       seconds = totalCreated * 120 + totalFinished * 240
       Profiles.update {userId: p.userId}, {$set: totalSeconds: seconds}
+
+  migratePoints: ->
+    sparks = Sparks.find().fetch()
+    _.each sparks, (item) ->
+      totalPoints = item.finishers.length * ts.consts.points.FINISH_SPARK
+      Sparks.update item._id, $set: {totalPoints: totalPoints, points: ts.consts.points.FINISH_SPARK}

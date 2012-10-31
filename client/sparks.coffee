@@ -76,6 +76,15 @@ _.extend Template.spark,
       Meteor.call 'updateSpark', sparkId, value, 'deadline'
     )
 
+    ts.setEditable
+      node: $('.edit-points', $parent)
+      value: -> @points
+      source: -> ts.consts.points.FINISH_SPARK_POINTS
+      renderCallback: (e, editable) ->
+        value = editable.value
+        sparkId = editable.$element.data('id')
+        Meteor.call 'updateSpark', sparkId, value, 'points'
+
     $('.edit-owners', $parent).editable(
       type: 'text'
       inputclass: 'span4'
@@ -292,6 +301,9 @@ _.extend Template.spark,
 
   hasFiles: ->
     @files?.length > 0
+
+  isCurrentOwner: ->
+    Meteor.userId() is @owners[0]
 
 _.extend Template.commentInput,
   events:

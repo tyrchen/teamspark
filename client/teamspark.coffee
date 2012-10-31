@@ -370,7 +370,7 @@ _.extend Template.notifications,
     if not @visitedAt
       Meteor.call 'notificationVisited', @_id
       $.pnotify
-        title: "<a href='#'>#{@title}</a>",
+        title: "#{@title}",
         text: @content,
         type: ts.consts.notifications[@level]
 

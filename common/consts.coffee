@@ -45,6 +45,7 @@ ts.consts.filter.MEMBERS = ->
 ts.consts.points = {}
 ts.consts.points.CREATE_SPARK = 4
 ts.consts.points.FINISH_SPARK = 16
+ts.consts.points.FINISH_SPARK_POINTS = {4:4, 8:8, 16:16, 32:32, 64:64, 128:128}
 ts.consts.points.COMMENT = 2
 ts.consts.points.SUPPORT = 1
 

@@ -138,13 +138,18 @@ Meteor.methods
       content1 = "#{user.username} 将任务 #{spark.title} 标记为完成"
       finished = true
 
-    Sparks.update sparkId, $set: {finished: finished}, $pull: {owners: currentId}, $push: {auditTrails: audit}, $addToSet: {finishers: currentId}
+    Sparks.update sparkId,
+      $set: {finished: finished}
+      $pull: {owners: currentId}
+      $push: {auditTrails: audit}
+      $addToSet: {finishers: currentId}
+      $inc: {totalPoints: spark.points}
 
 
     Meteor.call 'createAudit', content1, spark.projects[0]
 
-    if finishers and currentId not in finishers
-      Meteor.call 'addPoints', ts.consts.points.FINISH_SPARK
+    if not finishers or currentId not in finishers
+      Meteor.call 'addPoints', spark.points
 
     recipients = _.union [spark.authorId], spark.owners
     Meteor.call 'notify', recipients, "#{user.username}完成了#{spark.title}", audit.content, sparkId
@@ -205,7 +210,7 @@ Meteor.methods
     formatValue = ->
       switch field
         when 'deadline' then (new Date(value)).getTime()
-        when 'priority' then parseInt value
+        when 'priority', 'points' then parseInt value
         else value
 
     auditInfo = ->
@@ -213,12 +218,13 @@ Meteor.methods
       switch field
         when 'deadline' then "截止日期为: #{ts.formatDate(v)}"
         when 'priority' then "优先级为: #{v}"
+        when 'points' then "积分为: #{v}"
         when 'title' then "标题为: #{v}"
         when 'content' then "内容为: #{v}"
         when 'type' then "类型为: #{ts.sparks.type(v).name}"
 
     #console.log 'updateSpark: ', value, field
-    fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content', 'type']
+    fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content', 'type', 'points']
     if not _.find(fields, (item) -> item is field)
       return
 
@@ -285,4 +291,11 @@ Meteor.methods
     Meteor.call 'createAudit', content1, spark.projects[0]
 
     recipients = _.union [spark.authorId], spark.owners
-    Meteor.call 'notify', recipients, "#{user.username}修改了#{spark.title}", audit.content, sparkId
+
+    if field is 'points' and command[field] > 32
+      # ugly guy we will notify the entire team
+      all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+      all = _.without all, user._id
+      Meteor.call 'notify', all, "#{user.username}有点小无耻地修改了#{spark.title}的积分为#{command[field]}", audit.content, sparkId
+    else
+      Meteor.call 'notify', recipients, "#{user.username}修改了#{spark.title}", audit.content, sparkId
