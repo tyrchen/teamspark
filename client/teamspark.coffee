@@ -11,7 +11,9 @@ ts.filteringProject = ->
 _.extend Template.content,
   events:
     'click #manage-member': (e) ->
-      $('#manage-member-dialog').modal()
+      $('#manage-member-dialog').modal
+        keyboard: false
+        backdrop: 'static'
       $node = $('#member-name')
       $node.typeahead
         minLength: 2
@@ -248,7 +250,9 @@ _.extend Template.sparkFilter,
       name = $node.data('name')
 
       ts.State.sparkToCreate.set {id: id, name: name}
-      $('#add-spark').modal()
+      $('#add-spark').modal
+        keyboard: false
+        backdrop: 'static'
 
     'click .shortcut': (e) ->
       type = $(e.currentTarget).data('id')
@@ -403,7 +407,7 @@ _.extend Template.notifications,
     if not @visitedAt
       Meteor.call 'notificationVisited', @_id
       $.pnotify
-        title: "<a href='#'>#{@title}</a>",
+        title: "#{@title}",
         text: @content,
         type: ts.consts.notifications[@level]
 

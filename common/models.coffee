@@ -12,7 +12,7 @@ Projects = new Meteor.Collection 'projects'
 # owners: [userId, ...], finishers: [userId, ...], progress: 10
 # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
 # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
-# updatedAt: Date(), teamId: teamId
+# updatedAt: Date(), teamId: teamId, points: 16, totalPoints: 64
 # }
 Sparks = new Meteor.Collection 'sparks'
 
