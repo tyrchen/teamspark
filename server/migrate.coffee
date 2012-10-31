@@ -34,3 +34,8 @@ Meteor.methods
     _.each sparks, (item) ->
       totalPoints = item.finishers.length * ts.consts.points.FINISH_SPARK
       Sparks.update item._id, $set: {totalPoints: totalPoints, points: ts.consts.points.FINISH_SPARK}
+
+  migrateTotalSupporters: ->
+    sparks = Sparks.find().fetch()
+    _.each sparks, (item) ->
+      Sparks.update item._id, $set: totalSupporters: item.supporters.length

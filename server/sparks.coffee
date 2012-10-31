@@ -86,12 +86,12 @@ Meteor.methods
     user = Meteor.user()
 
     if ts.sparks.hasSupported spark
-      Sparks.update sparkId, $pull: supporters: user._id
+      Sparks.update sparkId, $pull: supporters: user._id, $inc: totalSupporters: -1
       content = "#{user.username} 取消支持 #{spark.title}"
       Meteor.call 'addPoints', -1 * ts.consts.points.SUPPORT
     else
       content = "#{user.username} 支持 #{spark.title}"
-      Sparks.update sparkId, $push: supporters: user._id
+      Sparks.update sparkId, $push: supporters: user._id, $inc: totalSupporters: 1
       Meteor.call 'addPoints', ts.consts.points.SUPPORT
 
       # TODO: later we should delete notification once user unsupport it.
@@ -292,10 +292,12 @@ Meteor.methods
 
     recipients = _.union [spark.authorId], spark.owners
 
-    if field is 'points' and command[field] > 32
+    if field is 'points' and command[field] > 16 and command[field] > spark.points
       # ugly guy we will notify the entire team
       all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-      all = _.without all, user._id
-      Meteor.call 'notify', all, "#{user.username}有点小无耻地修改了#{spark.title}的积分为#{command[field]}", audit.content, sparkId
+      recipients = _.without all, user._id
+      title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
     else
-      Meteor.call 'notify', recipients, "#{user.username}修改了#{spark.title}", audit.content, sparkId
+      title = "#{user.username}修改了#{spark.title}"
+
+    Meteor.call 'notify', recipients, title, audit.content, sparkId
