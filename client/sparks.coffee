@@ -158,7 +158,9 @@ _.extend Template.spark,
 
       ts.editor().panelInstance 'spark-edit-content', hasPanel : true
 
-      $('#edit-spark').modal()
+      $('#edit-spark').modal
+        keyboard: false
+        backdrop: 'static'
 
     'click .allocate': (e) ->
       alert 'Not finished yet'
