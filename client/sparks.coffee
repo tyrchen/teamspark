@@ -137,7 +137,7 @@ _.extend Template.spark,
       $node = $('#edit-spark')
       $node.data('id', @_id)
       #console.log 'spark id:', $node.data('id'), @title, @content
-      $('.modal-header h3', $node).val "编辑 #{@title}"
+      $('.modal-header h3', $node).text "编辑 #{@title}"
       $('#spark-edit-title', $node).val @title
 
       # remove old editor
