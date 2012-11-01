@@ -43,9 +43,13 @@ Meteor.methods
   migratePositionedAt: ->
     sparks = Sparks.find().fetch()
     _.each sparks, (item) ->
-      history = _.find item.auditTrails, (h) -> h.content.indexOf('更新了项目') > 0
-      if history
-        command = $set: positionedAt: history.createdAt
+      if item.auditTrails?.length > 0
+        history = _.find item.auditTrails, (h) -> h.content?.indexOf('更新了项目') > 0
       else
-        command = $set: positionedAt: item.createdAt
-      Sparks.update item._id, command
+        history = null
+
+      if history
+        command = positionedAt: history.createdAt
+      else
+        command = positionedAt: item.createdAt
+      Sparks.update item._id, $set: command
