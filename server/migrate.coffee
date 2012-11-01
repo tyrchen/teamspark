@@ -39,3 +39,9 @@ Meteor.methods
     sparks = Sparks.find().fetch()
     _.each sparks, (item) ->
       Sparks.update item._id, $set: totalSupporters: item.supporters.length
+
+  migrateFinishedAt: ->
+    sparks = Sparks.find(finished:true).fetch()
+    _.each sparks, (item) ->
+      Sparks.update item._id, $set: finishedAt: item.updatedAt
+
