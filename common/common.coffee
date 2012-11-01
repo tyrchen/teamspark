@@ -3,6 +3,9 @@ ts = ts || {}
 ts.now = ->
   (new Date()).getTime()
 
+ts.toDate = (d)->
+  (new Date(new Date(d).toDateString())).getTime()
+
 ts.formatDate = (date) ->
   # to ensure date is a Date instance
   date = new Date(date)
@@ -67,6 +70,8 @@ ts.sparks.types = ->
     {name: '任务', id: 'task', icon: 'icon-inbox'},
     {name: '改进', id: 'improvement', icon: 'icon-wrench'}
   ]
+
+ts.sparks.typesPos = {'idea': 1, 'bug': 2, 'feature': 3, 'task': 4, 'improvement': 5}
 
 ts.sparks.type = (spark) ->
   if spark.type

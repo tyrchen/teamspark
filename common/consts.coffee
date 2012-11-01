@@ -66,3 +66,5 @@ ts.consts.charts.layout = [
 
   {row: 4, col: 1, size_x: 4, size_y: 2, name: ''},
 ]
+
+# stat consts

@@ -30,6 +30,9 @@ if Meteor.is_server
   Meteor.publish 'notifications', (userId) ->
     Notifications.find {recipientId: userId}, {sort: 'createdAt': -1}
 
+  Meteor.publish 'dayStats', (teamId) ->
+    DayStats.find teamId: teamId
+
 if Meteor.is_client
   Meteor.autosubscribe ->
     teamId = ts.State.teamId.get()
@@ -50,6 +53,7 @@ if Meteor.is_client
       Meteor.subscribe 'profiles', teamId, ->
         console.log 'profiles loaded'
 
-
+      Meteor.subscribe 'dayStats', teamId, ->
+        console.log 'dayStats loaded'
 
 
