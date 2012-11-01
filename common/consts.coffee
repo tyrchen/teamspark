@@ -51,3 +51,18 @@ ts.consts.points.SUPPORT = 1
 
 # notification
 ts.consts.notifications = {1: 'success', 2: 'info', 3: '', 4: 'error', 5: ''}
+
+# initial chart layout
+ts.consts.charts = {}
+ts.consts.charts.layout = [
+  {row: 1, col: 1, size_x: 2, size_y: 2, name: ''},
+  {row: 1, col: 3, size_x: 2, size_y: 1, name: ''},
+
+  {row: 2, col: 3, size_x: 1, size_y: 1, name: ''},
+  {row: 2, col: 4, size_x: 1, size_y: 1, name: ''},
+
+  {row: 3, col: 1, size_x: 2, size_y: 1, name: ''},
+  {row: 3, col: 3, size_x: 2, size_y: 1, name: ''},
+
+  {row: 4, col: 1, size_x: 4, size_y: 2, name: ''},
+]

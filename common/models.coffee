@@ -24,3 +24,18 @@ AuditTrails = new Meteor.Collection 'auditTrails'
 # type: 1-5 | user | spark | project | team | site
 # title: 'bla', content: 'html bla', url: 'url', createdAt: new Date(), readAt: new Date(), visitedAt: new Date() }
 Notifications = new Meteor.Collection 'notifications'
+
+# dayStat = {
+#   _id: uuid, date: new Date(), teamId: teamId,
+#   positioned: { total: 1], userId2: [0, 0,0,0,0,0], ... } # index 0 is total[15, 1,2,3,4,5], userId1: [3, 1, 0, 0, 1,
+#   finished: { the same as created}
+# }
+DayStats = new Meteor.Collection 'dayStats'
+
+# weekStat = {
+#   _id: uuid, date: new Date(), teamId: teamId,
+#   positioned: { total: 1], userId2: [0, 0,0,0,0,0], ... } # index 0 is total[15, 1,2,3,4,5], userId1: [3, 1, 0, 0, 1,
+#   finished: { the same as create }
+#   burned: [79, 56, 40, 32, 24, 12, 3]
+# }
+WeekStats = new Meteor.Collection 'weekStats'
