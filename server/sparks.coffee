@@ -139,7 +139,7 @@ Meteor.methods
       finished = true
 
     Sparks.update sparkId,
-      $set: {finished: finished}
+      $set: {finished: finished, points: ts.consts.points.FINISH_SPARK} # restore points after one finished her job
       $pull: {owners: currentId}
       $push: {auditTrails: audit}
       $addToSet: {finishers: currentId}
