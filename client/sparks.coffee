@@ -172,6 +172,9 @@ _.extend Template.spark,
   created: ->
     moment(@createdAt).fromNow()
 
+  positioned: ->
+    moment(@positionedAt).fromNow()
+
   updated: ->
     moment(@updatedAt).fromNow()
 

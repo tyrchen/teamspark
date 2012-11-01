@@ -43,6 +43,7 @@ Meteor.methods
       deadline: deadline
       createdAt: now
       updatedAt: now
+      positionedAt: now
       teamId: user.teamId
 
     sparkType = ts.sparks.type type
@@ -258,6 +259,7 @@ Meteor.methods
       content1 += info
 
       command['projects'] = projects
+      command['positionedAt'] = ts.now()
       Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
     else if field is 'owners'
       users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
