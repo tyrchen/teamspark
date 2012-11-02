@@ -88,12 +88,12 @@ Meteor.methods
     user = Meteor.user()
 
     if ts.sparks.hasSupported spark
-      Sparks.update sparkId, $pull: supporters: user._id, $inc: totalSupporters: -1
+      Sparks.update sparkId, $pull: {supporters: user._id}, $inc: {totalSupporters: -1}
       content = "#{user.username} 取消支持 #{spark.title}"
       Meteor.call 'addPoints', -1 * ts.consts.points.SUPPORT
     else
       content = "#{user.username} 支持 #{spark.title}"
-      Sparks.update sparkId, $push: supporters: user._id, $inc: totalSupporters: 1
+      Sparks.update sparkId, $push: {supporters: user._id}, $inc: {totalSupporters: 1}
       Meteor.call 'addPoints', ts.consts.points.SUPPORT
 
       # TODO: later we should delete notification once user unsupport it.

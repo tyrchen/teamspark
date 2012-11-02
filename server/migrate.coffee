@@ -1,4 +1,22 @@
 Meteor.methods
+  migrateProfiles: ->
+    if Profiles.find().count() is 0
+      users = Meteor.users.find().fetch()
+      _.each users, (user) ->
+        Profiles.insert
+          userId: user._id
+          username: user.username
+          online: false
+          teamId: user.teamId
+
+  migrateUserPoints: ->
+    if not Meteor.user().points
+      users = Meteor.users.find().fetch()
+      _.each users, (user) ->
+        totalCreated = Sparks.find(authorId: user._id).count() * ts.consts.points.CREATE_SPARK
+        totalFinished = Sparks.find({owners: user._id, finished: true}).count() * ts.consts.points.FINISH_SPARK
+        Meteor.users.update user._id, $set: points: totalCreated + totalFinished
+
   migrateSparkFinishers: ->
     sparks = Sparks.find().fetch()
     _.each sparks, (spark) ->
