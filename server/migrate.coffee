@@ -72,7 +72,6 @@ Meteor.methods
         command = positionedAt: item.createdAt
       Sparks.update item._id, $set: command
 
-
   migrateFinishedAt: ->
     sparks = Sparks.find(finished:true).fetch()
     _.each sparks, (item) ->

@@ -33,7 +33,7 @@ Notifications = new Meteor.Collection 'notifications'
 DayStats = new Meteor.Collection 'dayStats'
 
 # weekStat = {
-#   _id: uuid, date: new Date(), teamId: teamId,
+#   _id: uuid, date: new Date(), teamId: teamId, projectId: projectId,
 #   positioned: { total: 1], userId2: [0, 0,0,0,0,0], ... } # index 0 is total[15, 1,2,3,4,5], userId1: [3, 1, 0, 0, 1,
 #   finished: { the same as create }
 #   burned: [79, 56, 40, 32, 24, 12, 3]
