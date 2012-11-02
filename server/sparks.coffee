@@ -44,6 +44,8 @@ Meteor.methods
       createdAt: now
       updatedAt: now
       positionedAt: now
+      points: ts.consts.points.FINISH_SPARK
+      totalPoints: 0
       teamId: user.teamId
 
     sparkType = ts.sparks.type type
@@ -87,12 +89,12 @@ Meteor.methods
     user = Meteor.user()
 
     if ts.sparks.hasSupported spark
-      Sparks.update sparkId, $pull: supporters: user._id, $inc: totalSupporters: -1
+      Sparks.update sparkId, $pull: {supporters: user._id}, $inc: {totalSupporters: -1}
       content = "#{user.username} 取消支持 #{spark.title}"
       Meteor.call 'addPoints', -1 * ts.consts.points.SUPPORT
     else
       content = "#{user.username} 支持 #{spark.title}"
-      Sparks.update sparkId, $push: supporters: user._id, $inc: totalSupporters: 1
+      Sparks.update sparkId, $push: {supporters: user._id}, $inc: {totalSupporters: 1}
       Meteor.call 'addPoints', ts.consts.points.SUPPORT
 
       # TODO: later we should delete notification once user unsupport it.
@@ -140,7 +142,7 @@ Meteor.methods
       finished = true
 
     Sparks.update sparkId,
-      $set: {finished: finished}
+      $set: {finished: finished, points: ts.consts.points.FINISH_SPARK, finishedAt: ts.now()} # restore points after one finished her job
       $pull: {owners: currentId}
       $push: {auditTrails: audit}
       $addToSet: {finishers: currentId}
@@ -294,11 +296,19 @@ Meteor.methods
 
     recipients = _.union [spark.authorId], spark.owners
 
-    if field is 'points' and command[field] > 16 and command[field] > spark.points
-      # ugly guy we will notify the entire team
-      all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-      recipients = _.without all, user._id
-      title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
+    if field is 'points'
+      if command[field] > ts.consts.points.FINISH_SPARK and command[field] > spark.points
+        # ugly guy we will notify the entire team
+        all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+        recipients = _.without all, user._id
+        title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
+      else if command[field] < ts.consts.points.FINISH_SPARK and command[field] < spark.points
+        # ugly guy we will notify the entire team
+        all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+        recipients = _.without all, user._id
+        title = "#{user.username}很有节操地修改了#{spark.title}的积分为#{command[field]}"
+      else
+        title = "#{user.username}修改了#{spark.title}" 
     else
       title = "#{user.username}修改了#{spark.title}"
 
