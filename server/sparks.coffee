@@ -294,11 +294,19 @@ Meteor.methods
 
     recipients = _.union [spark.authorId], spark.owners
 
-    if field is 'points' and command[field] > 16 and command[field] > spark.points
-      # ugly guy we will notify the entire team
-      all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-      recipients = _.without all, user._id
-      title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
+    if field is 'points'
+      if command[field] > ts.consts.points.FINISH_SPARK and command[field] > spark.points
+        # ugly guy we will notify the entire team
+        all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+        recipients = _.without all, user._id
+        title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
+      else if command[field] < ts.consts.points.FINISH_SPARK and command[field] < spark.points
+        # ugly guy we will notify the entire team
+        all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
+        recipients = _.without all, user._id
+        title = "#{user.username}很有节操地修改了#{spark.title}的积分为#{command[field]}"
+      else
+        title = "#{user.username}修改了#{spark.title}" 
     else
       title = "#{user.username}修改了#{spark.title}"
 
