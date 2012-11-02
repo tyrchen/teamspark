@@ -1,8 +1,12 @@
 _.extend Template.charts,
   rendered: ->
+    width = Math.floor(($('.spark-panel').width() - 30) / 4 - 5)
+    height = Math.floor(width * 0.618)
+    console.log width, height
+
     $(".gridster > ul").gridster
       widget_margins: [5, 5]
-      widget_base_dimensions: [170, 130]
+      widget_base_dimensions: [width, height]
       serialize_params: ($w, wgd) ->
         {col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y, name: $w.data('name')}
 
