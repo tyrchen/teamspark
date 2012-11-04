@@ -36,7 +36,7 @@ ts.stats.trackDaySpark = (spark, date, type="positioned", value=1) ->
 
     incCmd = ts.stats.getIncCmd spark, type, value
     DayStats.update dayStatId, $inc: incCmd
-    #console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, Projects.findOne(_id: id).name
+    console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, id
 
 
 Meteor.methods
@@ -66,8 +66,6 @@ Meteor.methods
 
     finishedDate = ts.toDate spark.finishedAt
     ts.stats.trackDaySpark spark, finishedDate, 'finished', 1
-
-    console.log "spark #{spark.title}: finished to: #{ts.formatDate(finishedDate)}"
 
 
 
