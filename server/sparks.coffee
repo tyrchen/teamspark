@@ -157,7 +157,9 @@ Meteor.methods
 
     recipients = _.union [spark.authorId], spark.owners
     Meteor.call 'notify', recipients, "#{user.username}完成了#{spark.title}", audit.content, sparkId
-    Meteor.call 'trackFinished', sparkId
+
+    if finished
+      Meteor.call 'trackFinished', sparkId
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]

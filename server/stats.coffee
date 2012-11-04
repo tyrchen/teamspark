@@ -13,15 +13,16 @@ ts.stats.createDayStat = (date, teamId, projectId) ->
     positioned: data
     finished: data
 
-ts.stats.getIncCmd = (spark, type, value=1) ->
+ts.stats.getIncCmd = (spark, type, users = [], value=1) ->
   pos = ts.sparks.typesPos[spark.type]
   userId = Meteor.userId()
 
   incCmd = {}
   incCmd["#{type}.total.0"] = value
   incCmd["#{type}.total.#{pos}"] = value
-  incCmd["#{type}.#{userId}.0"] = value
-  incCmd["#{type}.#{userId}.#{pos}"] = value
+  _.each users, (userId) ->
+    incCmd["#{type}.#{userId}.0"] = value
+    incCmd["#{type}.#{userId}.#{pos}"] = value
 
   return incCmd
 
@@ -34,9 +35,14 @@ ts.stats.trackDaySpark = (spark, date, type="positioned", value=1) ->
     if not dayStatId
       dayStatId = ts.stats.createDayStat date, Meteor.user().teamId, id
 
-    incCmd = ts.stats.getIncCmd spark, type, value
+    if type is 'positioned'
+      users = [spark.authorId]
+    else
+      users = spark.finishers || []
+
+    incCmd = ts.stats.getIncCmd spark, type, users, value
     DayStats.update dayStatId, $inc: incCmd
-    console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, id
+    console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, id, users
 
 
 Meteor.methods
