@@ -15,7 +15,7 @@ ts.charts.stats = ->
 _.extend Template.charts,
   rendered: ->
     width = Math.floor(($('.spark-panel').width() - 35) / 4 - 5)
-    height = Math.floor(width * 0.8)
+    height = Math.floor(width)
 
     $(".gridster > ul").gridster
       widget_margins: [5, 5]
@@ -30,13 +30,24 @@ _.extend Template.charts,
     ts.charts.catchup.graph()
     ts.charts.distribution.graph('positioned')
     ts.charts.distribution.graph('finished')
+    ts.charts.userDistribution.graph('finished')
+    ts.charts.self.graph()
 
 
   widgets: ->
     amplify.store('chart_layout') || ts.consts.charts.layout
 
+  title: ->
+    switch @name
+      when 'catchup' then '追赶图'
+      when 'distribution-positioned' then '发表类别分布'
+      when 'distribution-finished' then '完成类别分布'
+      when 'user-distribution-finished' then '团队成员完成分布'
+      when 'self' then '个人统计'
   chart: ->
     switch @name
       when 'catchup' then ts.charts.catchup.graph()
       when 'distribution-positioned' then ts.charts.distribution.graph('positioned')
       when 'distribution-finished' then ts.charts.distribution.graph('finished')
+      when 'user-distribution-finished' then ts.charts.userDistribution.graph('finished')
+      when 'self' then ts.charts.self.graph()

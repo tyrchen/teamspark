@@ -58,6 +58,8 @@ ts.consts.charts.layout = [
   {row: 1, col: 1, size_x: 4, size_y: 2, name: 'catchup'},
   {row: 3, col: 1, size_x: 4, size_y: 1, name: 'distribution-positioned'},
   {row: 4, col: 1, size_x: 4, size_y: 1, name: 'distribution-finished'},
+  {row: 5, col: 1, size_x: 4, size_y: 2, name: 'user-distribution-finished'},
+  {row: 6, col: 1, size_x: 4, size_y: 1, name: 'self'},
 ]
 
 # stat consts
