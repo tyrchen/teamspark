@@ -56,8 +56,8 @@ ts.consts.notifications = {1: 'success', 2: 'info', 3: '', 4: 'error', 5: ''}
 ts.consts.charts = {}
 ts.consts.charts.layout = [
   {row: 1, col: 1, size_x: 4, size_y: 2, name: 'catchup'},
-  {row: 3, col: 1, size_x: 2, size_y: 2, name: 'self'},
-  {row: 3, col: 3, size_x: 2, size_y: 2, name: 'team'},
+  {row: 3, col: 1, size_x: 4, size_y: 1, name: 'distribution-positioned'},
+  {row: 4, col: 1, size_x: 4, size_y: 1, name: 'distribution-finished'},
 ]
 
 # stat consts

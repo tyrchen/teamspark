@@ -78,7 +78,7 @@ Meteor.methods
       Sparks.update item._id, $set: finishedAt: item.updatedAt
 
   migrateStat: ->
-    sparks = Sparks.find({}).fetch()
+    sparks = Sparks.find().fetch()
     _.each sparks, (item) ->
       Meteor.call 'trackPositioned', item
       if item.finished
