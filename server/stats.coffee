@@ -13,20 +13,7 @@ ts.stats.createDayStat = (date, teamId, projectId) ->
     positioned: data
     finished: data
 
-ts.stats.createWeekStat = (date, teamId, projectId) ->
-  l = [0, 0, 0, 0, 0, 0]
-  data = {total: l}
-  _.each Meteor.users.find(teamId:teamId).fetch(), (user) ->
-    data[user._id] = l
-
-  WeekStats.insert
-    date: date
-    teamId: teamId
-    positioned: data
-    finished: data
-    burned: [0, 0, 0, 0, 0, 0, 0]
-
-ts.stats.getIncCmd = (spark, type, value) ->
+ts.stats.getIncCmd = (spark, type, value=1) ->
   pos = ts.sparks.typesPos[spark.type]
   userId = Meteor.userId()
 
@@ -40,36 +27,52 @@ ts.stats.getIncCmd = (spark, type, value) ->
 
 
 
-ts.stats.trackDaySpark = (spark, type="positioned", value=1) ->
-  date = ts.toDate(ts.now())
-  dayStatId = DayStats.findOne(date: date)?._id
+ts.stats.trackDaySpark = (spark, date, type="positioned", value=1) ->
+  #date = ts.toDate(ts.now())
+  dayStatId = DayStats.findOne(date: date, teamId: spark.teamId, projectId: spark.projectId)?._id
   if not dayStatId
-    dayStatId = ts.stats.createDayStat date, Meteor.user().teamId
+    dayStatId = ts.stats.createDayStat date, Meteor.user().teamId, spark.projectId
 
   incCmd = ts.stats.getIncCmd spark, type, value
   DayStats.update dayStatId, $inc: incCmd
 
-ts.stats.trackWeekSpark = (spark, type="positioned", value=1) ->
-  date = ts.toMonday(ts.now())
-  weekday = ts.toWeekday(ts.now())
-  weekStatId = WeekStats.findOne(date:date)?._id
-  if not weekStatId
-    weekStatId = ts.stats.createWeekStat date, Meteor.user().teamId
-
-  incCmd = ts.stats.getIncCmd spark, type, value
-
-  switch type
-    when 'positioned'
-      while weekday <= 7
-        incCmd["burned.#{weekday}"] = value
-        weekday += 1
-
-    when 'finished'
-
 
 Meteor.methods
-  trackCreated: (sparkId) ->
-    spark = Sparks.findOne _id: sparkId
-    ts._trackDaySpark spark, 'positioned'
+  trackPositioned: (sparkId) ->
+    if sparkId._id
+      spark = sparkId
+    else
+      spark = Sparks.findOne _id: sparkId
+
+    if not spark?.positionedAt
+      throw new Meteor.Error 400, "spark #{spark.title} has not yet been positioned"
+
+    createdDate = ts.toDate spark.createdAt
+    positionedDate = ts.toDate spark.positionedAt
+
+    if createdDate is positionedDate
+      ts.stats.trackDaySpark spark, positionedDate, 'positioned', 1
+    else
+      ts.stats.trackDaySpark spark, positionedDate, 'positioned', 1
+      ts.stats.trackDaySpark spark, createdDate, 'positioned', -1
+
+    console.log "spark #{spark.title}: positioned to: #{ts.formatDate(positionedDate)}"
+
+  trackFinished: (sparkId) ->
+    if sparkId._id
+      spark = sparkId
+    else
+      spark = Sparks.findOne _id: sparkId
+
+    if not spark?.finished
+      throw new Meteor.Error 400, "spark #{spark.title} has not yet been finished"
+
+    finishedDate = ts.toDate spark.finishedAt
+    ts.stats.trackDaySpark spark, finishedDate, 'finished', 1
+
+    console.log "spark #{spark.title}: finished to: #{ts.formatDate(finishedDate)}"
+
+
+
 
 
