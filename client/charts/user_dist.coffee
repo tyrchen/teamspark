@@ -14,14 +14,13 @@ ts.charts.userDistribution.data =  (statType = 'finished') ->
     return {key: user.username, values: data}
 
 ts.charts.userDistribution.graph = (statType = 'finished') ->
-  console.log('userDistribution')
   chartNode = "#chart-user-distribution-#{statType} svg"
   chart = nv.models.stackedAreaChart()
   chart.xAxis.tickFormat (d) ->
     d3.time.format('%x')(new Date(d))
 
   data = ts.charts.userDistribution.data(statType)
-  console.log 'userDistribution:', data, $(chartNode)
+  #console.log 'userDistribution:', data, $(chartNode)
   chart.yAxis.tickFormat(d3.format(',f'))
   d3.select(chartNode)
     .datum(data)

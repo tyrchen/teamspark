@@ -20,7 +20,7 @@ ts.charts.distribution.graph = (statType = 'positioned') ->
     d3.time.format('%x')(new Date(d))
 
   data = ts.charts.distribution.data(statType)
-  console.log 'distribution:', data, $(chartNode)
+  #console.log 'distribution:', data, $(chartNode)
   chart.yAxis.tickFormat(d3.format(',f'))
   d3.select(chartNode)
     .datum(data)

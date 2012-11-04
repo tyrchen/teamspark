@@ -24,7 +24,7 @@ ts.charts.self.graph = ->
     d3.time.format('%x')(new Date(d))
 
   data = ts.charts.self.data()
-  console.log 'self:', data, $(chartNode)
+  #console.log 'self:', data, $(chartNode)
   chart.yAxis.tickFormat(d3.format(',f'))
   d3.select(chartNode)
     .datum(data)

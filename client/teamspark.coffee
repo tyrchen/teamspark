@@ -176,7 +176,6 @@ _.extend Template.sparkFilter,
           v = parseInt editable.value
           value = {id: v, name: v}
 
-        console.log 'priority:', value
         ts.State.sparkPriorityFilter.set value
 
     ts.setEditable
@@ -256,7 +255,7 @@ _.extend Template.sparkFilter,
 
     'click .shortcut': (e) ->
       type = $(e.currentTarget).data('id')
-      console.log 'short cut:', type
+
       switch type
         when 'upcoming'
           ts.State.clearFilters()
