@@ -5,7 +5,6 @@ ts.getSession = (name) ->
 ts.setSession = (name, value) ->
   if name not in ['showSpark', 'teamId']
     # TODO: fix me. this is a workaround to clear notification entry and show sparks
-    console.log 'setsession: ', name, value
     Session.set 'showSpark', null
 
   Session.set name, value

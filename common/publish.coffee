@@ -31,7 +31,7 @@ if Meteor.is_server
     Notifications.find {recipientId: userId}, {sort: 'createdAt': -1}
 
   Meteor.publish 'dayStats', (teamId) ->
-    DayStats.find teamId: teamId
+    DayStats.find {teamId: teamId}, {sort: 'date': 1}
 
 if Meteor.is_client
   Meteor.autosubscribe ->

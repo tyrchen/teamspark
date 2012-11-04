@@ -52,6 +52,7 @@ Meteor.methods
 
     Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{title}", projectId
     Meteor.call 'addPoints', ts.consts.points.CREATE_SPARK
+    Meteor.call 'trackPositioned', sparkId
 
     if owners
       Meteor.call 'notify', owners, "#{user.username}创建了新#{sparkType.name}", "#{user.username}创建了新#{sparkType.name}: #{title}: ", sparkId
@@ -156,6 +157,7 @@ Meteor.methods
 
     recipients = _.union [spark.authorId], spark.owners
     Meteor.call 'notify', recipients, "#{user.username}完成了#{spark.title}", audit.content, sparkId
+    Meteor.call 'trackFinished', sparkId
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
@@ -262,7 +264,9 @@ Meteor.methods
 
       command['projects'] = projects
       command['positionedAt'] = ts.now()
+      Meteor.call 'trackPositioned', spark, -1
       Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
+      Meteor.call 'trackPositioned', sparkId, 1
     else if field is 'owners'
       users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
       #console.log 'new users:', users
