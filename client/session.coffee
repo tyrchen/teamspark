@@ -23,10 +23,11 @@ ts.tags.all =  ->
   projectId = ts.State.filterSelected.get()
   if projectId isnt 'all'
     project = Projects.findOne _id: projectId
-    if project.parent
-      query['projectId'] = project.parent
-    else
-      query['projectId'] = projectId
+    if project
+      if project.parent
+        query['projectId'] = project.parent
+      else
+        query['projectId'] = projectId
 
   Tags.find query
 

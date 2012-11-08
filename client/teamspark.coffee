@@ -343,6 +343,13 @@ _.extend Template.sparkInput,
       tokenSeparators: [' ']
       separator:';'
 
+    $node = $('#spark-tags')
+    $node.select2
+      tags: _.pluck ts.tags.all().fetch(), 'name'
+      placeholder: '添加标签'
+      tokenSeparators: [' ']
+      separator:';'
+
     $node = $('#spark-deadline')
     if not $node.data('done')
       $node.data('done', 'done')
@@ -383,12 +390,13 @@ _.extend Template.sparkInput,
       else
         owners = []
 
+      tags = $.trim($('input[name="tags"]', $form).val()).split(';')
       deadlineStr = $('input[name="deadline"]', $form).val()
 
 
       #console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
 
-      Meteor.call 'createSpark', title, content, type, project, owners, priority, deadlineStr, (error, result) ->
+      Meteor.call 'createSpark', title, content, type, project, owners, priority, tags, deadlineStr, (error, result) ->
         $('.control-group', $form).removeClass 'error'
         $form[0].reset()
         $('#add-spark').modal 'hide'

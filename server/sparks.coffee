@@ -1,5 +1,5 @@
 Meteor.methods
-  createSpark: (title, content, type, projectId, owners, priority, deadlineStr='') ->
+  createSpark: (title, content, type, projectId, owners, priority, tags, deadlineStr='') ->
     # spark = {
     # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
     # owners: [userId, ...], finishers: [userId, ...], progress: 10
@@ -24,6 +24,10 @@ Meteor.methods
     else
       deadline = null
 
+    if tags
+      _.each tags, (name) ->
+        ts.tags.createOrUpdate name, projectId
+
     now = ts.now()
 
     sparkId = Sparks.insert
@@ -47,6 +51,7 @@ Meteor.methods
       points: ts.consts.points.FINISH_SPARK
       totalPoints: 0
       teamId: user.teamId
+      tags: tags
 
     sparkType = ts.sparks.type type
 
@@ -331,35 +336,26 @@ Meteor.methods
     added = _.difference tags, spark.tags
     deleted = _.difference spark.tags, tags
 
-    console.log "added: #{added}, deleted: #{deleted}"
     if not added and not deleted
       return
 
     info = []
+
+    # always use parent project id
+    if spark.projects.length > 1
+      projectId = spark.projects[1]
+    else
+      projectId = spark.projects[0]
+
     if added.length > 0
       _.each added, (name) ->
-        # always use parent project id
-        if spark.projects.length > 1
-          projectId = spark.projects[1]
-        else
-          projectId = spark.projects[0]
-
-        tag = Tags.findOne {name: name, teamId: user.teamId, projectId: projectId}
-        if tag
-          Tags.update tag._id, $inc: sparks: 1
-        else
-          Tags.insert
-            name: name
-            teamId: user.teamId
-            projectId: projectId
-            createdAt: ts.now()
-            sparks: 1
+        ts.tags.createOrUpdate name, projectId
       info.push "添加了标签: #{added.join(', ')}"
 
     if deleted.length > 0
       info.push "删除了标签: #{deleted.join(', ')}"
       _.each deleted, (name) ->
-        Tags.update {name: name, teamId: user.teamId}, {$inc: sparks: -1}
+        ts.tags.createOrUpdate name, projectId, -1
 
 
     info = info.join('; ')

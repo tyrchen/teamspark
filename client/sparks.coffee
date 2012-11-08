@@ -123,8 +123,6 @@ _.extend Template.spark,
       autotext: 'never'
       emptytext: '<i class="icon-tags"></i>'
       value: ->
-        console.log spark.tags, $(".tags", $parent)
-
         if spark.tags
           return spark.tags.join(';')
         else
