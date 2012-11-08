@@ -83,3 +83,6 @@ Meteor.methods
       Meteor.call 'trackPositioned', item
       if item.finished
         Meteor.call 'trackFinished', item
+
+  migrateTags: ->
+    Tags.update {projectId: null}, {$set: projectId: '1b6c3590-c26a-49ea-96f7-d07f0e95fc74'}

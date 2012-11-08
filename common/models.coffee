@@ -41,5 +41,5 @@ DayStats = new Meteor.Collection 'dayStats'
 # }
 WeekStats = new Meteor.Collection 'weekStats'
 
-# tag = { _id: uuid, name: '剪辑器', teamId: teamId, sparks: 0, createdAt: new Date()}
+# tag = { _id: uuid, name: '剪辑器', teamId: teamId, projectId: projectId, sparks: 0, createdAt: new Date()}
 Tags = new Meteor.Collection 'tags'

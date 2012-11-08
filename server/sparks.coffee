@@ -338,13 +338,20 @@ Meteor.methods
     info = []
     if added.length > 0
       _.each added, (name) ->
-        tag = Tags.findOne {name: name, teamId: user.teamId}
+        # always use parent project id
+        if spark.projects.length > 1
+          projectId = spark.projects[1]
+        else
+          projectId = spark.projects[0]
+
+        tag = Tags.findOne {name: name, teamId: user.teamId, projectId: projectId}
         if tag
           Tags.update tag._id, $inc: sparks: 1
         else
           Tags.insert
             name: name
             teamId: user.teamId
+            projectId: projectId
             createdAt: ts.now()
             sparks: 1
       info.push "添加了标签: #{added.join(', ')}"

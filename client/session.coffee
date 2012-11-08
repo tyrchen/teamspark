@@ -18,8 +18,17 @@ ts.members.ordered = ->
   return ts.members.all().fetch()
 
 ts.tags = {}
-ts.tags.all = ->
-  Tags.find teamId: ts.State.teamId.get()
+ts.tags.all =  ->
+  query = {'teamId': ts.State.teamId.get()}
+  projectId = ts.State.filterSelected.get()
+  if projectId isnt 'all'
+    project = Projects.findOne _id: projectId
+    if project.parent
+      query['projectId'] = project.parent
+    else
+      query['projectId'] = projectId
+
+  Tags.find query
 
 ts.editor = ->
   new nicEditor
