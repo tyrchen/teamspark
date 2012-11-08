@@ -111,6 +111,11 @@ _.extend ts.State,
     getName: -> ts.getSession('sparkDeadlineFilter')?.name || 0
     set: (value) -> ts.setSession 'sparkDeadlineFilter', value
 
+  sparkTagFilter:
+    get: -> ts.getSession('sparkTagFilter')?.id || 'all'
+    getName: -> ts.getSession('sparkTagFilter')?.name || '全部'
+    set: (value) -> ts.setSession 'sparkTagFilter', value
+
   clearFilters: ->
     ts.State.sparkDeadlineFilter.set null
     ts.State.sparkFinishFilter.set null
@@ -120,6 +125,7 @@ _.extend ts.State,
     ts.State.sparkPriorityFilter.set null
     ts.State.sparkTypeFilter.set null
     ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
+    ts.State.sparkTagFilter.set null
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'

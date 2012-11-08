@@ -193,6 +193,7 @@ ts.sparks.query = (needProject=true) ->
   progress = ts.State.sparkProgressFilter.get()
   deadline = ts.State.sparkDeadlineFilter.get()
   finish = ts.State.sparkFinishFilter.get()
+  tag = ts.State.sparkTagFilter.get()
 
   showSpark = ts.State.showSpark.get()
 
@@ -237,6 +238,8 @@ ts.sparks.query = (needProject=true) ->
         query.push finishers: user._id
       query.push finished: true
 
+  if tag isnt 'all'
+    query.push tags: tag
   #console.log 'query:', query
   return query
 

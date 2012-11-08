@@ -41,6 +41,13 @@ ts.consts.filter.MEMBERS = ->
   members['all'] = '全部'
   return members
 
+ts.consts.filter.TAGS = ->
+  tags = {}
+  _.each ts.tags.all().fetch(), (item) ->
+    tags[item.name] = item.name
+  tags['all'] = '全部'
+  return tags
+
 # member points
 ts.consts.points = {}
 ts.consts.points.CREATE_SPARK = 4

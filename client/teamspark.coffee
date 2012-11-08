@@ -229,10 +229,7 @@ _.extend Template.sparkFilter,
     ts.setEditable
       node: $('#filter-owner')
       value: -> ts.State.sparkOwnerFilter.get()
-      source: ->
-        members = ts.consts.filter.MEMBERS()
-        members['all'] = '全部'
-        return members
+      source: -> ts.consts.filter.MEMBERS()
       renderCallback: (e, editable) ->
         if editable.value is 'all'
           user = {id: 'all', username: '全部'}
@@ -240,6 +237,16 @@ _.extend Template.sparkFilter,
           user = Meteor.users.findOne _id: editable.value
         ts.State.sparkOwnerFilter.set {id: user._id, name: user.username}
 
+    ts.setEditable
+      node: $('#filter-tag')
+      value: -> ts.State.sparkTagFilter.get()
+      source: -> ts.consts.filter.TAGS()
+      renderCallback: (e, editable) ->
+        if editable.value is 'all'
+          tag = {id: 'all', name: '全部'}
+        else
+          tag = {id: editable.value, name: editable.value}
+        ts.State.sparkTagFilter.set tag
   events:
     'click .spark-list .dropdown-menu > li': (e) ->
       $node = $(e.currentTarget)
@@ -294,6 +301,8 @@ _.extend Template.sparkFilter,
   ownerText: ->
     ts.State.sparkOwnerFilter.getName()
 
+  tagText: ->
+    ts.State.sparkTagFilter.getName()
   orderText: ->
     ts.State.sparkOrder.getName()
 
