@@ -33,6 +33,9 @@ if Meteor.is_server
   Meteor.publish 'dayStats', (teamId) ->
     DayStats.find {teamId: teamId}, {sort: 'date': 1}
 
+  Meteor.publish 'tags', (teamId) ->
+    Tags.find {teamId: teamId}, {sort: 'count': -1}
+
 if Meteor.is_client
   Meteor.autosubscribe ->
     teamId = ts.State.teamId.get()
@@ -56,4 +59,6 @@ if Meteor.is_client
       Meteor.subscribe 'dayStats', teamId, ->
         console.log 'dayStats loaded'
 
+      Meteor.subscribe 'tags', teamId, ->
+        console.log 'tags loaded'
 

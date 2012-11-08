@@ -17,6 +17,9 @@ ts.members.all = ->
 ts.members.ordered = ->
   return ts.members.all().fetch()
 
+ts.tags = {}
+ts.tags.all = ->
+  Tags.find teamId: ts.State.teamId.get()
 
 ts.editor = ->
   new nicEditor

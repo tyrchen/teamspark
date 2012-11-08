@@ -416,7 +416,8 @@
             }
 
             if ($.trim(this.$element.text()) === '') {
-                this.$element.addClass('editable-empty').text(this.settings.emptytext);
+                // Tyr modified emptytext text() to html()
+                this.$element.addClass('editable-empty').html(this.settings.emptytext);
             } else {
                 this.$element.removeClass('editable-empty');
             }

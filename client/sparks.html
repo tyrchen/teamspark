@@ -22,6 +22,7 @@
             <li class="support {{supported}}"><a href="#" title="支持"><i class="icon-thumbs-up"></i></a></li>
             <li class="upload"><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
             <li class="edit"><a href="#" title="编辑"><i class="icon-edit"></i></a></li>
+            <li class="tag"><a href="#" class="edit-tags" data-id="{{_id}}"><i class="icon-tags"></i></a> </li>
             {{#if canFinish}}
             <li class="finish"><a href="#" title="完成"><i class="icon-ok"></i></a></li>
             {{/if}}
@@ -29,6 +30,7 @@
         </h5>
         <p>
           <span>{{positioned}}</span> |
+          <span>标签: <b class="tags">{{showTags}}</b></span> |
           <span>项目: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
           <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}" data-priority="{{priority}}">{{priority}}</a></span> |
           <span>截至日期: <a href="#" class="edit-deadline" data-id="{{_id}}" data-deadline="{{deadline}}">{{expired}}</a></span> |

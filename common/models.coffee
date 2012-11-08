@@ -13,6 +13,7 @@ Projects = new Meteor.Collection 'projects'
 # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
 # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
 # updatedAt: Date(), finishedAt: Date(), positionedAt: Date(), teamId: teamId, points: 16, totalPoints: 64
+# tags: []
 # }
 Sparks = new Meteor.Collection 'sparks'
 
@@ -39,3 +40,6 @@ DayStats = new Meteor.Collection 'dayStats'
 #   burned: [79, 56, 40, 32, 24, 12, 3]
 # }
 WeekStats = new Meteor.Collection 'weekStats'
+
+# tag = { _id: uuid, name: '剪辑器', teamId: teamId, sparks: 0, createdAt: new Date()}
+Tags = new Meteor.Collection 'tags'

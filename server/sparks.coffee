@@ -109,7 +109,7 @@ Meteor.methods
   finishSpark: (sparkId) ->
     spark = Sparks.findOne _id: sparkId
     if not ts.sparks.writable spark
-      throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
+      throw new ts.exp.AccessDeniedException 'Only team members can finish a spark'
 
     user = Meteor.user()
 
@@ -169,7 +169,7 @@ Meteor.methods
 
     spark = Sparks.findOne _id: sparkId
     if not ts.sparks.writable spark
-      throw new ts.exp.AccessDeniedException 'Only team members can add comments to a spark'
+      throw new ts.exp.AccessDeniedException 'Only team members can upload files to a spark'
 
     user = Meteor.user()
 
@@ -319,3 +319,58 @@ Meteor.methods
       title = "#{user.username}修改了#{spark.title}"
 
     Meteor.call 'notify', recipients, title, audit.content, sparkId
+
+  tagSpark: (sparkId, tags) ->
+    spark = Sparks.findOne _id: sparkId
+    if not ts.sparks.writable spark
+      throw new ts.exp.AccessDeniedException 'Only team members can tag a spark'
+
+    user = Meteor.user()
+
+    tags = tags.split(';')
+    added = _.difference tags, spark.tags
+    deleted = _.difference spark.tags, tags
+
+    console.log "added: #{added}, deleted: #{deleted}"
+    if not added and not deleted
+      return
+
+    info = []
+    if added.length > 0
+      _.each added, (name) ->
+        tag = Tags.findOne {name: name, teamId: user.teamId}
+        if tag
+          Tags.update tag._id, $inc: sparks: 1
+        else
+          Tags.insert
+            name: name
+            teamId: user.teamId
+            createdAt: ts.now()
+            sparks: 1
+      info.push "添加了标签: #{added.join(', ')}"
+
+    if deleted.length > 0
+      info.push "删除了标签: #{deleted.join(', ')}"
+      _.each deleted, (name) ->
+        Tags.update {name: name, teamId: user.teamId}, {$inc: sparks: -1}
+
+
+    info = info.join('; ')
+
+
+    audit =
+      _id: Meteor.uuid()
+      authorId: user._id
+      createdAt: ts.now()
+      content: "#{user.username}#{info}"
+
+    content1 = "#{user.username}为#{spark.title}#{info}"
+
+    Sparks.update sparkId,
+      $set: {tags: tags}
+      $push: {auditTrails: audit}
+
+    Meteor.call 'createAudit', content1, spark.projects[0]
+
+    recipients = _.union [spark.authorId], spark.owners
+    Meteor.call 'notify', recipients, "#{user.username}修改了#{spark.title}的标签", audit.content, sparkId

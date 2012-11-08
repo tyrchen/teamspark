@@ -13,6 +13,7 @@ _.extend Template.spark,
   rendered: ->
     #console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
     $parent = $(@firstNode)
+    spark = @
     $('.carousel', $parent).carousel
       interval: false
     $('.carousel .item:first-child', $parent).addClass('active')
@@ -113,6 +114,37 @@ _.extend Template.spark,
         placeholder:'添加责任人'
         tokenSeparators: [' ']
         separator:';'
+    )
+
+    $('.edit-tags', $parent).editable(
+      type: 'text'
+      inputclass: 'span4'
+      #toggle: $('.tags', $parent)
+      autotext: 'never'
+      emptytext: '<i class="icon-tags"></i>'
+      value: ->
+        console.log spark.tags, $(".tags", $parent)
+
+        if spark.tags
+          return spark.tags.join(';')
+        else
+          return ''
+
+      placement: 'bottom'
+      name: 'tags'
+      pk: null
+    ).on('render', (e, editable) ->
+      value = editable.value
+      sparkId = spark._id
+      if value and sparkId
+        Meteor.call 'tagSpark', sparkId, value
+    ).on('shown', (e, editable) ->
+      tags = _.pluck ts.tags.all().fetch(), 'name'
+      $(editable.$input).select2
+        tags: tags
+        placeholder: '添加标签'
+        tokenSeparators: [' ']
+        separator: ';'
     )
 
   events:
@@ -224,6 +256,11 @@ _.extend Template.spark,
       items.push "<li><a href='#'><img src='#{item.avatar}' class='avatar-small' title='#{item.username}'/></a></li>"
 
     return items.join('\n')
+
+  showTags: ->
+    if @tags
+      return @tags.join(', ')
+    return '无'
 
   allocated: ->
     @owners
