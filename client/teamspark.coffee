@@ -8,6 +8,36 @@ ts.filteringUser = ->
 ts.filteringProject = ->
   ts.State.filterSelected.get() isnt 'all'
 
+ts.select2 = ts.select2 || {}
+ts.select2.formatSpark = (item) ->
+  author = Meteor.users.findOne(_id:item.authorId)
+  if author
+    authorNode = "<div class='pull-left'><img class='avatar' src='#{author.avatar}'/></div>"
+    createdNode = "<span class='created'>#{moment(item.createdAt).fromNow()}</span>"
+    createClass = ''
+  else
+    authorNode = ''
+    createdNode = ''
+    createClass = 'new'
+
+  tags = _.map item.tags, (tag) -> "<span class='label label-info'>#{tag}</span>"
+  if tags
+    tags = tags.join('')
+  else
+    tags = ''
+
+  content = "<p class='content'>#{item.content}</p>"
+  return "<div class='spark-search-item #{createClass}'> #{authorNode}<div> <span class='title'>#{item.text}</span> #{tags} #{createdNode}#{content}</div></div>"
+
+ts.stripTags = (content) ->
+  if content
+    return content.replace(/(<([^>]+)>)/ig,"")
+  return ''
+
+ts.select2.formatSparkSelection = (item) ->
+  console.log item, item._id
+  return item._id
+
 _.extend Template.content,
   events:
     'click #manage-member': (e) ->
@@ -247,6 +277,39 @@ _.extend Template.sparkFilter,
         else
           tag = {id: editable.value, name: editable.value}
         ts.State.sparkTagFilter.set tag
+
+    $('#search-spark').select2(
+      placeholder: '搜索当前项目下的任务'
+      minimumInputLength: 1
+      formatResult: ts.select2.formatSpark
+      #formatSelection: ts.select2.formatSpark
+
+      query: (query) ->
+        projectId = ts.State.filterSelected.get()
+        regex = new RegExp query.term, 'i'
+        sparks = Sparks.find(projects: projectId, title: regex).fetch()
+        sparks.push({_id: 'new', title: '都不是我的菜，创建一个新的'})
+        data = results: _.map(sparks, (spark) ->
+          ret =
+            id: spark._id
+            text:spark.title
+            createdAt: spark.createdAt
+            authorId: spark.authorId
+            tags: spark.tags
+            content: ts.stripTags(spark.content).slice(0, 80)
+        )
+        #data = {results: sparks}
+
+        query.callback(data)
+
+    ).off('change').on('change', (e) ->
+      console.log e
+      if e.val is 'new'
+        $('#add-spark').modal
+          keyboard: false
+          backdrop: 'static'
+    )
+
   events:
     'click .spark-list .dropdown-menu > li': (e) ->
       $node = $(e.currentTarget)
