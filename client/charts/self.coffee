@@ -9,12 +9,12 @@ ts.charts.self.data =  ->
   positioned = []
   finished = []
   _.each stats, (stat) ->
-    if stat['positioned'][user._id]
+    if stat['positioned'][user._id]?[0]
       positioned.push x: stat.date, y: stat['positioned'][user._id][0]
     else
       positioned.push x: stat.date, y: 0
 
-    if stat['finished'][user._id]
+    if stat['finished'][user._id]?[0]
       finished.push x: stat.date, y: stat['finished'][user._id][0]
     else
       finished.push x: stat.date, y: 0

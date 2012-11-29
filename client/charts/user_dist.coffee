@@ -9,7 +9,7 @@ ts.charts.userDistribution.data =  (statType = 'finished') ->
   _.map members, (user) ->
     data = []
     _.each stats, (stat) ->
-      if stat[statType][user._id]
+      if stat[statType][user._id]?[0]
         data.push x: stat.date, y: stat[statType][user._id][0]
       else
         data.push x: stat.date, y: 0
