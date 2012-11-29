@@ -93,7 +93,7 @@ _.extend Template.content,
   projects: -> Projects.find()
   teamName: -> ts.currentTeam()?.name
   isOrphan: ->
-    if Meteor.userLoaded() and not Meteor.user().teamId
+    if Meteor.userId() and not Meteor.user().teamId
       return 'orphan'
     return ''
 

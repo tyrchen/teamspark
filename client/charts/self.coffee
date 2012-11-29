@@ -9,8 +9,15 @@ ts.charts.self.data =  ->
   positioned = []
   finished = []
   _.each stats, (stat) ->
-    positioned.push x: stat.date, y: stat['positioned'][user._id][0]
-    finished.push x: stat.date, y: stat['finished'][user._id][0]
+    if stat['positioned'][user._id]
+      positioned.push x: stat.date, y: stat['positioned'][user._id][0]
+    else
+      positioned.push x: stat.date, y: 0
+
+    if stat['finished'][user._id]
+      finished.push x: stat.date, y: stat['finished'][user._id][0]
+    else
+      finished.push x: stat.date, y: 0
 
   return [
     {values: positioned, key: '发表', color: '#ff7f0e'},
