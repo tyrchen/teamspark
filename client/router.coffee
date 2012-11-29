@@ -34,11 +34,10 @@ TsRouter = Backbone.Router.extend
   home: ->
     self = @
     Meteor.autorun (handle) ->
-
-      p = Projects.findOne()
+      p = Projects.findOne {}, {sort: createdAt: 1}
       if p
         handle.stop()
-        self.navigate "/projects/#{p.name}/sparks"
+        self.navigate "/projects/#{p.name}/sparks", true
 
   sparks: (project_name) ->
     ts.State.showContent.set 'sparks'
