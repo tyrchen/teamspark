@@ -24,11 +24,21 @@ ts.setProject = (project_name) ->
 
 TsRouter = Backbone.Router.extend
   routes:
+    '': 'home'
     'projects/:project_name/sparks': 'sparks'
     'projects/:project_name/charts': 'charts'
     'projects/:project_name/schedule': 'schedule'
 
     'sparks/:spark_id': 'spark'
+
+  home: ->
+    self = @
+    Meteor.autorun (handle) ->
+
+      p = Projects.findOne()
+      if p
+        handle.stop()
+        self.navigate "/projects/#{p.name}/sparks"
 
   sparks: (project_name) ->
     ts.State.showContent.set 'sparks'
