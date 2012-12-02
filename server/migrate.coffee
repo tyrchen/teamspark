@@ -110,3 +110,8 @@ Meteor.methods
       finished = Sparks.find(finishers: item.userId).count()
 
       Profiles.update item._id, $set: {totalSubmitted: submitted, totalUnfinished: unfinished, totalFinished: finished}
+
+  migrateSparkVerified: ->
+    Sparks.update {finished: false}, {$set: verified: false}, {multi: true}
+    Sparks.update {finished: true}, {$set: verified: true}, {multi: true}
+    console.log 'total unverified:', Sparks.find(verified:false).count(), ', total verified: ', Sparks.find(verified:true).count()

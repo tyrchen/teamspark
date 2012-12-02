@@ -11,9 +11,9 @@
         <option value="new">新建项目</option>
       </select>
     </div>
-    <ul class="nav nav-list">
+    <ul class="nav nav-list shortcuts">
       <li class="nav-header">{{taskName}}</li>
-      <li><a href="#" class="shortcut" data-type='unfinished'>未完成 ({{totalUnfinished}})</a></li>
+      <li class="active"><a href="#" class="shortcut" data-type='unfinished'>未完成 ({{totalUnfinished}})</a></li>
       <li class="sub"><a href="#" class="shortcut" data-type='important'>重要 ({{totalImportant}})</a></li>
       <li class="sub"><a href="#" class="shortcut" data-type="urgent">紧急 ({{totalUrgent}})</a></li>
       <li><a href="#" class="shortcut" data-type="finished">已完成 ({{totalFinished}})</a></li>

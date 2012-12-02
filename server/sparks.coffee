@@ -43,6 +43,7 @@ Meteor.methods
       supporters: []
       finishers: []
       finished: false
+      verified: false
       projects: projects
       deadline: deadline
       createdAt: now

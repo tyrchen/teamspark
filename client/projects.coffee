@@ -1,9 +1,20 @@
 # project = { _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null, parentId: null, teamId: teamId, createdAt: Date() }
 
+ts = ts || {}
+
+ts.setFinish = -> ts.State.sparkFinishFilter.set {id: 2, name: '已完成'}
+ts.setUnfinish = -> ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
+ts.setVerify = -> ts.State.sparkVerifyFilter.set {id: 2, name: '已验证'}
+ts.setUnverify = -> ts.State.sparkVerifyFilter.set {id: 1, name: '未验证'}
+ts.setAuthor = ->
+  user = Meteor.user()
+  ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
+
 _.extend Template.projects,
   rendered: ->
     $node = $('#select-project')
     $node.val ts.State.filterSelected.getName()
+    ts.setUnfinish()
     #$node.select2()
 
   events:
@@ -12,6 +23,40 @@ _.extend Template.projects,
 
     'click #filter-member': (e) ->
       ts.State.filterType.set 'user'
+
+    'click .shortcut': (e) ->
+      $('.shortcut').parent().removeClass('active')
+      $node = $(e.currentTarget)
+      type = $node.data('type')
+      $node.parent().addClass('active')
+      ts.State.filterShortcut.set type
+
+      ts.State.clearFilters()
+      switch type
+        when 'finished'
+          ts.setFinish()
+          ts.setUnverify()
+        when 'unfinished' then setUnfinish()
+        when 'important'
+          ts.setUnfinish()
+          ts.State.sparkPriorityFilter.set {id: 4, name: 4}
+        when 'urgent'
+          ts.setUnfinish()
+          ts.State.sparkDeadlineFilter.set {id: ts.consts.EXPIRE_IN_3_DAYS, name: 1}
+        when 'verified'
+          ts.setFinish()
+          ts.setVerify()
+        when 'my-finished'
+          ts.setFinish()
+          ts.setUnverify()
+          ts.setAuthor()
+        when 'my-unfinished'
+          ts.setUnfinish()
+          ts.setAuthor()
+        when 'my-verified'
+          ts.setFinish()
+          ts.setVerify()
+          ts.setAuthor()
 
 
     'change #select-project': (e) ->
@@ -23,6 +68,7 @@ _.extend Template.projects,
         return
 
       ts.State.showSpark.set null
+      ts.State.clearFilters()
       Router.setProject name
 
 
@@ -64,17 +110,6 @@ _.extend Template.projects,
     if ts.State.filterSelected.get() is id
       return 'active'
     return ''
-
-  totalSparks: (id=null, showAll=false) ->
-    query = ts.sparks.query(false)
-    if id
-      p = Projects.findOne _id: id
-      if showAll or p?.parent
-        query.push projects: id
-      else
-        query.push projects: [id]
-
-    Sparks.find($and: query).count()
 
   parentProjects: ->
     projects = ts.projects.parents().fetch()
@@ -122,16 +157,16 @@ _.extend Template.projects,
   totalFinished: ->
     query = Template.projects.getQuery()
     if ts.filteringUser()
-      query.push(finishers: Meteor.userId())
+      query.push({finishers: Meteor.userId()}, {verified: false})
     else
-      query.push({finished: true})
+      query.push({finished: true}, {verified: false})
     Sparks.find($and: query).count()
 
   totalVerified: ->
     query = Template.projects.getQuery()
     query.push({verified: true}, {finished: true})
     if ts.filteringUser()
-      query.push(owners: Meteor.userId())
+      query.push(finishers: Meteor.userId())
     Sparks.find($and: query).count()
 
   totalMyUnfinished: ->
@@ -141,7 +176,7 @@ _.extend Template.projects,
 
   totalMyFinished: ->
     query = Template.projects.getQuery()
-    query.push({finished: true}, {authorId: Meteor.userId()})
+    query.push({finished: true}, {verified: false}, {authorId: Meteor.userId()})
     Sparks.find($and: query).count()
 
   totalMyVerified: ->

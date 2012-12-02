@@ -121,6 +121,11 @@ _.extend ts.State,
     getName: -> ts.getSession('sparkFinishFilter')?.name || '未完成'
     set: (value) -> ts.setSession 'sparkFinishFilter', value
 
+  sparkVerifyFilter:
+    get: -> ts.getSession('sparkVerifyFilter')?.id
+    getName: -> ts.getSession('sparkVerifyFilter')?.name || '未验证'
+    set: (value) -> ts.setSession 'sparkVerifyFilter', value
+
   sparkDeadlineFilter:
     get: -> ts.getSession('sparkDeadlineFilter')?.id || 'all'
     getName: -> ts.getSession('sparkDeadlineFilter')?.name || 0
@@ -141,6 +146,7 @@ _.extend ts.State,
     ts.State.sparkTypeFilter.set null
     ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
     ts.State.sparkTagFilter.set null
+    ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
@@ -171,3 +177,4 @@ _.extend ts.State,
 
 Meteor.startup ->
   ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
+  ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}
