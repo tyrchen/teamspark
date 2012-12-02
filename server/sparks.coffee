@@ -59,6 +59,10 @@ Meteor.methods
     Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{title}", projectId
     Meteor.call 'addPoints', ts.consts.points.CREATE_SPARK
     Meteor.call 'trackPositioned', sparkId
+    Meteor.call 'updateProjectStat', projectId
+    Meteor.call 'updateUserStat', user._id, 1
+    _.each owners, (id) ->
+      Meteor.call 'updateUserStat', id, 0, 1
 
     if owners
       Meteor.call 'notify', owners, "#{user.username}创建了新#{sparkType.name}", "#{user.username}创建了新#{sparkType.name}: #{title}: ", sparkId
@@ -158,6 +162,11 @@ Meteor.methods
 
     Meteor.call 'createAudit', content1, spark.projects[0]
 
+    if finished
+      Meteor.call 'updateProjectStat', spark.projects[0], -1, 1
+
+    Meteor.call 'updateUserStat', user._id, 0, -1, 1
+
     if not finishers or currentId not in finishers
       Meteor.call 'addPoints', spark.points
 
@@ -166,6 +175,26 @@ Meteor.methods
 
     if finished
       Meteor.call 'trackFinished', sparkId
+
+  verifySpark: (sparkId) ->
+    spark = Sparks.findOne _id: sparkId
+    user = Meteor.user()
+    if spark.authorId isnt user._id
+      throw new ts.exp.AccessDeniedException 'Only owner can verify a spark'
+
+    audit =
+      _id: Meteor.uuid()
+      authorId: user._id
+      createdAt: ts.now()
+      content: "#{user.username} 将任务标记为验收合格"
+
+    Sparks.update sparkId,
+      $set: {verified: true, updatedAt: ts.now()}
+      $push: {auditTrails: audit}
+
+    Meteor.call 'createAudit', "#{user.username} 将任务#{spark.title}标记为验收合格", spark.projects[0]
+    Meteor.call 'updateProjectStat', spark.projects[0], 0, -1, 1
+    Meteor.call 'addPoints', 4
 
   uploadFiles: (sparkId, lists) ->
     # [{"url":"https://www.filepicker.io/api/file/ODrP2zTwTGig5y0RvZyU","filename":"test.pdf","mimetype":"application/pdf","size":50551,"isWriteable":true}]
@@ -259,6 +288,9 @@ Meteor.methods
     content1 = "#{user.username} 更新了 #{spark.title} 的"
 
     if field is 'project'
+      if spark.finished
+        # finished spark cannot be moved
+        return
       project = Projects.findOne _id: value
       if project.parent
         parent = Projects.findOne _id: project.parent
@@ -273,8 +305,10 @@ Meteor.methods
       command['projects'] = projects
       command['positionedAt'] = ts.now()
       Meteor.call 'trackPositioned', spark, -1
+      Meteor.call 'updateProjectStat', spark.projects[0], -1
       Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
       Meteor.call 'trackPositioned', sparkId, 1
+      Meteor.call 'updateProjectStat', projects[0], 1
     else if field is 'owners'
       users = Meteor.users.find({_id: $in: value}, {fields: {'_id':1, 'username':1}}).fetch()
       #console.log 'new users:', users
@@ -283,6 +317,7 @@ Meteor.methods
       if value.length > 0
         # if owners updated, spark should be changed back to unfinished
         command['finished'] = false
+        command['verified'] = false
 
       if users
         info = '责任人为: ' + _.pluck(users, 'username').join(', ')
@@ -292,6 +327,23 @@ Meteor.methods
       content1 += info
 
       Sparks.update sparkId, $set: command, $push: {auditTrails: audit}
+      if spark.finished and command['finished'] is false
+        if spark.verified
+          Meteor.call 'updateProjectStat', spark.projects[0], 1, 0, -1
+        else
+          Meteor.call 'updateProjectStat', spark.projects[0], 1, -1
+
+      console.log 'update:', command['owners'], spark.owners
+      added = _.difference command['owners'], spark.owners
+      deleted = _.difference spark.owners, command['owners']
+
+      console.log 'update:', added, deleted
+      _.each added, (id) ->
+        Meteor.call 'updateUserStat', id, 0, 1
+
+      _.each deleted, (id) ->
+        Meteor.call 'updateUserStat', id, 0, -1
+
     else
       info = auditInfo()
       audit.content += info

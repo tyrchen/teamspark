@@ -187,6 +187,9 @@ _.extend Template.spark,
     'click .finish': (e) ->
       Meteor.call 'finishSpark', @_id
 
+    'click .verify': (e) ->
+      Meteor.call 'verifySpark', @_id
+
     'click .upload': (e) ->
       id = @_id
       filepicker.pickMultiple
@@ -354,6 +357,12 @@ _.extend Template.spark,
       if ts.isStaff()
         return true
     else if @owners[0] is Meteor.user()._id
+      return true
+
+    return false
+
+  canVerify: ->
+    if not @verified and @finished and @authorId is Meteor.userId()
       return true
 
     return false

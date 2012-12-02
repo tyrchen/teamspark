@@ -11,7 +11,7 @@ Profiles = new Meteor.Collection 'profiles'
 # project = {
 #   _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null,
 #   parent: null, teamId: teamId, createdAt: Date()
-#   open: 0, finished: 0, verified: 0
+#   unfinished: 0, finished: 0, verified: 0
 # }
 Projects = new Meteor.Collection 'projects'
 

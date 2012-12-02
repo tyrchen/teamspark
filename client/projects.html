@@ -3,9 +3,9 @@
     <div>
       <select id="select-project">
         {{#each parentProjects}}
-          <option value="{{name}}">{{name}} ({{open}})</option>
+          <option value="{{name}}">{{name}} ({{unfinished}})</option>
           {{#each childProjects _id}}
-          <option value="{{name}}">&nbsp;&nbsp;{{name}} ({{open}})</option>
+          <option value="{{name}}">&nbsp;&nbsp;{{name}} ({{unfinished}})</option>
           {{/each}}
         {{/each}}
         <option value="new">新建项目</option>

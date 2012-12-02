@@ -91,15 +91,15 @@ Meteor.methods
     projects = Projects.find().fetch()
     _.each projects, (item) ->
       if item.parent
-        open = Sparks.find(projects: item._id, finished: false).count()
+        unfinished = Sparks.find(projects: item._id, finished: false).count()
         finished = Sparks.find(projects: item._id, finished: true).count()
         verified = Sparks.find(projects: item._id, finished: true, verified: $ne: null).count()
       else
-        open = Sparks.find(projects: [item._id], finished: false).count()
+        unfinished = Sparks.find(projects: [item._id], finished: false).count()
         finished = Sparks.find(projects: [item._id], finished: true).count()
         verified = Sparks.find(projects: [item._id], finished: true, verified: $ne: null).count()
 
-      Projects.update item._id, $set: {open: open, finished: finished, verified: verified}
+      Projects.update item._id, $set: {unfinished: unfinished, finished: finished, verified: verified}
 
   migrateUserStat: ->
     #   totalSubmitted: 0, totalActive: 0, totalFinished: 0
