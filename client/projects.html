@@ -1,18 +1,18 @@
 <template name="projects">
   <div class="project-list stretch">
-    <ul class="nav nav-list">
-      <li class="nav-header">
-        项目
-        <div class="btn-group pull-right">
-          <a class="btn btn-small btn-info" id="add-project" title="添加项目"><i class="icon-plus-sign"></i></a>
-        </div>
-      </li>
-      {{#each parentProjects}}
-      <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalSparks _id}})</a></li>
-        {{#each childProjects _id}}
-        <li class="{{isFilterSelected _id }} filter-project child" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalSparks _id}})</a></li>
+    <div>
+      <select id="select-project">
+        {{#each parentProjects}}
+          <option value="{{name}}">{{name}} ({{open}})</option>
+          {{#each childProjects _id}}
+          <option value="{{name}}">&nbsp;&nbsp;{{name}} ({{open}})</option>
+          {{/each}}
         {{/each}}
-      {{/each}}
+        <option value="new">新建项目</option>
+      </select>
+    </div>
+    <ul class="nav nav-list">
+
     </ul>
   </div>
 

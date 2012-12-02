@@ -1,6 +1,11 @@
 # project = { _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null, parentId: null, teamId: teamId, createdAt: Date() }
 
 _.extend Template.projects,
+  rendered: ->
+    $node = $('#select-project')
+    $node.val ts.State.filterSelected.getName()
+    #$node.select2()
+
   events:
     'click #filter-team': (e) ->
       ts.State.filterType.set 'team'
@@ -9,16 +14,17 @@ _.extend Template.projects,
       ts.State.filterType.set 'user'
 
 
-    'click .filter-project': (e) ->
-      e.preventDefault()
-
+    'change #select-project': (e) ->
       # TODO: fix me. this is a workaround to clear notification entry and show sparks
+      name = $(e.currentTarget).val()
+      if name is 'new'
+        $('#add-project-dialog').modal()
+        $(e.currentTarget).val ts.State.filterSelected.getName()
+        return
+
       ts.State.showSpark.set null
+      Router.setProject name
 
-      Router.setProject @name
-
-    'click #add-project': (e) ->
-      $('#add-project-dialog').modal()
 
     'click #add-project-submit': (e) ->
       $form = $('#add-project-dialog form')

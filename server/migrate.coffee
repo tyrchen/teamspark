@@ -86,3 +86,17 @@ Meteor.methods
 
   migrateTags: ->
     Tags.update {projectId: null}, {$set: projectId: '1b6c3590-c26a-49ea-96f7-d07f0e95fc74'}
+
+  migrateProjectStat: ->
+    projects = Projects.find().fetch()
+    _.each projects, (item) ->
+      if item.parent
+        open = Sparks.find(projects: item._id, finished: false).count()
+        finished = Sparks.find(projects: item._id, finished: true).count()
+        verified = Sparks.find(projects: item._id, finished: true, verified: $ne: null).count()
+      else
+        open = Sparks.find(projects: [item._id], finished: false).count()
+        finished = Sparks.find(projects: [item._id], finished: true).count()
+        verified = Sparks.find(projects: [item._id], finished: true, verified: $ne: null).count()
+
+      Projects.update item._id, $set: {open: open, finished: finished, verified: verified}

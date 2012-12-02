@@ -61,7 +61,7 @@ _.extend ts.State,
 
   # filter the sparks by current owner or team. Can be 'user' | 'team'
   filterType:
-    get: -> ts.getSession('filterType') || 'team'
+    get: -> ts.getSession('filterType') || 'user'
     set: (value)-> ts.setSession 'filterType', value
 
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
