@@ -100,3 +100,13 @@ Meteor.methods
         verified = Sparks.find(projects: [item._id], finished: true, verified: $ne: null).count()
 
       Projects.update item._id, $set: {open: open, finished: finished, verified: verified}
+
+  migrateUserStat: ->
+    #   totalSubmitted: 0, totalActive: 0, totalFinished: 0
+    profiles = Profiles.find().fetch()
+    _.each profiles, (item) ->
+      submitted = Sparks.find(authorId: item.userId).count()
+      unfinished = Sparks.find(finished: false, owners: item.userId).count()
+      finished = Sparks.find(finishers: item.userId).count()
+
+      Profiles.update item._id, $set: {totalSubmitted: submitted, totalUnfinished: unfinished, totalFinished: finished}

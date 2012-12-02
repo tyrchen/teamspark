@@ -32,19 +32,23 @@ _.extend Template.member,
   auditTrails: -> ts.audits.all @_id, null
 
   totalUnfinished: (projectId=null) ->
-    ts.sparks.totalUnfinished projectId, @_id
+    profile = Profiles.findOne userId: @_id
+    if profile?.totalUnfinished
+      return profile.totalUnfinished
+    return 0
+
 
   totalFinished: (projectId=null) ->
-    ts.sparks.totalFinished projectId, @_id
+    profile = Profiles.findOne userId: @_id
+    if profile?.totalFinished
+      return profile.totalFinished
+    return 0
 
   totalSubmitted: (projectId=null) ->
-    ts.sparks.totalSubmitted @_id, projectId
-
-  totalImportant: (projectId=null) ->
-    ts.sparks.totalImportant projectId, @_id
-
-  totalUrgent: (projectId=null) ->
-    ts.sparks.totalUrgent projectId, @_id
+    profile = Profiles.findOne userId: @_id
+    if profile?.totalSubmitted
+      return profile.totalSubmitted
+    return 0
 
   onlineClass: ->
     profile = Profiles.findOne userId: @_id

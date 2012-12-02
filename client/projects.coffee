@@ -84,3 +84,68 @@ _.extend Template.projects,
     projects = ts.projects.children(id).fetch()
     #_.sortBy projects, (item) -> -Template.projects.totalSparks(item._id)
 
+  taskName: ->
+    if ts.filteringUser()
+      return '我的任务'
+    return '团队任务'
+
+  getQuery: ->
+    query = []
+    p = Projects.findOne _id: ts.State.filterSelected.get()
+    if p?.parent
+      query.push projects: p._id
+    else
+      query.push projects: [p._id]
+    return query
+
+  totalUnfinished: ->
+    query = Template.projects.getQuery()
+    query.push(finished: false)
+    if ts.filteringUser()
+      query.push(owners: Meteor.userId())
+    Sparks.find($and: query).count()
+
+  totalImportant: ->
+    query = Template.projects.getQuery()
+    query.push({finished: false}, {priority: $gte: 4})
+    if ts.filteringUser()
+      query.push(owners: Meteor.userId())
+    Sparks.find($and: query).count()
+
+  totalUrgent: ->
+    query = Template.projects.getQuery()
+    query.push({finished: false}, {deadline: {$gt: ts.now(), $lte: ts.consts.EXPIRE_IN_3_DAYS + ts.now()}})
+    if ts.filteringUser()
+      query.push(owners: Meteor.userId())
+    Sparks.find($and: query).count()
+
+  totalFinished: ->
+    query = Template.projects.getQuery()
+    if ts.filteringUser()
+      query.push(finishers: Meteor.userId())
+    else
+      query.push({finished: true})
+    Sparks.find($and: query).count()
+
+  totalVerified: ->
+    query = Template.projects.getQuery()
+    query.push({verified: true}, {finished: true})
+    if ts.filteringUser()
+      query.push(owners: Meteor.userId())
+    Sparks.find($and: query).count()
+
+  totalMyUnfinished: ->
+    query = Template.projects.getQuery()
+    query.push({finished: false}, {authorId: Meteor.userId()})
+    Sparks.find($and: query).count()
+
+  totalMyFinished: ->
+    query = Template.projects.getQuery()
+    query.push({finished: true}, {authorId: Meteor.userId()})
+    Sparks.find($and: query).count()
+
+  totalMyVerified: ->
+    query = Template.projects.getQuery()
+    query.push({finished: true}, {verified: true}, {authorId: Meteor.userId()})
+    Sparks.find($and: query).count()
+

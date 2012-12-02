@@ -21,8 +21,8 @@ if Meteor.is_server
   Meteor.publish 'projects', (teamId) ->
     Projects.find teamId: teamId
 
-  Meteor.publish 'sparks', (teamId) ->
-    Sparks.find {teamId: teamId}, {sort: 'updateddAt': -1}
+  Meteor.publish 'sparks', (projectId) ->
+    Sparks.find {'projects.0': projectId}, {sort: 'updateddAt': -1}
 
   #Meteor.publish 'auditTrails', (teamId) ->
   #  AuditTrails.find teamId: teamId
@@ -43,13 +43,15 @@ if Meteor.is_client
     if teamId
       Meteor.subscribe 'projects', teamId, ->
         console.log 'projects loaded'
-#        project = Projects.findOne {}
-#        if project
-#          Router.setProject project.name
-      Meteor.subscribe 'sparks', teamId, ->
-        console.log 'sparks loaded'
-        ts.State.loaded.set true
+
+      projectId = ts.State.filterSelected.get()
+      if projectId
+        Meteor.subscribe 'sparks', projectId, ->
+          console.log 'sparks loaded'
+          ts.State.loaded.set true
+
       #Meteor.subscribe 'auditTrails', teamId
+
       Meteor.subscribe 'notifications', Meteor.userId(), ->
         console.log 'notifications loaded'
 

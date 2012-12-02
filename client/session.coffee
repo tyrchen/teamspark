@@ -70,6 +70,11 @@ _.extend ts.State,
     getName: -> ts.getSession('filterSelected')?.name || '全部'
     set: (value)-> ts.setSession 'filterSelected', value
 
+  # filter the sparks by shortcut
+  filterShortcut:
+    get: -> ts.getSession('filterShortcut') || 'unfinished'
+    set: (value) -> ts.setSession 'filterShortcut', value
+
   # spark display type. 'wall' or 'board'
   sparkDisplay:
     get: -> ts.getSession('sparkDisplay') || 'wall'
