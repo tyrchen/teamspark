@@ -13,16 +13,16 @@
     </div>
     <ul class="nav nav-list shortcuts">
       <li class="nav-header">{{taskName}}</li>
-      <li class="active"><a href="#" class="shortcut" data-type='unfinished'>未完成 ({{totalUnfinished}})</a></li>
-      <li class="sub"><a href="#" class="shortcut" data-type='important'>重要 ({{totalImportant}})</a></li>
-      <li class="sub"><a href="#" class="shortcut" data-type="urgent">紧急 ({{totalUrgent}})</a></li>
-      <li><a href="#" class="shortcut" data-type="finished">已完成 ({{totalFinished}})</a></li>
-      <li><a href="#" class="shortcut" data-type="verified">已验证 ({{totalVerified}})</a></li>
+      <li class="unfinished"><a href="#" class="shortcut" data-type='unfinished'>未完成 ({{totalUnfinished}})</a></li>
+      <li class="sub important"><a href="#" class="shortcut" data-type='important'>重要 ({{totalImportant}})</a></li>
+      <li class="sub urgent"><a href="#" class="shortcut" data-type="urgent">紧急 ({{totalUrgent}})</a></li>
+      <li class="finished"><a href="#" class="shortcut" data-type="finished">已完成 ({{totalFinished}})</a></li>
+      <li class="verified"><a href="#" class="shortcut" data-type="verified">已验证 ({{totalVerified}})</a></li>
       {{#if ts.filteringUser}}
       <li class="nav-header">我创建的任务</li>
-      <li><a href="#" class="shortcut" data-type="my-unfinished">未完成 ({{totalMyUnfinished}})</a></li>
-      <li><a href="#" class="shortcut" data-type="my-finished">已完成 ({{totalMyFinished}})</a></li>
-      <li><a href="#" class="shortcut" data-type="my-verified">已验证 ({{totalMyVerified}})</a></li>
+      <li class="my-unfinished"><a href="#" class="shortcut" data-type="my-unfinished">未完成 ({{totalMyUnfinished}})</a></li>
+      <li class="my-finished"><a href="#" class="shortcut" data-type="my-finished">已完成 ({{totalMyFinished}})</a></li>
+      <li class="my-verified"><a href="#" class="shortcut" data-type="my-verified">已验证 ({{totalMyVerified}})</a></li>
       {{/if}}
     </ul>
   </div>

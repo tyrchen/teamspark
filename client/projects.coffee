@@ -14,7 +14,8 @@ _.extend Template.projects,
   rendered: ->
     $node = $('#select-project')
     $node.val ts.State.filterSelected.getName()
-    ts.setUnfinish()
+    $('.shortcuts .' + ts.State.filterShortcut.get()).addClass('active')
+    #ts.setUnfinish()
     #$node.select2()
 
   events:
@@ -25,6 +26,7 @@ _.extend Template.projects,
       ts.State.filterType.set 'user'
 
     'click .shortcut': (e) ->
+      Router.setProject ts.State.filterSelected.getName()
       $('.shortcut').parent().removeClass('active')
       $node = $(e.currentTarget)
       type = $node.data('type')
@@ -36,7 +38,7 @@ _.extend Template.projects,
         when 'finished'
           ts.setFinish()
           ts.setUnverify()
-        when 'unfinished' then setUnfinish()
+        when 'unfinished' then ts.setUnfinish()
         when 'important'
           ts.setUnfinish()
           ts.State.sparkPriorityFilter.set {id: 4, name: 4}
@@ -127,7 +129,9 @@ _.extend Template.projects,
   getQuery: ->
     query = []
     p = Projects.findOne _id: ts.State.filterSelected.get()
-    if p?.parent
+    if not p
+      return query
+    if p.parent
       query.push projects: p._id
     else
       query.push projects: [p._id]

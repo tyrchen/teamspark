@@ -101,7 +101,8 @@ _.extend Template.content,
     ts.State.showSpark.get()
 
   singleSpark: ->
-    return ts.State.showSpark.get()
+    s = ts.State.showSpark.get()
+    Sparks.findOne _id: s._id
 
   showSparks: ->
     if ts.State.showContent.get() is 'sparks'
