@@ -30,6 +30,9 @@ Meteor.methods
 
     now = ts.now()
 
+    team = Teams.findOne user.teamId, fields: {nextIssueId: 1, abbr: 1}
+    Teams.update user.teamId, $inc: nextIssueId: 1
+    issueId = "#{team.abbr}#{team.nextIssueId}"
     sparkId = Sparks.insert
       type: type
       authorId: user._id
@@ -53,10 +56,11 @@ Meteor.methods
       totalPoints: 0
       teamId: user.teamId
       tags: tags
+      issueId: issueId
 
     sparkType = ts.sparks.type type
 
-    Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{title}", projectId
+    Meteor.call 'createAudit', "#{user.username}创建了一个#{sparkType.name}: #{issueId} - #{title}", projectId
     Meteor.call 'addPoints', ts.consts.points.CREATE_SPARK
     Meteor.call 'trackPositioned', sparkId
     Meteor.call 'updateProjectStat', projectId
@@ -65,7 +69,7 @@ Meteor.methods
       Meteor.call 'updateUserStat', id, 0, 1
 
     if owners
-      Meteor.call 'notify', owners, "#{user.username}创建了新#{sparkType.name}", "#{user.username}创建了新#{sparkType.name}: #{title}: ", sparkId
+      Meteor.call 'notify', owners, "#{user.username}创建了新#{sparkType.name}: #{issueId}", "#{user.username}创建了新#{sparkType.name}: #{title}: ", sparkId
 
   createComment: (sparkId, content) ->
     # comments = {_id: uuid(), authorId: userId, content: content}

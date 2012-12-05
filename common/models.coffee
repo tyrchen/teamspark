@@ -1,4 +1,4 @@
-# team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date()}
+# team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date(), abbr: 'tkq', nextIssueId: 0}
 Teams = new Meteor.Collection 'teams'
 
 # profile = {
@@ -21,7 +21,7 @@ Projects = new Meteor.Collection 'projects'
 # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
 # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
 # updatedAt: Date(), finishedAt: Date(), positionedAt: Date(), teamId: teamId, points: 16, totalPoints: 64
-# tags: []
+# tags: [], issueId: 'tkq1'
 # }
 Sparks = new Meteor.Collection 'sparks'
 
