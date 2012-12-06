@@ -1,8 +1,25 @@
+@red: #E51400;
+@green: #339933;
+@blue: #1ba1e2;
+@orange: #f09609;
+@lime: #8cbf26;
+@teal: #00aba9;
+@magenta: #ff0097;
+@pink: #e671b8;
+@brown: #a05000;
+@purple: #a200ff;
+//@grey: #dedfde;
+@black: #393939;
+@grey: #999;
+@white: #fdfdfd;
+
 .border-radius(@radius) {
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   border-radius: @radius;
 }
+
+
 
 /* CSS declarations go here */
 html, body {
@@ -72,18 +89,18 @@ body .modal {
         .border-radius(10px);
         i{
           margin: 0;
-          color: #fdfdfd;
+          color: @white;
         }
       }
       &:hover{
-        background:#E84C31;
+        background: @red;
         a{
-          color: #fdfdfd;
+          color: @white;
         }
         .mark-read{
           display: block;
           &:hover{
-            background:  darken(#E84C31, 20%);
+            background:  darken(@red, 20%);
           }
         }
       }
@@ -98,9 +115,9 @@ body .modal {
     .show-more{
       text-align: center;
       a{
-        color: #999;
+        color: @grey;
         &:hover{
-          color: #fdfdfd;
+          color: @white;
         }
       }
     }
@@ -108,10 +125,10 @@ body .modal {
 }
 
 .gridster .gs_w {
-  background: white;
+  background: @white;
   cursor: pointer;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 5px @grey;
+  box-shadow: 0 0 5px @grey;
 }
 
 .spark .carousel-caption {
@@ -138,14 +155,14 @@ body .modal {
     width: 300px;
     left: 40%;
     top: 40%;
-    color: white;
+    color: @white;
   }
 }
 
 .container-fluid {
-  background-color: #383838;
+  background-color: @black;
   #login-buttons {
-    color:white;
+    color:@white;
     display: block;
     line-height: auto;
     position: absolute;
@@ -163,25 +180,25 @@ body .modal {
 .insignificant { color: #d3d3d3; font-size: 75%; margin: 0 5px;}
 
 .attraction {
-  background-color: #383838;
-  color: #f8f8ff;
+  background-color: @black;
+  color: @white;
   a:not(.btn) {
-    i {color: #add8e6;}
-    color: white;
+    i {color: @blue;}
+    color: @white;
     &:hover {
-      color:#000;
-      i {color: #383838;}
+      color:@black;
+      i {color: @black;}
     }
   }
   #login-buttons {
-    color: #383838;
+    color: @black;
     #login-dropdown-list {
-      a {color:#383838;}
+      a {color:@black;}
       input {width: 170px;}
     }
   }
   .modal {
-    color: #383838;
+    color: @black;
   }
 }
 
@@ -244,6 +261,24 @@ img.avatar-small {width:20px; height: 20px;}
   padding-bottom: 35px;
   height: 100%;
   .project-list {
+    .nav .dropdown .dropdown-toggle {
+      .caret { margin-top: 14px;}
+      &:hover, &:active {
+        .caret {color: @white; }
+        background-color: @black;
+        a { color: @white;}
+      }
+    }
+    .dropdown-menu {
+      left: auto;
+      right: 0px;
+      .avatar-small {width: 15px; height: 15px;}
+      a {
+        color: @black;
+        font-size: 12px;
+        &:hover {color: @white;}
+      }
+    }
   }
 
   .child {margin-left: 10px;}
@@ -264,7 +299,7 @@ img.avatar-small {width:20px; height: 20px;}
 
 #select-project {
   width: 100%;
-  color: #393939;
+  color: @black;
 //  .border-radius(0px);
 }
 
@@ -292,10 +327,10 @@ li.sub {padding-left: 10px;}
         padding: 5px 6px;
       }
       &:hover, &:active {
-        color: white;
-        background-color: #08c;
+        color: @white;
+        background-color: @blue;
         > a {
-          color: #f8f8ff;
+          color: @white;
         }
       }
     }
@@ -315,13 +350,13 @@ li.sub {padding-left: 10px;}
   div.avatar {
     float: left;
     p {padding: 20px 15px 0px 15px;}
-    i {font-size: 24px; width: 24px; text-align: center; color: #0088cc;}
-    i.urgent {color: #d14;}
-    i.important {color: #0044cc;}
-    i.urgent.important {color:#8b0000;}
+    i {font-size: 24px; width: 24px; text-align: center; color: @blue;}
+    i.urgent {color: @magenta;}
+    i.important {color: @orange;}
+    i.urgent.important {color:@red;}
   }
   .spark-container {
-    //background-color: #f8f8ff;
+    //background-color: @white;
     padding: 10px;
     margin-left: 60px;
     clear: right;
@@ -334,8 +369,8 @@ li.sub {padding-left: 10px;}
       li {
         display: inline;
         >a {display: inline;}
-        &.supported i {color: #d14;}
-        i:hover {color: #d14; }
+        &.supported i {color: @red;}
+        i:hover {color: @red; }
       }
 
     }
@@ -345,7 +380,7 @@ li.sub {padding-left: 10px;}
 
     }
     .content {
-      background-color: #f8f8ff;
+      background-color: @white;
     }
     .modal-header {
       .small {font-size: 14px; font-weight: normal;}
@@ -370,7 +405,7 @@ li.sub {padding-left: 10px;}
           &.active {
             opacity: 1;
             img {
-              border: 1px solid #08c;
+              border: 1px solid @blue;
             }
           }
         }
@@ -386,7 +421,7 @@ li.sub {padding-left: 10px;}
     li {display: inline-block;}
   }
   .tag > .edit-tags {
-    color: #08c;
+    color: @blue;
     text-decoration: none;
     border-bottom: 0px;
   }
@@ -396,7 +431,7 @@ li.sub {padding-left: 10px;}
   ul { list-style: none;}
   margin: 15px 0 0 0;
   padding:15px;
-  border-bottom: 1px #E2A499 solid;
+  border-bottom: 1px @blue solid;
   #create-comment-form{
     .control-group{
       img{
@@ -423,7 +458,7 @@ li.sub {padding-left: 10px;}
       margin:0 20px;
       a{
         line-height: 20px;
-        color: #A59D98;
+        color: @grey;
         font-size: 12px;
         margin: 0 0 0 5px;
       }
@@ -439,12 +474,12 @@ li.sub {padding-left: 10px;}
     .span7{
       width: 510px;
       margin:0 0 0 10px;
-      border-bottom: 1px #E8E6E6 dashed;
+      border-bottom: 1px @grey dashed;
       .author{
         margin: 0px;
         font-size: 12px;
         span{
-          color: #A59D98;
+          color: @grey;
         }
       }
     }
@@ -470,13 +505,13 @@ li.sub {padding-left: 10px;}
   }
   cursor: pointer;
   &:hover, &.active {
-    background-color: #eee;
+    background-color: @grey;
   }
   overflow-y: auto;
-  color: #383838;
+  color: @black;
   margin: 5px 10px 0px 10px;
-  background-color: whiteSmoke;
-  border-top: 1px solid #DDD;
+  background-color: @white;
+  border-top: 1px solid @grey;
   .author-info {
     .avatar {float:left; margin: 10px;}
   }
@@ -550,8 +585,8 @@ li.sub {padding-left: 10px;}
 
 .chart-header {
   text-align: center;
-  background-color: #383838;
-  color: #f8f8ff;
+  background-color: @black;
+  color: @white;
   -webkit-border-top-left-radius: 5px;
      -moz-border-top-left-radius: 5px;
           border-top-left-radius: 5px;

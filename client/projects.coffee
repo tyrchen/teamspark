@@ -6,9 +6,7 @@ ts.setFinish = -> ts.State.sparkFinishFilter.set {id: 2, name: '已完成'}
 ts.setUnfinish = -> ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
 ts.setVerify = -> ts.State.sparkVerifyFilter.set {id: 2, name: '已验证'}
 ts.setUnverify = -> ts.State.sparkVerifyFilter.set {id: 1, name: '未验证'}
-ts.setAuthor = ->
-  user = Meteor.user()
-  ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
+ts.setAuthor = -> ts.State.sparkAuthorFilter.set {id: ts.State.filterUser.get(), name: ts.State.filterUser.getName()}
 
 _.extend Template.projects,
   rendered: ->
@@ -98,6 +96,9 @@ _.extend Template.projects,
       $('#add-project-dialog form .control-group').removeClass 'error'
       $('#add-project-dialog').modal 'hide'
 
+    'click #filter-team-members > li': (e) ->
+      ts.State.filterUser.set {id: @_id, username: @username}
+
   isActiveMember: ->
     if ts.filteringUser()
       return 'active'
@@ -121,10 +122,13 @@ _.extend Template.projects,
     projects = ts.projects.children(id).fetch()
     #_.sortBy projects, (item) -> -Template.projects.totalSparks(item._id)
 
-  taskName: ->
-    if ts.filteringUser()
-      return '我的任务'
-    return '团队任务'
+  selectedUser: ->
+    if ts.State.filterUser.get() is Meteor.userId()
+      return '我'
+    ts.State.filterUser.getName()
+
+  teamMembers: ->
+    Meteor.users.find teamId: Meteor.user().teamId
 
   getQuery: ->
     query = []
@@ -141,50 +145,50 @@ _.extend Template.projects,
     query = Template.projects.getQuery()
     query.push(finished: false)
     if ts.filteringUser()
-      query.push(owners: Meteor.userId())
+      query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalImportant: ->
     query = Template.projects.getQuery()
     query.push({finished: false}, {priority: $gte: 4})
     if ts.filteringUser()
-      query.push(owners: Meteor.userId())
+      query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalUrgent: ->
     query = Template.projects.getQuery()
     query.push({finished: false}, {deadline: {$gt: ts.now(), $lte: ts.consts.EXPIRE_IN_3_DAYS + ts.now()}})
     if ts.filteringUser()
-      query.push(owners: Meteor.userId())
+      query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalFinished: ->
     query = Template.projects.getQuery()
+    query.push({finished: true}, {verified: false})
     if ts.filteringUser()
-      query.push({finishers: Meteor.userId()}, {verified: false})
-    else
-      query.push({finished: true}, {verified: false})
+      query.push({finishers: ts.State.filterUser.get()})
+
     Sparks.find($and: query).count()
 
   totalVerified: ->
     query = Template.projects.getQuery()
     query.push({verified: true}, {finished: true})
     if ts.filteringUser()
-      query.push(finishers: Meteor.userId())
+      query.push(finishers: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalMyUnfinished: ->
     query = Template.projects.getQuery()
-    query.push({finished: false}, {authorId: Meteor.userId()})
+    query.push({finished: false}, {authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 
   totalMyFinished: ->
     query = Template.projects.getQuery()
-    query.push({finished: true}, {verified: false}, {authorId: Meteor.userId()})
+    query.push({finished: true}, {verified: false}, {authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 
   totalMyVerified: ->
     query = Template.projects.getQuery()
-    query.push({finished: true}, {verified: true}, {authorId: Meteor.userId()})
+    query.push({finished: true}, {verified: true}, {authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 

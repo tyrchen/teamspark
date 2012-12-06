@@ -65,6 +65,11 @@ _.extend ts.State,
     get: -> ts.getSession('filterType') || 'user'
     set: (value)-> ts.setSession 'filterType', value
 
+  filterUser:
+    get: -> ts.getSession('filterUser')?.id || Meteor.userId()
+    getName: -> ts.getSession('filterUser')?.username || Meteor.user()?.username
+    set: (value) -> ts.setSession 'filterUser', value
+
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
   filterSelected:
     get: -> ts.getSession('filterSelected')?.id || 'all'

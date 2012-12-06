@@ -185,6 +185,7 @@ ts.sparks.currentOwner = (spark) ->
 ts.sparks.query = (needProject=true) ->
   project = ts.State.filterSelected.get()
   filterType = ts.State.filterType.get()
+  filterUser = ts.State.filterUser.get()
 
   type = ts.State.sparkTypeFilter.get()
   priority = ts.State.sparkPriorityFilter.get()
@@ -211,7 +212,7 @@ ts.sparks.query = (needProject=true) ->
 
   # only filter owners if the spark is not finished
   if filterType is 'user' and finish isnt 2 and author is 'all'
-    query.push owners: user._id
+    query.push owners: filterUser
 
   if type isnt 'all'
     query.push type: type
@@ -236,7 +237,7 @@ ts.sparks.query = (needProject=true) ->
       query.push finished: false
     else
       if filterType is 'user' and author is 'all'
-        query.push finishers: user._id
+        query.push finishers: filterUser
       query.push finished: true
 
   if verify isnt 0
