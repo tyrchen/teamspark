@@ -249,7 +249,7 @@ _.extend Template.sparkFilter,
           tag = {id: editable.value, name: editable.value}
         ts.State.sparkTagFilter.set tag
   events:
-    'click .spark-list .dropdown-menu > li': (e) ->
+    'click .spark-list > li': (e) ->
       $node = $(e.currentTarget)
       # close the dropdown menu. This is a workaround...need to find an elegant way to do this
       $node.closest('.dropdown').removeClass('open')
