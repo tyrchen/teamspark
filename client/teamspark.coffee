@@ -26,7 +26,7 @@ ts.select2.formatSpark = (item) ->
   else
     tags = ''
 
-  content = "<p class='content'>#{item.content}</p>"
+  content = "<p class='content clearfix'>#{item.content}</p>"
   return "<div class='spark-search-item #{createClass}'> #{authorNode}<div> <span class='title'>#{item.text}</span> #{tags} #{createdNode}#{content}</div></div>"
 
 ts.stripTags = (content) ->
@@ -289,7 +289,12 @@ _.extend Template.sparkFilter,
         projectId = ts.State.filterSelected.get()
         regex = new RegExp query.term, 'i'
         sparks = Sparks.find(projects: projectId, title: regex).fetch()
-        sparks.push({_id: 'new', title: '都不是我的菜，创建一个新的'})
+        sparks.push({_id: 'idea', title: '新建想法'})
+        sparks.push({_id: 'bug', title: '新建BUG'})
+        sparks.push({_id: 'requirement', title: '新建需求'})
+        sparks.push({_id: 'task', title: '新建任务'})
+        sparks.push({_id: 'improvement', title: '新建改进'})
+
         data = results: _.map(sparks, (spark) ->
           ret =
             id: spark._id
@@ -304,11 +309,14 @@ _.extend Template.sparkFilter,
         query.callback(data)
 
     ).off('change').on('change', (e) ->
-      console.log e
-      if e.val is 'new'
+      console.log e, e.val
+      if e.val in ['idea', 'bug', 'requirement', 'task', 'improvement']
+        ts.State.sparkToCreate.set {id: e.val, name: e.val}
         $('#add-spark').modal
           keyboard: false
           backdrop: 'static'
+      else
+        Router.setSpark e.val
     )
 
   events:
