@@ -97,7 +97,10 @@ _.extend Template.projects,
       $('#add-project-dialog').modal 'hide'
 
     'click #filter-team-members > li': (e) ->
-      ts.State.filterUser.set {id: @_id, username: @username}
+      if not @_id
+        ts.State.filterUser.set {id: 'all', username: '全部'}
+      else
+        ts.State.filterUser.set {id: @_id, username: @username}
 
   isActiveMember: ->
     if ts.filteringUser()
@@ -144,28 +147,28 @@ _.extend Template.projects,
   totalUnfinished: ->
     query = Template.projects.getQuery()
     query.push(finished: false)
-    if ts.filteringUser()
+    if ts.filteringUser() and ts.State.filterUser.get() isnt 'all'
       query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalImportant: ->
     query = Template.projects.getQuery()
     query.push({finished: false}, {priority: $gte: 4})
-    if ts.filteringUser()
+    if ts.filteringUser() and ts.State.filterUser.get() isnt 'all'
       query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalUrgent: ->
     query = Template.projects.getQuery()
     query.push({finished: false}, {deadline: {$gt: ts.now(), $lte: ts.consts.EXPIRE_IN_3_DAYS + ts.now()}})
-    if ts.filteringUser()
+    if ts.filteringUser() and ts.State.filterUser.get() isnt 'all'
       query.push(owners: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalFinished: ->
     query = Template.projects.getQuery()
     query.push({finished: true}, {verified: false})
-    if ts.filteringUser()
+    if ts.filteringUser() and ts.State.filterUser.get() isnt 'all'
       query.push({finishers: ts.State.filterUser.get()})
 
     Sparks.find($and: query).count()
@@ -173,22 +176,28 @@ _.extend Template.projects,
   totalVerified: ->
     query = Template.projects.getQuery()
     query.push({verified: true}, {finished: true})
-    if ts.filteringUser()
+    if ts.filteringUser() and ts.State.filterUser.get() isnt 'all'
       query.push(finishers: ts.State.filterUser.get())
     Sparks.find($and: query).count()
 
   totalMyUnfinished: ->
     query = Template.projects.getQuery()
-    query.push({finished: false}, {authorId: ts.State.filterUser.get()})
+    query.push({finished: false})
+    if ts.State.filterUser.get() isnt 'all'
+      query.push({authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 
   totalMyFinished: ->
     query = Template.projects.getQuery()
-    query.push({finished: true}, {verified: false}, {authorId: ts.State.filterUser.get()})
+    query.push({finished: true}, {verified: false})
+    if ts.State.filterUser.get() isnt 'all'
+      query.push({authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 
   totalMyVerified: ->
     query = Template.projects.getQuery()
-    query.push({finished: true}, {verified: true}, {authorId: ts.State.filterUser.get()})
+    query.push({finished: true}, {verified: true})
+    if ts.State.filterUser.get() isnt 'all'
+      query.push({authorId: ts.State.filterUser.get()})
     Sparks.find($and: query).count()
 
