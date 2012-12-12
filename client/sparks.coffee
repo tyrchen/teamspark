@@ -9,6 +9,31 @@ _.extend Template.sparks,
 
     Sparks.find {$and: query}, {sort: sort}
 
+  initialSparks: ->
+    query = ts.sparks.query()
+
+    order = ts.State.sparkOrder.get()
+
+    sort = {}
+    sort[order] = -1
+
+    # initial the current page
+    ts.State.currentPage.set 2
+    Sparks.find {$and: query}, {sort: sort, limit: ts.consts.sparks.PER_PAGE}
+
+  nextBulkSparks: ->
+    query = ts.sparks.query()
+
+    order = ts.State.sparkOrder.get()
+
+    sort = {}
+    sort[order] = -1
+
+    skipNum = (ts.State.currentPage - 1) * ts.consts.sparks.PER_PAGE
+    ts.State.currentPage.set(ts.State.currentPage + 1)
+
+    Sparks.find {$and: query}, {sort: sort, skip: skipNum, limit: ts.consts.sparks.PER_PAGE}
+
 _.extend Template.spark,
   rendered: ->
     #console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
@@ -161,6 +186,9 @@ _.extend Template.spark,
 
     'click .finish': (e) ->
       Meteor.call 'finishSpark', @_id
+
+    'click .verify': (e) ->
+      Meteor.call 'verifySpark', @_id
 
     'click .upload': (e) ->
       id = @_id
@@ -329,6 +357,12 @@ _.extend Template.spark,
       if ts.isStaff()
         return true
     else if @owners[0] is Meteor.user()._id
+      return true
+
+    return false
+
+  canVerify: ->
+    if not @verified and @finished and @authorId is Meteor.userId()
       return true
 
     return false

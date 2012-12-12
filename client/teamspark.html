@@ -92,14 +92,10 @@
             <li>
               <input type="text" id="search-spark" style="width:420px;">
             </li>
-            <li class="dropdown hide">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>创建 <b class="caret"></b></a>
-              <ul class="dropdown-menu" role="menu">
-                {{#each types}}
-                <li data-id="{{id}}" data-name="{{name}}"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
-                {{/each}}
-              </ul>
-            </li>
+
+            {{#each types}}
+            <li data-id="{{id}}" data-name="{{name}}" class="hide add-item"><a href="#"><i class="{{icon}}"></i>{{name}}</a></li>
+            {{/each}}
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">

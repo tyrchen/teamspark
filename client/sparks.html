@@ -26,10 +26,13 @@
             {{#if canFinish}}
             <li class="finish"><a href="#" title="完成"><i class="icon-ok"></i></a></li>
             {{/if}}
+            {{#if canVerify}}
+            <li class="verify"><a href="#" title="验证"><i class="icon-ok"></i></a> </li>
+            {{/if}}
           </ul>
         </h5>
         <p>
-          <span>{{positioned}}</span> |
+          <span>{{created}}</span> |
           <span>标签: <b class="tags">{{showTags}}</b></span> |
           <span>项目: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
           <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}" data-priority="{{priority}}">{{priority}}</a></span> |
@@ -45,7 +48,7 @@
       <div class="content">
         <div class="modal-header">
           <h4>
-            {{title}}
+            <b>#{{issueId}}</b>: {{title}}
             <div class="pull-right">
             {{#if supporters}}
             <span class="small">支持者:</span> <ul>{{{showSupporters}}}</ul>
@@ -55,38 +58,35 @@
         </div>
         <div class="modal-body">
           <p>{{{content}}}</p>
-          {{#if ts.isIphone}}
-          {{else}}
-            {{#if hasImages}}
-            <hr/>
-            <p>共{{images.length}}张图片：</p>
-            <div class="carousel slide" id="{{_id}}-img">
-              <div class="carousel-inner" data-interval="false" >
-                {{#each images}}
-                <div class="item">
-                  <img src="{{url}}" alt="{{filename}}" />
-                  <div class="carousel-caption">
-                    <p>图片大小: {{size}}字节 | 下载: <a href="{{url}}">{{filename}}</a></p>
-                  </div>
+          {{#if hasImages}}
+          <hr/>
+          <p>共{{images.length}}张图片：</p>
+          <div class="carousel slide" id="{{_id}}-img">
+            <div class="carousel-inner" data-interval="false" >
+              {{#each images}}
+              <div class="item">
+                <img src="{{url}}" alt="{{filename}}" />
+                <div class="carousel-caption">
+                  <p>图片大小: {{size}}字节 | 下载: <a href="{{url}}">{{filename}}</a></p>
                 </div>
-                {{/each}}
               </div>
-              {{#if hasMoreImages}}
-              <a class="left carousel-control" href="#{{_id}}-img" data-slide="prev">‹</a>
-              <a class="right carousel-control" href="#{{_id}}-img" data-slide="next">›</a>
-              {{/if}}
-            </div>
-            {{/if}}
-
-            {{#if hasFiles}}
-            <hr/>
-            <p>共{{files.length}}个文件：</p>
-            <ul class="files">
-              {{#each files}}
-              <li><a href="{{url}}"><i class="icon-file"></i>{{filename}}</a><span class="small insignificant"> ({{size}}字节)</span></li>
               {{/each}}
-            </ul>
+            </div>
+            {{#if hasMoreImages}}
+            <a class="left carousel-control" href="#{{_id}}-img" data-slide="prev">‹</a>
+            <a class="right carousel-control" href="#{{_id}}-img" data-slide="next">›</a>
             {{/if}}
+          </div>
+          {{/if}}
+
+          {{#if hasFiles}}
+          <hr/>
+          <p>共{{files.length}}个文件：</p>
+          <ul class="files">
+            {{#each files}}
+            <li><a href="{{url}}"><i class="icon-file"></i>{{filename}}</a><span class="small insignificant"> ({{size}}字节)</span></li>
+            {{/each}}
+          </ul>
           {{/if}}
         </div>
         <div class="modal-footer">

@@ -24,11 +24,25 @@ ts.setProject = (project_name) ->
 
 TsRouter = Backbone.Router.extend
   routes:
+    '': 'home'
     'projects/:project_name/sparks': 'sparks'
     'projects/:project_name/charts': 'charts'
     'projects/:project_name/schedule': 'schedule'
 
     'sparks/:spark_id': 'spark'
+
+  home: ->
+    self = @
+    lastProject =  amplify.store('project')
+    if lastProject
+      self.navigate "/projects/#{lastProject}/sparks", true
+      return
+
+    Meteor.autorun (handle) ->
+      p = Projects.findOne {}, {sort: createdAt: 1}
+      if p
+        handle.stop()
+        self.navigate "/projects/#{p.name}/sparks", true
 
   sparks: (project_name) ->
     ts.State.showContent.set 'sparks'
@@ -57,7 +71,8 @@ TsRouter = Backbone.Router.extend
       project_name = '全部'
 
     type = ts.State.showContent.get()
-    this.navigate("/projects/#{project_name}/#{type}", true)
+    this.navigate "/projects/#{project_name}/#{type}", true
+    amplify.store('project', project_name)
 
   setSpark: (id) ->
     this.navigate("/sparks/#{id}", true)

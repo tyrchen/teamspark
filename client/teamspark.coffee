@@ -123,7 +123,7 @@ _.extend Template.content,
   projects: -> Projects.find()
   teamName: -> ts.currentTeam()?.name
   isOrphan: ->
-    if Meteor.userLoaded() and not Meteor.user().teamId
+    if Meteor.userId() and not Meteor.user().teamId
       return 'orphan'
     return ''
 
@@ -131,7 +131,8 @@ _.extend Template.content,
     ts.State.showSpark.get()
 
   singleSpark: ->
-    return ts.State.showSpark.get()
+    s = ts.State.showSpark.get()
+    Sparks.findOne _id: s._id
 
   showSparks: ->
     if ts.State.showContent.get() is 'sparks'
@@ -311,7 +312,7 @@ _.extend Template.sparkFilter,
     )
 
   events:
-    'click .spark-list .dropdown-menu > li': (e) ->
+    'click .spark-list > li.add-item': (e) ->
       $node = $(e.currentTarget)
       # close the dropdown menu. This is a workaround...need to find an elegant way to do this
       $node.closest('.dropdown').removeClass('open')

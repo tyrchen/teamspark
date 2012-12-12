@@ -91,3 +91,13 @@ Meteor.methods
       recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
       content = "#{user.username}删除了项目#{project.name}"
       Meteor.call 'notify', recipients, content, content, null
+
+  updateProjectStat: (id, unfinished=1, finished=0, verified=0) ->
+    project = Projects.findOne _id: id
+    if project
+      Projects.update id, $inc: {unfinished: unfinished, finished: finished, verified: verified}
+
+  updateUserStat: (id, submitted=0, unfinished=0, finished=0) ->
+    profile = Profiles.findOne userId: id
+    if profile
+      Profiles.update profile._id, $inc: {totalSubmitted: submitted, totalUnfinished: unfinished, totalFinished: finished}

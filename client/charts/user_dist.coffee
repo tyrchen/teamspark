@@ -9,7 +9,10 @@ ts.charts.userDistribution.data =  (statType = 'finished') ->
   _.map members, (user) ->
     data = []
     _.each stats, (stat) ->
-      data.push x: stat.date, y: stat[statType][user._id][0]
+      if stat[statType][user._id]?[0]
+        data.push x: stat.date, y: stat[statType][user._id][0]
+      else
+        data.push x: stat.date, y: 0
 
     return {key: user.username, values: data}
 

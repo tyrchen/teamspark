@@ -1,19 +1,27 @@
-# team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date()}
+# team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date(), abbr: 'tkq', nextIssueId: 0}
 Teams = new Meteor.Collection 'teams'
 
-# profile = {_id: uuid, userId: userId, online: true/false, teamId: teamId, lastActive: new Date(), totalSeconds: integer}
+# profile = {
+#   _id: uuid, userId: userId, online: true/false, teamId: teamId,
+#   lastActive: new Date(), totalSeconds: integer
+#   totalSubmitted: 0, totalUnfinished: 0, totalFinished: 0
+# }
 Profiles = new Meteor.Collection 'profiles'
 
-# project = { _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null, parent: null, teamId: teamId, createdAt: Date() }
+# project = {
+#   _id: uuid, name: 'cayman', description: 'cayman is a project', authorId: null,
+#   parent: null, teamId: teamId, createdAt: Date()
+#   unfinished: 0, finished: 0, verified: 0
+# }
 Projects = new Meteor.Collection 'projects'
 
 # spark = {
 # _id: uuid, type: 'idea', authorId: userId, auditTrails: [],
-# owners: [userId, ...], finishers: [userId, ...], progress: 10
+# owners: [userId, ...], finishers: [userId, ...], verified: false, progress: 10,
 # title: 'blabla', content: 'blabla', priority: 1, supporters: [userId1, userId2, ...],
 # finished: false, projects: [projectId, ...], deadline: Date(), createdAt: Date(),
 # updatedAt: Date(), finishedAt: Date(), positionedAt: Date(), teamId: teamId, points: 16, totalPoints: 64
-# tags: []
+# tags: [], issueId: 'tkq1'
 # }
 Sparks = new Meteor.Collection 'sparks'
 

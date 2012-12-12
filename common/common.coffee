@@ -185,6 +185,7 @@ ts.sparks.currentOwner = (spark) ->
 ts.sparks.query = (needProject=true) ->
   project = ts.State.filterSelected.get()
   filterType = ts.State.filterType.get()
+  filterUser = ts.State.filterUser.get()
 
   type = ts.State.sparkTypeFilter.get()
   priority = ts.State.sparkPriorityFilter.get()
@@ -194,6 +195,7 @@ ts.sparks.query = (needProject=true) ->
   deadline = ts.State.sparkDeadlineFilter.get()
   finish = ts.State.sparkFinishFilter.get()
   tag = ts.State.sparkTagFilter.get()
+  verify = ts.State.sparkVerifyFilter.get()
 
   showSpark = ts.State.showSpark.get()
 
@@ -209,14 +211,15 @@ ts.sparks.query = (needProject=true) ->
       query.push projects: [project]
 
   # only filter owners if the spark is not finished
-  if filterType is 'user' and finish isnt 2
-    query.push owners: user._id
+  if filterType is 'user' and finish isnt 2 and author is 'all'
+    if filterUser isnt 'all'
+      query.push owners: filterUser
 
   if type isnt 'all'
     query.push type: type
 
   if priority isnt 'all'
-    query.push priority: priority
+    query.push priority: $gte: priority
 
   if author isnt 'all'
     query.push authorId: author
@@ -234,9 +237,16 @@ ts.sparks.query = (needProject=true) ->
     if finish is 1
       query.push finished: false
     else
-      if filterType is 'user'
-        query.push finishers: user._id
+      if filterType is 'user' and author is 'all'
+        if filterUser isnt 'all'
+          query.push finishers: filterUser
       query.push finished: true
+
+  if verify isnt 0
+    if verify is 1
+      query.push verified: false
+    else
+      query.push verified: true
 
   if tag isnt 'all'
     query.push tags: tag

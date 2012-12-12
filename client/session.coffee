@@ -3,8 +3,9 @@ ts.getSession = (name) ->
   Session.get name
 
 ts.setSession = (name, value) ->
-  if name not in ['showSpark', 'teamId']
+  if name not in ['showSpark', 'teamId', 'loaded']
     # TODO: fix me. this is a workaround to clear notification entry and show sparks
+    console.log 'setSession:', name, value
     Session.set 'showSpark', null
 
   Session.set name, value
@@ -61,14 +62,24 @@ _.extend ts.State,
 
   # filter the sparks by current owner or team. Can be 'user' | 'team'
   filterType:
-    get: -> ts.getSession('filterType') || 'team'
+    get: -> ts.getSession('filterType') || 'user'
     set: (value)-> ts.setSession 'filterType', value
+
+  filterUser:
+    get: -> ts.getSession('filterUser')?.id || Meteor.userId()
+    getName: -> ts.getSession('filterUser')?.username || Meteor.user()?.username
+    set: (value) -> ts.setSession 'filterUser', value
 
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
   filterSelected:
     get: -> ts.getSession('filterSelected')?.id || 'all'
     getName: -> ts.getSession('filterSelected')?.name || '全部'
     set: (value)-> ts.setSession 'filterSelected', value
+
+  # filter the sparks by shortcut
+  filterShortcut:
+    get: -> ts.getSession('filterShortcut') || 'unfinished'
+    set: (value) -> ts.setSession 'filterShortcut', value
 
   # spark display type. 'wall' or 'board'
   sparkDisplay:
@@ -116,6 +127,11 @@ _.extend ts.State,
     getName: -> ts.getSession('sparkFinishFilter')?.name || '未完成'
     set: (value) -> ts.setSession 'sparkFinishFilter', value
 
+  sparkVerifyFilter:
+    get: -> ts.getSession('sparkVerifyFilter')?.id
+    getName: -> ts.getSession('sparkVerifyFilter')?.name || '未验证'
+    set: (value) -> ts.setSession 'sparkVerifyFilter', value
+
   sparkDeadlineFilter:
     get: -> ts.getSession('sparkDeadlineFilter')?.id || 'all'
     getName: -> ts.getSession('sparkDeadlineFilter')?.name || 0
@@ -136,6 +152,7 @@ _.extend ts.State,
     ts.State.sparkTypeFilter.set null
     ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
     ts.State.sparkTagFilter.set null
+    ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
@@ -160,6 +177,10 @@ _.extend ts.State,
     get: -> ts.getSession('showContent') || 'sparks'
     set: (value) -> ts.setSession 'showContent', value
 
+  currentPage:
+    get: -> ts.getSession('currentPage') || 2
+    set: (value) -> ts.setSession 'currentPage', value
 
 Meteor.startup ->
   ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
+  ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}

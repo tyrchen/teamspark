@@ -86,3 +86,44 @@ Meteor.methods
 
   migrateTags: ->
     Tags.update {projectId: null}, {$set: projectId: '1b6c3590-c26a-49ea-96f7-d07f0e95fc74'}
+
+  migrateProjectStat: ->
+    projects = Projects.find().fetch()
+    _.each projects, (item) ->
+      if item.parent
+        unfinished = Sparks.find(projects: item._id, finished: false).count()
+        finished = Sparks.find(projects: item._id, finished: true).count()
+        verified = Sparks.find(projects: item._id, finished: true, verified: $ne: null).count()
+      else
+        unfinished = Sparks.find(projects: [item._id], finished: false).count()
+        finished = Sparks.find(projects: [item._id], finished: true).count()
+        verified = Sparks.find(projects: [item._id], finished: true, verified: $ne: null).count()
+
+      Projects.update item._id, $set: {unfinished: unfinished, finished: finished, verified: verified}
+
+  migrateUserStat: ->
+    #   totalSubmitted: 0, totalActive: 0, totalFinished: 0
+    profiles = Profiles.find().fetch()
+    _.each profiles, (item) ->
+      submitted = Sparks.find(authorId: item.userId).count()
+      unfinished = Sparks.find(finished: false, owners: item.userId).count()
+      finished = Sparks.find(finishers: item.userId).count()
+
+      Profiles.update item._id, $set: {totalSubmitted: submitted, totalUnfinished: unfinished, totalFinished: finished}
+
+  migrateSparkVerified: ->
+    Sparks.update {finished: false}, {$set: verified: false}, {multi: true}
+    Sparks.update {finished: true}, {$set: verified: true}, {multi: true}
+    console.log 'total unverified:', Sparks.find(verified:false).count(), ', total verified: ', Sparks.find(verified:true).count()
+
+  migrateSparkIssueId: (abbr="") ->
+    user = Meteor.user()
+    teamId = user.teamId
+    Teams.update teamId, $set: {abbr: abbr, nextIssueId: 1}
+
+    sparks = Sparks.find({teamId: teamId}, {sort: createdAt: 1}).fetch()
+    _.each sparks, (item) ->
+      team = Teams.findOne teamId, fields: nextIssueId: 1
+      Teams.update teamId, $inc: nextIssueId: 1
+      console.log 'nextIssueId', team.nextIssueId
+      Sparks.update item._id, $set: issueId: "#{abbr}#{team.nextIssueId}"
