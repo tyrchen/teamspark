@@ -1,4 +1,7 @@
 if Meteor.is_server
+  Meteor.publish 'projects', (teamId) ->
+    Projects.find teamId: teamId
+
   Meteor.publish 'teams', ->
     Teams.find()
 
@@ -18,8 +21,6 @@ if Meteor.is_server
   Meteor.publish 'profiles', (teamId) ->
     Profiles.find teamId: teamId
 
-  Meteor.publish 'projects', (teamId) ->
-    Projects.find teamId: teamId
 
   Meteor.publish 'sparks', (teamId) ->
     #Sparks.find {'projects.0': projectId}, {sort: 'updateddAt': -1}
@@ -38,11 +39,15 @@ if Meteor.is_server
     Tags.find {teamId: teamId}, {sort: 'count': -1}
 
 if Meteor.is_client
+  Meteor.subscribe 'teams'
   Meteor.autosubscribe ->
-    Meteor.subscribe 'teams'
     teamId = Meteor.user().teamId
+    console.log 'auto subscribe to ', teamId
     Meteor.subscribe 'projects', teamId, ->
       console.log 'projects loaded'
+
+    Meteor.subscribe 'tags', teamId, ->
+      console.log 'tags loaded'
 
     #projectId = ts.State.filterSelected.get()
     #if projectId
@@ -55,15 +60,12 @@ if Meteor.is_client
 
     #Meteor.subscribe 'auditTrails', teamId
 
-    Meteor.subscribe 'notifications', Meteor.userId(), ->
-      console.log 'notifications loaded'
-
     Meteor.subscribe 'profiles', teamId, ->
       console.log 'profiles loaded'
 
     Meteor.subscribe 'dayStats', teamId, ->
       console.log 'dayStats loaded'
 
-    Meteor.subscribe 'tags', teamId, ->
-      console.log 'tags loaded'
 
+    Meteor.subscribe 'notifications', Meteor.userId(), ->
+      console.log 'notifications loaded'

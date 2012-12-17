@@ -45,6 +45,7 @@ TsRouter = Backbone.Router.extend
         self.navigate "/projects/#{p.name}/sparks", true
 
   sparks: (project_name) ->
+    console.log 'set project', project_name
     ts.State.showContent.set 'sparks'
     ts.setProject project_name
 
