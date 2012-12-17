@@ -10,6 +10,7 @@ ts.setAuthor = -> ts.State.sparkAuthorFilter.set {id: ts.State.filterUser.get(),
 
 _.extend Template.projects,
   rendered: ->
+    console.log 'projects rendered'
     $node = $('#select-project')
     $node.val ts.State.filterSelected.getName()
     $('.shortcuts .' + ts.State.filterShortcut.get()).addClass('active')

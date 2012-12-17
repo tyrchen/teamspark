@@ -38,6 +38,17 @@ ts.select2.formatSparkSelection = (item) ->
   console.log item, item._id
   return item._id
 
+# TODO: this is not a perfect solution, however using jquery .on cannot bind the click event on these anchors which are created on the fly.
+ts.createSparkFunc = ->
+  $('#search-spark').select2('close')
+  $node = $(this)
+  id = $node.data('id')
+  name = $node.data('name')
+  ts.State.sparkToCreate.set {id: id, name: name}
+  $('#add-spark').modal
+    keyboard: false
+    backdrop: 'static'
+
 _.extend Template.content,
   events:
     'click #manage-member': (e) ->
@@ -180,6 +191,7 @@ _.extend Template.login,
 
 _.extend Template.sparkFilter,
   rendered: ->
+    console.log 'spark filter rendered'
     ts.setEditable
       node: $('#filter-finished')
       value: -> ts.State.sparkFinishFilter.get()
@@ -284,16 +296,18 @@ _.extend Template.sparkFilter,
       minimumInputLength: 1
       formatResult: ts.select2.formatSpark
       #formatSelection: ts.select2.formatSpark
+      formatInputTooShort: (input, min) ->
+        creators = []
+        _.each Template.sparkFilter.types(), (item) ->
+          creators.push("<a data-id='#{item.id}' data-name='#{item.name}' href='javascript:;' onclick='ts.createSparkFunc();'><i class='#{item.icon}' ></i>#{item.name}</a> ")
+
+        "<span class='pull-right' id='spark-creators'>新建：#{creators.join(' | ')}</span>"
 
       query: (query) ->
         projectId = ts.State.filterSelected.get()
         regex = new RegExp query.term, 'i'
         sparks = Sparks.find(projects: projectId, title: regex).fetch()
-        sparks.push({_id: 'idea', title: '新建想法'})
-        sparks.push({_id: 'bug', title: '新建BUG'})
-        sparks.push({_id: 'requirement', title: '新建需求'})
-        sparks.push({_id: 'task', title: '新建任务'})
-        sparks.push({_id: 'improvement', title: '新建改进'})
+
 
         data = results: _.map(sparks, (spark) ->
           ret =
@@ -320,18 +334,6 @@ _.extend Template.sparkFilter,
     )
 
   events:
-    'click .spark-list > li.add-item': (e) ->
-      $node = $(e.currentTarget)
-      # close the dropdown menu. This is a workaround...need to find an elegant way to do this
-      $node.closest('.dropdown').removeClass('open')
-      id = $node.data('id')
-      name = $node.data('name')
-
-      ts.State.sparkToCreate.set {id: id, name: name}
-      $('#add-spark').modal
-        keyboard: false
-        backdrop: 'static'
-
     'click .shortcut': (e) ->
       type = $(e.currentTarget).data('id')
 
@@ -380,6 +382,7 @@ _.extend Template.sparkFilter,
 
 _.extend Template.sparkContentEditor,
   rendered: ->
+    console.log 'spark content rendered'
     ts.editor().panelInstance 'spark-content', hasPanel : true
 
 _.extend Template.sparkEdit,
@@ -405,7 +408,7 @@ _.extend Template.sparkEdit,
 
 _.extend Template.sparkInput,
   rendered: ->
-    #console.log 'spark input rendered', @
+    console.log 'spark input rendered'
     usernames = _.pluck ts.members.all().fetch(), 'username'
     $node = $('#spark-owner')
 

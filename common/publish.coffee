@@ -39,32 +39,31 @@ if Meteor.is_server
 
 if Meteor.is_client
   Meteor.autosubscribe ->
-    teamId = ts.State.teamId.get()
     Meteor.subscribe 'teams'
-    if teamId
-      Meteor.subscribe 'projects', teamId, ->
-        console.log 'projects loaded'
+    teamId = Meteor.user().teamId
+    Meteor.subscribe 'projects', teamId, ->
+      console.log 'projects loaded'
 
-      #projectId = ts.State.filterSelected.get()
-      #if projectId
-      #  Meteor.subscribe 'sparks', projectId, ->
-      #    console.log 'sparks loaded'
-      #    ts.State.loaded.set true
-      Meteor.subscribe 'sparks', teamId, ->
-        console.log 'sparks loaded'
-        ts.State.loaded.set true
+    #projectId = ts.State.filterSelected.get()
+    #if projectId
+    #  Meteor.subscribe 'sparks', projectId, ->
+    #    console.log 'sparks loaded'
+    #    ts.State.loaded.set true
+    Meteor.subscribe 'sparks', teamId, ->
+      console.log 'sparks loaded'
+      ts.State.loaded.set true
 
-      #Meteor.subscribe 'auditTrails', teamId
+    #Meteor.subscribe 'auditTrails', teamId
 
-      Meteor.subscribe 'notifications', Meteor.userId(), ->
-        console.log 'notifications loaded'
+    Meteor.subscribe 'notifications', Meteor.userId(), ->
+      console.log 'notifications loaded'
 
-      Meteor.subscribe 'profiles', teamId, ->
-        console.log 'profiles loaded'
+    Meteor.subscribe 'profiles', teamId, ->
+      console.log 'profiles loaded'
 
-      Meteor.subscribe 'dayStats', teamId, ->
-        console.log 'dayStats loaded'
+    Meteor.subscribe 'dayStats', teamId, ->
+      console.log 'dayStats loaded'
 
-      Meteor.subscribe 'tags', teamId, ->
-        console.log 'tags loaded'
+    Meteor.subscribe 'tags', teamId, ->
+      console.log 'tags loaded'
 

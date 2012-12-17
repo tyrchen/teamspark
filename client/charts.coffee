@@ -14,6 +14,7 @@ ts.charts.stats = ->
 
 _.extend Template.charts,
   rendered: ->
+    console.log 'chart rendered'
     width = Math.floor(($('.spark-panel').width() - 35) / 4 - 5)
     height = Math.floor(width)
 

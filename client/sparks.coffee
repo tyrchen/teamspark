@@ -36,7 +36,7 @@ _.extend Template.sparks,
 
 _.extend Template.spark,
   rendered: ->
-    #console.log 'template spark rendered:', @, $('.edit-type', $(@firstNode))
+    console.log 'spark rendered'
     $parent = $(@firstNode)
     spark = @
     $('.carousel', $parent).carousel
