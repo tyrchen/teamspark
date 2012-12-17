@@ -27,7 +27,7 @@ ts.select2.formatSpark = (item) ->
     tags = ''
 
   content = "<p class='content clearfix'>#{item.content}</p>"
-  return "<div class='spark-search-item #{createClass}'> #{authorNode}<div> <span class='title'>#{item.sparkId}: #{item.text}</span> #{tags} #{createdNode}#{content}</div></div>"
+  return "<div class='spark-search-item #{createClass}'> #{authorNode}<div> <span class='title'>#{item.issueId}: #{item.text}</span> #{tags} #{createdNode}#{content}</div></div>"
 
 ts.stripTags = (content) ->
   if content
@@ -306,13 +306,13 @@ _.extend Template.sparkFilter,
       query: (query) ->
         projectId = ts.State.filterSelected.get()
         regex = new RegExp query.term, 'i'
-        sparks = Sparks.find(projects: projectId, $or: [{title: regex}, {sparkId: regex}, {tags: regex}]).fetch()
+        sparks = Sparks.find(projects: projectId, $or: [{title: regex}, {issueId: regex}, {tags: regex}]).fetch()
 
 
         data = results: _.map(sparks, (spark) ->
           ret =
             id: spark._id
-            sparkId: spark.sparkId
+            issueId: spark.issueId
             text:spark.title
             createdAt: spark.createdAt
             authorId: spark.authorId
