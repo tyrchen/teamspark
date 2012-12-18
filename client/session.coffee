@@ -92,7 +92,7 @@ _.extend ts.State,
     getName: -> ts.getSession('sparkOrder')?.name || '最近创建'
     set: (value)-> ts.setSession 'sparkOrder', value
 
-  # spark type for filter. can be 'idea' | 'bug' | 'requirement' | 'task'
+  # spark type for filter. can be 'idea' | 'bug' | 'feature' | 'task'
   sparkTypeFilter:
     get: -> ts.getSession('sparkTypeFilter')?.id || 'all'
     getName: -> ts.getSession('sparkTypeFilter')?.name || '全部'

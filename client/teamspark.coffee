@@ -323,16 +323,7 @@ _.extend Template.sparkFilter,
 
         query.callback(data)
 
-    ).off('change').on('change', (e) ->
-      console.log e, e.val
-      if e.val in ['idea', 'bug', 'requirement', 'task', 'improvement']
-        ts.State.sparkToCreate.set {id: e.val, name: e.val}
-        $('#add-spark').modal
-          keyboard: false
-          backdrop: 'static'
-      else
-        Router.setSpark e.val
-    )
+    ).off('change').on('change', (e) ->  Router.setSpark e.val)
 
   events:
     'click .shortcut': (e) ->
