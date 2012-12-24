@@ -39,12 +39,10 @@ ts.select2.formatSparkSelection = (item) ->
   return item._id
 
 # TODO: this is not a perfect solution, however using jquery .on cannot bind the click event on these anchors which are created on the fly.
-ts.createSparkFunc = ->
+ts.createSparkFunc = (id) ->
   $('#search-spark').select2('close')
-  $node = $(this)
-  id = $node.data('id')
-  name = $node.data('name')
-  ts.State.sparkToCreate.set {id: id, name: name}
+  type = _.find Template.sparkFilter.types(), (item) -> item.id is id
+  ts.State.sparkToCreate.set {id: id, name: type.name}
   $('#add-spark').modal
     keyboard: false
     backdrop: 'static'
@@ -299,7 +297,7 @@ _.extend Template.sparkFilter,
       formatInputTooShort: (input, min) ->
         creators = []
         _.each Template.sparkFilter.types(), (item) ->
-          creators.push("<a data-id='#{item.id}' data-name='#{item.name}' href='javascript:;' onclick='ts.createSparkFunc();'><i class='#{item.icon}' ></i>#{item.name}</a> ")
+          creators.push("<a data-id='#{item.id}' data-name='#{item.name}' href='javascript:;' onclick=ts.createSparkFunc('#{item.id}');><i class='#{item.icon}' ></i>#{item.name}</a> ")
 
         "<span class='pull-right' id='spark-creators'>新建：#{creators.join(' | ')}</span>"
 
