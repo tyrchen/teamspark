@@ -99,7 +99,7 @@ _.extend Template.projects,
 
     'click #filter-team-members > li': (e) ->
       if not @_id
-        ts.State.filterUser.set {id: 'all', username: '全部'}
+        ts.State.filterUser.set {id: 'all', username: '大家'}
       else
         ts.State.filterUser.set {id: @_id, username: @username}
 
