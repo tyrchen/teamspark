@@ -6,6 +6,12 @@ AuditTrails.allow
   update: (userId, items, fields, modifier) -> false
   remove: (userId, items) -> false
 
+Meteor.users.allow
+  insert: (userId, item) -> false
+  update: (userId, items, fields, modifier) ->
+    userId is Meteor.userId()
+  remove: (userId, items) -> false
+
 Teams.allow
   insert: (userId, item) -> true
   update: (userId, items, fields, modifier) ->

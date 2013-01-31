@@ -136,6 +136,9 @@ _.extend Template.content,
       return 'orphan'
     return ''
 
+  configureTeam: ->
+    Teams.find().count() is 0
+
   showSingleSpark: ->
     ts.State.showSpark.get()
 
@@ -475,6 +478,13 @@ _.extend Template.notifications,
         text: @content,
         type: ts.consts.notifications[@level]
 
+_.extend Template.createTeam,
+  events:
+    'click #btn-create-team': (e) ->
+      e.preventDefault()
+      name = $.trim $('#teamname').val()
+      if name
+        Actions.createTeam name
 
 Meteor.startup ->
   $(window).focus ->

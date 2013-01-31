@@ -1,6 +1,17 @@
 Actions = {}
 
 # team related
+Actions.createTeam = (name) ->
+  user = Meteor.user()
+  id = Teams.insert
+    name: name
+    authorId: user._id
+    members: [user._id]
+    createdAt: ts.now()
+
+  console.log 'team id:', id
+  Meteor.users.update user._id, '$set': 'teamId': id
+
 Actions.hire = (user, team) ->
 
   if not ts.isStaff team
