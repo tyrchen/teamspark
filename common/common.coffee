@@ -116,18 +116,20 @@ ts.sparks.finishedItems = (projectId=null, ownerId=null) ->
 
 
 ts.sparks.filteredFinishItems = (projectId=null, ownerId=null, finished=false) ->
-  #query = [finished: finished]
-  query = []
+  query = [finished: finished]
+  #query = []
   if projectId
     query.push projects: projectId
 
-  if ownerId
-    if finished
-      query.push finishers: ownerId
-    else
-      query.push owners: ownerId
-  else
-    query.push finished: finished
+  if ts.State.filterType.get() is 'user'
+    query.push owners: Meteor.userId()
+  #if ownerId
+  #  if finished
+  #    query.push finishers: ownerId
+  #  else
+  #    query.push owners: ownerId
+  #else
+  #  query.push finished: finished
 
   if query.length > 0
     Sparks.find $and: query
@@ -216,9 +218,11 @@ ts.sparks.query = (needProject=true) ->
       query.push projects: [project]
 
   # only filter owners if the spark is not finished
-  if filterType is 'user' and finish isnt 2 and author is 'all'
-    if filterUser isnt 'all'
-      query.push owners: filterUser
+  #if filterType is 'user' and finish isnt 2 and author is 'all'
+  #  if filterUser isnt 'all'
+  #    query.push owners: filterUser
+  if filterType is 'user'
+    query.push owners: Meteor.userId()
 
   if type isnt 'all'
     query.push type: type
