@@ -9,7 +9,7 @@ ts.setProject = (project_name) ->
   # here we need to delay initial url parsing since data hasn't arrived
   Meteor.autorun (handle)->
     project = null
-    if not Meteor.user().teamId
+    if not Meteor.user()?.teamId
       return
     project = Projects.findOne name:project_name, teamId: Meteor.user().teamId
     if not project

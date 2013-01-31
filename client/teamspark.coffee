@@ -100,8 +100,8 @@ _.extend Template.content,
       removed_ids = []
       added_ids = _.map $added, (item) -> $(item).data('id')
       removed_ids = _.map $removed, (item) -> $(item).data('id')
-      Meteor.call 'updateMembers', added_ids, removed_ids, (error, result) ->
-        $('#manage-member-dialog').modal 'hide'
+      Actions.updateMembers added_ids, removed_ids
+      $('#manage-member-dialog').modal 'hide'
 
 
     'click #logout': (e) ->
@@ -158,23 +158,6 @@ _.extend Template.content,
       return 'active'
     return ''
 
-
-  connectStatus: ->
-    status = Meteor.status()
-    if not status.connected
-      nextRetry = moment(status.retryTime).fromNow()
-      if window.errorNotice
-        window.errorNotice.pnotify_display()
-      else
-        window.errorNotice = $.pnotify
-          title: "正在重新连接",
-          text: "连接中断, 系统会在#{nextRetry}重连服务器)。 这可能是因为网络不稳或者管理员正在部署导致，您可以刷新此页立即重新连接"
-          type: 'error'
-          hide: false
-          closer: false
-          sticker: false
-    else
-      window.errorNotice?.pnotify_remove?()
 
 _.extend Template.login,
   events:
@@ -388,10 +371,10 @@ _.extend Template.sparkEdit,
       content = nicEditors.findEditor('spark-edit-content').nicInstances?[0].getContent()
       spark = Sparks.findOne _id: id
       if spark.title != title
-        Meteor.call 'updateSpark', id, title, 'title'
+        Actions.updateSpark id, title, 'title'
 
       if spark.content != content
-        Meteor.call 'updateSpark', id, content, 'content'
+        Actions.updateSpark id, content, 'content'
 
       $('form', $node)?[0].reset()
       $node.modal 'hide'
@@ -461,16 +444,16 @@ _.extend Template.sparkInput,
 
       #console.log "name: #{name}, desc: #{content}, priority: #{priority}, type: #{type}, project: #{project}, owners:", owners, deadlineStr
 
-      Meteor.call 'createSpark', title, content, type, project, owners, priority, tags, deadlineStr, (error, result) ->
-        $('.control-group', $form).removeClass 'error'
-        $form[0].reset()
-        $('#add-spark').modal 'hide'
+      Actions.createSpark title, content, type, project, owners, priority, tags, deadlineStr
+      $('.control-group', $form).removeClass 'error'
+      $form[0].reset()
+      $('#add-spark').modal 'hide'
 
 _.extend Template.notifications,
   events:
     'click .notification > a': (e) ->
       e.preventDefault()
-      Meteor.call 'notificationRead', @_id
+      Actions.notificationRead @_id
       Router.setSpark @sparkId
 
   totalUnread: ->
@@ -486,7 +469,7 @@ _.extend Template.notifications,
 
   showNotification: ->
     if not @visitedAt
-      Meteor.call 'notificationVisited', @_id
+      Actions.notificationVisited @_id
       $.pnotify
         title: "#{@title}",
         text: @content,
@@ -498,10 +481,10 @@ Meteor.startup ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'online:', profile.username
     if profile and not profile.online
-      Meteor.call 'online', true
+      Actions.online true
 
   $(window).blur ->
     profile = Profiles.findOne userId: Meteor.userId()
     #console.log 'offline:', profile.username
     if profile and profile.online
-      Meteor.call 'online', false
+      Actions.online false

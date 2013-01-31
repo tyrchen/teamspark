@@ -58,7 +58,7 @@ _.extend Template.spark,
       value = editable.value
       sparkId = editable.$element.data('id')
       if value and sparkId
-        Meteor.call 'updateSpark', sparkId, value, 'project'
+        Actions.updateSpark sparkId, value, 'project'
     )
 
     $('.edit-type', $parent).editable(
@@ -72,7 +72,7 @@ _.extend Template.spark,
       value = editable.value
       sparkId = editable.$element.data('id')
       if value and sparkId
-        Meteor.call 'updateSpark', sparkId, value, 'type'
+        Actions.updateSpark sparkId, value, 'type'
     )
 
     $('.edit-priority', $parent).editable(
@@ -86,7 +86,7 @@ _.extend Template.spark,
       value = editable.value
       sparkId = editable.$element.data('id')
       if value and sparkId
-        Meteor.call 'updateSpark', sparkId, value, 'priority'
+        Actions.updateSpark sparkId, value, 'priority'
     )
 
     $('.edit-deadline', $parent).editable(
@@ -99,7 +99,7 @@ _.extend Template.spark,
     ).on('render', (e, editable) ->
       value = editable.value
       sparkId = editable.$element.data('id')
-      Meteor.call 'updateSpark', sparkId, value, 'deadline'
+      Actions.updateSpark sparkId, value, 'deadline'
     )
 
     ts.setEditable
@@ -109,7 +109,7 @@ _.extend Template.spark,
       renderCallback: (e, editable) ->
         value = editable.value
         sparkId = editable.$element.data('id')
-        Meteor.call 'updateSpark', sparkId, value, 'points'
+        Actions.updateSpark sparkId, value, 'points'
 
     $('.edit-owners', $parent).editable(
       type: 'text'
@@ -129,7 +129,7 @@ _.extend Template.spark,
 
       owners = _.filter owners, (id) -> id
       if owners and sparkId
-        Meteor.call 'updateSpark', sparkId, owners, 'owners'
+        Actions.updateSpark sparkId, owners, 'owners'
     ).on('shown', (e, editable) ->
       #console.log e, editable, $(editable.$content).addClass('editable-owners')
       usernames = _.pluck ts.members.all().fetch(), 'username'
@@ -160,7 +160,7 @@ _.extend Template.spark,
       value = editable.value
       sparkId = spark._id
       if value and sparkId
-        Meteor.call 'tagSpark', sparkId, value
+        Actions.tagSpark sparkId, value
     ).on('shown', (e, editable) ->
       tags = _.pluck ts.tags.all().fetch(), 'name'
       $(editable.$input).select2
@@ -182,13 +182,13 @@ _.extend Template.spark,
       $('.comments', $spark).hide()
 
     'click .support': (e) ->
-      Meteor.call 'supportSpark', @_id
+      Actions.supportSpark @_id
 
     'click .finish': (e) ->
-      Meteor.call 'finishSpark', @_id
+      Actions.finishSpark @_id
 
     'click .verify': (e) ->
-      Meteor.call 'verifySpark', @_id
+      Actions.verifySpark @_id
 
     'click .upload': (e) ->
       id = @_id
@@ -197,7 +197,7 @@ _.extend Template.spark,
         services: ['COMPUTER']
         (fpfiles) =>
           #console.log 'uploaded:', id, fpfiles
-          Meteor.call 'uploadFiles', id, fpfiles
+          Actions.uploadFiles id, fpfiles
 
 
     'click .edit': (e) ->
@@ -385,11 +385,9 @@ _.extend Template.commentInput,
       $form = $(e.currentTarget).closest('form')
       $node = $form.closest('.comment-box')
       content = $('textarea', $form).val()
-      Meteor.call 'createComment', @_id, content, (error, result) ->
-        $('textarea', $form).val('')
-        Meteor.setTimeout (->
-          $node.show()
-        ), 200
+      Actions.createComment @_id, content
+      $('textarea', $form).val('')
+      $node.show()
 
   avatar: ->
     Meteor.user().avatar

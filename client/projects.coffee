@@ -88,7 +88,8 @@ _.extend Template.projects,
         $name.parent().addClass 'error'
         return null
 
-      Meteor.call 'createProject', name, description, parentId, (error, result) ->
+      projectId = Actions.createProject name, description, parentId
+      if projectId
         $('.control-group', $form).removeClass 'error'
         $form[0].reset()
         $('#add-project-dialog').modal 'hide'

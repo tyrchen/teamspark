@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 preserve-inputs
-accounts-ui
 accounts-weibo
 coffeescript
 jquery
@@ -17,3 +16,5 @@ accounts-github
 accounts-google
 d3
 amplify
+accounts-password
+accounts-ui
