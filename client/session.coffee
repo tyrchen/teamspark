@@ -15,6 +15,9 @@ ts.members = {}
 ts.members.all = ->
   Meteor.users.find teamId: ts.State.teamId.get()
 
+ts.members.waiting = ->
+  Meteor.users.find teamId: null
+
 ts.members.ordered = ->
   return ts.members.all().fetch()
 

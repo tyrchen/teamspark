@@ -53,49 +53,25 @@ _.extend Template.content,
       $('#manage-member-dialog').modal
         keyboard: false
         backdrop: 'static'
-      $node = $('#member-name')
-      $node.typeahead
-        minLength: 2
-        display: 'username'
-        source: (query) ->
-          items = Meteor.users.find($and: [
-            username:
-              $regex : query
-              $options: 'i'
-            teamId: null
-          ]).fetch()
 
-          _.map items, (item) ->
-            id: item._id
-            username: item.username
-            avatar: item.avatar
-            toLowerCase: -> @username.toLowerCase()
-            toString: -> JSON.stringify @
-            indexOf: (string) -> String.prototype.indexOf.apply @username, arguments
-            replace: (string) -> String.prototype.replace.apply @username, arguments
-
-        updater: (itemString) ->
-          item = JSON.parse itemString
-          $member = $("<li data-id='#{item.id}' class='added'><img class='avatar' src='#{item.avatar}' alt='#{item.username}' /></li>")
-          $member.appendTo $('#existing-members')
-          return ''
 
     'click #existing-members li': (e) ->
       if this._id is ts.currentTeam().authorId
         return
 
       $this = $(e.currentTarget)
-      if $this.hasClass 'mask'
-        $this.removeClass 'mask'
-      else
-        $this.addClass 'mask'
+      $this.remove().appendTo('#waiting-members')
+
+    'click #waiting-members li': (e) ->
+      $this = $(e.currentTarget)
+      $this.remove().appendTo('#existing-members')
 
     'click #manage-member-cancel': (e) ->
       $('#manage-member-dialog').modal 'hide'
 
     'click #manage-member-submit': (e) ->
-      $added = $('#existing-members li.added:not(.mask)')
-      $removed = $('#existing-members li.mask:not(.added)')
+      $added = $('#existing-members li')
+      $removed = $('#waiting-members li')
       added_ids = []
       removed_ids = []
       added_ids = _.map $added, (item) -> $(item).data('id')
@@ -498,3 +474,11 @@ Meteor.startup ->
     #console.log 'offline:', profile.username
     if profile and profile.online
       Actions.online false
+
+Accounts.ui.config
+  requestPermissions:
+    github: ['user', 'repo']
+  requestOfflineToken:
+    google: true
+
+  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'

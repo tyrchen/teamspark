@@ -45,3 +45,4 @@ Tags.allow team_access
 DayStats.allow team_access
 
 WeekStats.allow team_access
+

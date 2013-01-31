@@ -8,6 +8,8 @@ Actions.createTeam = (name) ->
     authorId: user._id
     members: [user._id]
     createdAt: ts.now()
+    abbr: ""
+    nextIssueId: 1
 
   console.log 'team id:', id
   Meteor.users.update user._id, '$set': 'teamId': id
@@ -18,7 +20,8 @@ Actions.hire = (user, team) ->
     throw new ts.exp.AccessDeniedException('Only team staff can hire team members')
 
   if not ts.isFreelancer user
-    throw new ts.exp.InvalidValueException('Only freelancer can be hired by a team')
+    #throw new ts.exp.InvalidValueException('Only freelancer can be hired by a team')
+    return
 
   Meteor.users.update user._id, $set: {teamId: team._id}
   Teams.update team._id, $addToSet: {members: user._id}
@@ -35,7 +38,8 @@ Actions.layoff = (user, team) ->
     throw new ts.exp.AccessDeniedException('Only team staff can layoff team members')
 
   if user._id is team.authorId
-    throw new ts.exp.AccessDeniedException('team admin cannot be layed off')
+    #throw new ts.exp.AccessDeniedException('team admin cannot be layed off')
+    return
 
   if not ts.isFreelancer user
     Meteor.users.update user._id, $set: {teamId: null}

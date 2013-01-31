@@ -399,5 +399,3 @@ _.extend Template.comment,
   created: ->
     moment(@createdAt).fromNow()
 
-Meteor.startup ->
-  filepicker.setKey 'AJEoTb-YlRYuHGmtOfmdjz'

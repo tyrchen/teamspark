@@ -7,12 +7,7 @@
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="member-name">新成员: </label>
-          <input type="text" class="input-xlarge" name="name" id="member-name" placeholder="比如：陈天_Tyr" maxlength="16" />
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">已有成员: </label>
+          <p>已有成员: </p>
           <ul id="existing-members">
             {{#each ts.members.all}}
             <li data-id="{{_id}}">
@@ -20,8 +15,21 @@
             </li>
             {{/each}}
           </ul>
-
         </div>
+
+        <div class="control-group">
+          <p>希望加入: </p>
+          <ul id="waiting-members">
+            {{#each ts.members.waiting}}
+            <li data-id="{{_id}}">
+              <img class="avatar" src="{{avatar}}" alt="{{username}}" />
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+
+
+
       </form>
     </div>
     <div class="modal-footer">
