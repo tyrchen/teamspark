@@ -1,17 +1,37 @@
-teamspark
+Teamspark
 =========
 
-A realtime, simple page application for intra-team communication and collaboration. Could be used for product discussion and/or bug/task tracking.
+## What is Teamspark?
+
+Teamspark is a realtime communication and collaboration tools for small and medium teams. 
+It could be used for product discussions and/or bug/task tracking.
 
 ## Installation
 
-You need to install [meteor](http://meteor.com) first:
+### MongoDB
+
+[Mongodb](http://www.mongodb.org/) shall be installed as a database service for Teamspark. To install it:
+Ubuntu:
+```
+$ sudo apt-get install mongodb
+```
+
+OSX with homebrew:
+```
+$ brew install mongodb
+```
+
+For windows and other platforms, please refer to the related documents.
+
+### Meteor
+
+Teamspark uses [meteor](http://meteor.com) framework. To install meteor:
 
 ```
 $ curl https://install.meteor.com | /bin/sh
 ```
 
-Meanwhile, you can grab the code to your local folder. When meteor installation finished, you can run it by:
+Meanwhile, you can clone/fork the code to your local folder. When meteor/mongodb installation finished, you can run it by:
 ```
 $ cd teamspark
 $ meteor
