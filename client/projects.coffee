@@ -19,6 +19,8 @@ _.extend Template.projects,
       else
         ts.State.filterSelected.set {id: id, name: name}
 
+      Router.setProject id
+
     'click #add-project': (e) ->
       $('#add-project-dialog').modal()
 
