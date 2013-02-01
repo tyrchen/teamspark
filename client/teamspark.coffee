@@ -478,10 +478,10 @@ Meteor.startup ->
   # a little hack for not making the create team form show each time when data hasn't arrived
   setTimeout("$('#create-team-form').fadeIn('slow')", 1000)
 
-Accounts.ui.config
-  requestPermissions:
-    github: ['user', 'repo']
-  requestOfflineToken:
-    google: true
+  Accounts.ui.config
+    requestPermissions:
+      github: ['user', 'repo']
+    requestOfflineToken:
+      google: true
 
   passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
