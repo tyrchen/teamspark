@@ -23,7 +23,9 @@
       <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
       <h5>{{username}}</h5>
       <p><small>Contribution: {{points}}points, online: {{onlineTime}}</small></p>
+      {{#if description}}
       <p>{{description}}</p>
+      {{/if}}
     </div>
     <div class="navbar">
       <div class="navbar-inner">
