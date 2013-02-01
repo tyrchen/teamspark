@@ -475,6 +475,9 @@ Meteor.startup ->
     if profile and profile.online
       Actions.online false
 
+  # a little hack for not making the create team form show each time when data hasn't arrived
+  setTimeout("$('#create-team-form').fadeIn('slow')", 1000)
+
 Accounts.ui.config
   requestPermissions:
     github: ['user', 'repo']
