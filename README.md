@@ -3,8 +3,7 @@ Teamspark
 
 ## What is Teamspark?
 
-Teamspark is a realtime communication and collaboration tools for small and medium teams. 
-It could be used for product discussions and/or bug/task tracking.
+Teamspark is a clean and simple project/task management tool. It enables everyone within the team to capture inspiration, manage tasks, track the progress and communicate freely.
 
 ## Installation
 
@@ -37,6 +36,8 @@ Meanwhile, you can clone/fork the code to your local folder. When meteor/mongodb
 $ cd teamspark
 $ meteor
 ```
+
+> Note: for chinese user, please checkout to chinese branch so that you could have a familiar user interface.
 
 Then teamspark service will be started at port 3000. You can visit http://localhost:3000 to see the demo.
 
