@@ -489,7 +489,7 @@ Meteor.startup ->
   Accounts.ui.config
     requestPermissions:
       github: ['user', 'repo']
-    requestOfflineToken:
-      google: true
+    #requestOfflineToken:
+    #  google: true
 
     passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
