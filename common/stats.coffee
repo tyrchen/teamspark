@@ -42,4 +42,4 @@ ts.stats.trackDaySpark = (spark, date, type="positioned", value=1) ->
 
     incCmd = ts.stats.getIncCmd spark, type, users, value
     DayStats.update dayStatId, $inc: incCmd
-    console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, id, users
+    #console.log 'track spark:', spark.title, ts.formatDate(date), type, value, incCmd, id, users

@@ -5,7 +5,7 @@ ts.getSession = (name) ->
 ts.setSession = (name, value) ->
   if name not in ['showSpark', 'teamId', 'loaded']
     # TODO: fix me. this is a workaround to clear notification entry and show sparks
-    console.log 'setSession:', name, value
+    #console.log 'setSession:', name, value
     Session.set 'showSpark', null
 
   Session.set name, value
@@ -70,13 +70,13 @@ _.extend ts.State,
 
   filterUser:
     get: -> ts.getSession('filterUser')?.id || 'all' #Meteor.userId()
-    getName: -> ts.getSession('filterUser')?.username || '大家' #Meteor.user()?.username
+    getName: -> ts.getSession('filterUser')?.username || 'All' #Meteor.user()?.username
     set: (value) -> ts.setSession 'filterUser', value
 
   # filter the sparks by special type or project name. can be 'important' | 'urgent' | 'all' | projectName
   filterSelected:
     get: -> ts.getSession('filterSelected')?.id || 'all'
-    getName: -> ts.getSession('filterSelected')?.name || '全部'
+    getName: -> ts.getSession('filterSelected')?.name || 'All'
     set: (value)-> ts.setSession 'filterSelected', value
 
   # filter the sparks by shortcut
@@ -92,47 +92,47 @@ _.extend ts.State,
   # spark order for display. can be 'createdAt' | 'updatedAt'
   sparkOrder:
     get: -> ts.getSession('sparkOrder')?.id || 'createdAt'
-    getName: -> ts.getSession('sparkOrder')?.name || '最近创建'
+    getName: -> ts.getSession('sparkOrder')?.name || 'Created'
     set: (value)-> ts.setSession 'sparkOrder', value
 
   # spark type for filter. can be 'idea' | 'bug' | 'feature' | 'task'
   sparkTypeFilter:
     get: -> ts.getSession('sparkTypeFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkTypeFilter')?.name || '全部'
+    getName: -> ts.getSession('sparkTypeFilter')?.name || 'All'
     set: (value)-> ts.setSession 'sparkTypeFilter', value
 
   # spark priority filter. can be 1 - red | 2 - orange | 3 - yellow | 4 - green | 5 - gray
   sparkPriorityFilter:
     get: -> ts.getSession('sparkPriorityFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkPriorityFilter')?.name || '全部'
+    getName: -> ts.getSession('sparkPriorityFilter')?.name || 'All'
     set: (value)-> ts.setSession 'sparkPriorityFilter', value
 
   # spark author filter. can be author name
   sparkAuthorFilter:
     get: -> ts.getSession('sparkAuthorFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkAuthorFilter')?.name || '全部'
+    getName: -> ts.getSession('sparkAuthorFilter')?.name || 'All'
     set: (value)-> ts.setSession 'sparkAuthorFilter', value
 
   # spark current owner filter. can be author name
   sparkOwnerFilter:
     get: -> ts.getSession('sparkOwnerFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkOwnerFilter')?.name || '全部'
+    getName: -> ts.getSession('sparkOwnerFilter')?.name || 'All'
     set: (value) -> ts.setSession 'sparkOwnerFilter', value
 
   # spark progress filter. can be 'not started | just started | half down | almost done | done' - use visual graph
   sparkProgressFilter:
     get: -> ts.getSession('sparkProgressFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkProgressFilter')?.id || '全部'
+    getName: -> ts.getSession('sparkProgressFilter')?.id || 'All'
     set: (value) -> ts.setSession 'sparkProgressFilter', value
 
   sparkFinishFilter:
     get: -> ts.getSession('sparkFinishFilter')?.id
-    getName: -> ts.getSession('sparkFinishFilter')?.name || '未完成'
+    getName: -> ts.getSession('sparkFinishFilter')?.name || 'Unfinished'
     set: (value) -> ts.setSession 'sparkFinishFilter', value
 
   sparkVerifyFilter:
     get: -> ts.getSession('sparkVerifyFilter')?.id
-    getName: -> ts.getSession('sparkVerifyFilter')?.name || '未验证'
+    getName: -> ts.getSession('sparkVerifyFilter')?.name || 'Unverified'
     set: (value) -> ts.setSession 'sparkVerifyFilter', value
 
   sparkDeadlineFilter:
@@ -142,7 +142,7 @@ _.extend ts.State,
 
   sparkTagFilter:
     get: -> ts.getSession('sparkTagFilter')?.id || 'all'
-    getName: -> ts.getSession('sparkTagFilter')?.name || '全部'
+    getName: -> ts.getSession('sparkTagFilter')?.name || 'All'
     set: (value) -> ts.setSession 'sparkTagFilter', value
 
   clearFilters: ->
@@ -153,13 +153,13 @@ _.extend ts.State,
     ts.State.sparkAuthorFilter.set null
     ts.State.sparkPriorityFilter.set null
     ts.State.sparkTypeFilter.set null
-    ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
+    ts.State.sparkFinishFilter.set {id: 1, name: 'Unfinished'}
     ts.State.sparkTagFilter.set null
-    ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}
+    ts.State.sparkVerifyFilter.set {id: 0, name: 'All'}
 
   sparkToCreate:
     get: -> ts.getSession('sparkToCreate')?.id || 'idea'
-    getName: -> ts.getSession('sparkToCreate')?.name || '想法'
+    getName: -> ts.getSession('sparkToCreate')?.name || 'Idea'
     set: (value) -> ts.setSession 'sparkToCreate', value
 
   # activity display type. can be 'team' | 'project'
@@ -185,5 +185,5 @@ _.extend ts.State,
     set: (value) -> ts.setSession 'currentPage', value
 
 Meteor.startup ->
-  ts.State.sparkFinishFilter.set {id: 1, name: '未完成'}
-  ts.State.sparkVerifyFilter.set {id: 0, name: '全部'}
+  ts.State.sparkFinishFilter.set {id: 1, name: 'Unfinished'}
+  ts.State.sparkVerifyFilter.set {id: 0, name: 'All'}

@@ -14,7 +14,7 @@ ts.charts.stats = ->
 
 _.extend Template.charts,
   rendered: ->
-    console.log 'chart rendered'
+    #console.log 'chart rendered'
     width = Math.floor(($('.spark-panel').width() - 35) / 4 - 5)
     height = Math.floor(width)
 
@@ -40,11 +40,11 @@ _.extend Template.charts,
 
   title: ->
     switch @name
-      when 'catchup' then '追赶图'
-      when 'distribution-positioned' then '发表类别分布'
-      when 'distribution-finished' then '完成类别分布'
-      when 'user-distribution-finished' then '团队成员完成分布'
-      when 'self' then '个人统计'
+      when 'catchup' then 'Catch up chart'
+      when 'distribution-positioned' then 'Distribution chart for published items'
+      when 'distribution-finished' then 'Distribution chart for finished items'
+      when 'user-distribution-finished' then 'Distribution chart for team members'
+      when 'self' then 'Personal statistics'
   chart: ->
     switch @name
       when 'catchup' then ts.charts.catchup.graph()

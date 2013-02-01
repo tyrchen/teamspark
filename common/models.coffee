@@ -1,4 +1,4 @@
-# team = { _id: uuid, name: '途客圈战队', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date(), abbr: 'tkq', nextIssueId: 0}
+# team = { _id: uuid, name: 'Tukeq Team', authorId: userId, members: [userId1, userId2, ... ], createdAt: Date(), abbr: 'tkq', nextIssueId: 0}
 Teams = new Meteor.Collection 'teams'
 
 # profile = {

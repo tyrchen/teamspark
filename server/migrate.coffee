@@ -114,7 +114,7 @@ Meteor.methods
   migrateSparkVerified: ->
     Sparks.update {finished: false}, {$set: verified: false}, {multi: true}
     Sparks.update {finished: true}, {$set: verified: true}, {multi: true}
-    console.log 'total unverified:', Sparks.find(verified:false).count(), ', total verified: ', Sparks.find(verified:true).count()
+    #console.log 'total unverified:', Sparks.find(verified:false).count(), ', total verified: ', Sparks.find(verified:true).count()
 
   migrateSparkIssueId: (abbr="") ->
     user = Meteor.user()
@@ -125,5 +125,5 @@ Meteor.methods
     _.each sparks, (item) ->
       team = Teams.findOne teamId, fields: nextIssueId: 1
       Teams.update teamId, $inc: nextIssueId: 1
-      console.log 'nextIssueId', team.nextIssueId
+      #console.log 'nextIssueId', team.nextIssueId
       Sparks.update item._id, $set: issueId: "#{abbr}#{team.nextIssueId}"

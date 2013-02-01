@@ -10,11 +10,11 @@ ts.consts.prio.MEDIUM = 3
 ts.consts.prio.HIGH = 4
 ts.consts.prio.VERY_HIGH = 5
 ts.consts.prio.dict =
-  1: '很闲时再做'
-  2: '不急不急'
-  3: '请抽空完成'
-  4: '越快完成越好'
-  5: '请即刻去做'
+  1: 'Do it when idle'
+  2: 'No hurry'
+  3: 'On your earliest convenience'
+  4: 'ASAP'
+  5: 'Do it immediately'
 
 # expiration
 ts.consts.EXPIRE_IN_3_DAYS = 3 * 24 * 3600 * 1000
@@ -24,9 +24,9 @@ ts.consts.EXPIRE_INFINITE = 365 * 24 * 3600 * 1000
 
 # filter
 ts.consts.filter = ts.consts.filter || {}
-ts.consts.filter.FINISHED = {0: '全部', 1: '未完成', 2: '已完成'}
+ts.consts.filter.FINISHED = {0: 'All', 1: 'Unfinished', 2: 'Finished'}
 ts.consts.filter.PRIORITY = {1:1, 2:2, 3:3, 4:4, 5:5}
-ts.consts.filter.DEADLINE = {0: '全部', 1: '3天内', 2: '一周内', 3: '两周内'}
+ts.consts.filter.DEADLINE = {0: 'All', 1: 'Within 3 days', 2: 'Within a week', 3: 'Within two weeks'}
 ts.consts.filter.TYPE = ->
   types = {}
   _.each ts.sparks.types(), (item) ->
@@ -38,14 +38,14 @@ ts.consts.filter.MEMBERS = ->
   members = {}
   _.each ts.members.all().fetch(), (item) ->
     members[item._id] = item.username
-  members['all'] = '全部'
+  members['all'] = 'All'
   return members
 
 ts.consts.filter.TAGS = ->
   tags = {}
   _.each ts.tags.all().fetch(), (item) ->
     tags[item.name] = item.name
-  tags['all'] = '全部'
+  tags['all'] = 'All'
   return tags
 
 # member points

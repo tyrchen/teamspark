@@ -36,7 +36,7 @@ _.extend Template.sparks,
 
 _.extend Template.spark,
   rendered: ->
-    console.log 'spark rendered'
+    #console.log 'spark rendered'
     $parent = $(@firstNode)
     spark = @
     $('.carousel', $parent).carousel
@@ -136,7 +136,7 @@ _.extend Template.spark,
 
       $(editable.$input).select2
         tags: usernames
-        placeholder:'添加责任人'
+        placeholder:'Add Responsibles'
         tokenSeparators: [' ']
         separator:';'
     )
@@ -165,7 +165,7 @@ _.extend Template.spark,
       tags = _.pluck ts.tags.all().fetch(), 'name'
       $(editable.$input).select2
         tags: tags
-        placeholder: '添加标签'
+        placeholder: 'Add Tags'
         tokenSeparators: [' ']
         separator: ';'
     )
@@ -204,7 +204,7 @@ _.extend Template.spark,
       $node = $('#edit-spark')
       $node.data('id', @_id)
       #console.log 'spark id:', $node.data('id'), @title, @content
-      $('.modal-header h3', $node).text "编辑 #{@title}"
+      $('.modal-header h3', $node).text "Edit #{@title}"
       $('#spark-edit-title', $node).val @title
 
       # remove old editor
@@ -239,7 +239,7 @@ _.extend Template.spark,
   expired: ->
     if @deadline
       return moment(@deadline).fromNow()
-    return '未指定'
+    return 'Unassigned'
 
   typeObj: ->
     obj = ts.sparks.type(@)
@@ -286,7 +286,7 @@ _.extend Template.spark,
   showTags: ->
     if @tags
       return @tags.join(', ')
-    return '无'
+    return 'n/a'
 
   allocated: ->
     @owners
@@ -313,13 +313,13 @@ _.extend Template.spark,
     typeObj = ts.sparks.type @
     text = [typeObj.name]
     if ts.sparks.isUrgent @
-      text.push '紧急(3日内到期)'
+      text.push 'Urgent (Expire in 3 days)'
 
     if ts.sparks.isImportant @
-      text.push '重要(优先级4及以上)'
+      text.push 'Important (priority with 4 and above)'
 
     if text.length == 1
-      text.push '正常'
+      text.push 'Normal'
 
     return text.join(' | ')
 
@@ -356,7 +356,7 @@ _.extend Template.spark,
     if not @owners[0]
       if ts.isStaff()
         return true
-    else if @owners[0] is Meteor.user()._id
+    else if @owners[0] is Meteor.user()?._id
       return true
 
     return false
@@ -390,7 +390,7 @@ _.extend Template.commentInput,
       $node.show()
 
   avatar: ->
-    Meteor.user().avatar
+    Meteor.user()?.avatar
 
 _.extend Template.comment,
   author: ->

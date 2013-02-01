@@ -2,8 +2,8 @@ ts = ts || {}
 ts.setProject = (project_name) ->
   project_name = decodeURIComponent(project_name)
 
-  project = {_id: 'all', name: '全部'}
-  if project_name is '全部'
+  project = {_id: 'all', name: 'All'}
+  if project_name is 'All'
     return
 
   # here we need to delay initial url parsing since data hasn't arrived
@@ -45,7 +45,7 @@ TsRouter = Backbone.Router.extend
         self.navigate "/projects/#{p.name}/sparks", true
 
   sparks: (project_name) ->
-    console.log 'set project', project_name
+    #console.log 'set project', project_name
     ts.State.showContent.set 'sparks'
     ts.setProject project_name
 
@@ -69,7 +69,7 @@ TsRouter = Backbone.Router.extend
 
   setProject: (project_name) ->
     if not project_name
-      project_name = '全部'
+      project_name = 'All'
 
     type = ts.State.showContent.get()
     this.navigate "/projects/#{project_name}/#{type}", true

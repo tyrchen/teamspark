@@ -15,7 +15,7 @@
       {{>createTeam}}
     {{else}}
       {{#if isOrphan}}
-      <div class="overlay"><h1>请等待管理员审批</h1></div>
+      <div class="overlay"><h1>Please wait for permissions from your administrator</h1></div>
       {{else}}
 
       <div class="span2 project-panel stretch sidebar-nav attraction">
@@ -29,10 +29,10 @@
             {{>notifications}}
             <div class="btn-group pull-right" id="user-settings">
               {{# if ts.isStaff ts.currentTeam }}
-              <a class="btn btn-info btn-small" id="manage-member" title="管理团队成员"><i class="icon-plus"></i></a>
+              <a class="btn btn-info btn-small" id="manage-member" title="Manage team members"><i class="icon-plus"></i></a>
               {{/if}}
-              <a class="btn btn-info btn-small hide" id="edit-profile" title="编辑个人资料"><i class="icon-cogs"></i></a>
-              <a class="btn btn-info btn-small" id="logout" title="退出登录"><i class="icon-signout"></i></a>
+              <a class="btn btn-info btn-small hide" id="edit-profile" title="Edit personal information"><i class="icon-cogs"></i></a>
+              <a class="btn btn-info btn-small" id="logout" title="Sign out"><i class="icon-signout"></i></a>
 
             </div>
           </h4>
@@ -51,9 +51,9 @@
         {{/if}}
         <div class="toolbar-bottom" style="visibility: hidden; display: none;">
           <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-            <button class="btn {{ showSparks }}" id="spark-board" title="任务墙"><i class="icon-tasks"></i>任务墙</button>
-            <button class="btn {{ showSchedule }}" id="schedule-board" title="进度板"><i class="icon-calendar"></i>进度板</button>
-            <button class="btn {{ showCharts }}" id="chart-board" title="统计表"><i class="icon-dashboard"></i>统计表</button>
+            <button class="btn {{ showSparks }}" id="spark-board" title="Task Wall"><i class="icon-tasks"></i>Task Wall</button>
+            <button class="btn {{ showSchedule }}" id="schedule-board" title="Schedule"><i class="icon-calendar"></i>Schedule</button>
+            <button class="btn {{ showCharts }}" id="chart-board" title="Statistics"><i class="icon-dashboard"></i>Statistics</button>
 
           </div>
         </div>
@@ -85,31 +85,31 @@
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>筛选任务 <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-filter"></i>Filter <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a class="shortcut" href="#" data-id="upcoming" data-name="即将到期的任务"><i class="icon-time" style="color:#d14;"></i>即将到期的任务</a></li>
-                <li><a class="shortcut" href="#" data-id="created" data-name="我创建的任务"><i class="icon-user" style="color:#228b22;"></i>我创建的任务</a></li>
-                <li><a class="shortcut" href="#" data-id="finished" data-name="我完成的任务"><i class="icon-ok" style="color:#000080;"></i>我完成的任务</a></li>
+                <li><a class="shortcut" href="#" data-id="upcoming" data-name="Upcoming"><i class="icon-time" style="color:#d14;"></i>Upcoming</a></li>
+                <li><a class="shortcut" href="#" data-id="created" data-name="Created by myself"><i class="icon-user" style="color:#228b22;"></i>Created by myself</a></li>
+                <li><a class="shortcut" href="#" data-id="finished" data-name="Finished by myself"><i class="icon-ok" style="color:#000080;"></i>Finished by myself</a></li>
                 <li class="divider"></li>
-                <li><a href="#"><i class="icon-ok-circle"></i>完成: <span id="filter-finished">{{finishText}}</span></a></li>
-                <li><a href="#"><i class="icon-arrow-up"></i>优先级: <span id="filter-priority">{{priorityText}}</span></a></li>
-                <li><a href="#"><i class="icon-time"></i>截止日期: <span id="filter-deadline">{{deadlineText}}</span></a></li>
-                <li><a href="#"><i class="icon-list-ul"></i>类型: <span id="filter-spark-type">{{typeText}}</span></a></li>
-                <li><a href="#"><i class="icon-user"></i>作者: <span id="filter-author">{{authorText}}</span></a></li>
-                <li><a href="#"><i class="icon-user"></i>责任人: <span id="filter-owner">{{ownerText}}</span></a></li>
-                <li><a href="#"><i class="icon-tag"></i>标签: <span id="filter-tag">{{tagText}}</span></a></li>
+                <li><a href="#"><i class="icon-ok-circle"></i>Finished: <span id="filter-finished">{{finishText}}</span></a></li>
+                <li><a href="#"><i class="icon-arrow-up"></i>Priority: <span id="filter-priority">{{priorityText}}</span></a></li>
+                <li><a href="#"><i class="icon-time"></i>Deadline: <span id="filter-deadline">{{deadlineText}}</span></a></li>
+                <li><a href="#"><i class="icon-list-ul"></i>Type: <span id="filter-spark-type">{{typeText}}</span></a></li>
+                <li><a href="#"><i class="icon-user"></i>Author: <span id="filter-author">{{authorText}}</span></a></li>
+                <li><a href="#"><i class="icon-user"></i>Responsible: <span id="filter-owner">{{ownerText}}</span></a></li>
+                <li><a href="#"><i class="icon-tag"></i>Tag: <span id="filter-tag">{{tagText}}</span></a></li>
                 <li class="divider"></li>
-                <li><a href="#" id="clear-filter"><i class="icon-ban-circle"></i>清空筛选</a></li>
+                <li><a href="#" id="clear-filter"><i class="icon-ban-circle"></i>Clear Filters</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort"></i>排序: {{orderText}} <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort"></i>Sort by: {{orderText}} <b class="caret"></b></a>
               <ul class="dropdown-menu" id="spark-sort">
-                <li><a href="#" data-id="createdAt" data-name="最近创建"><i class="icon-time"></i>最近创建</a></li>
-                <li><a href="#" data-id="updatedAt" data-name="最近更新"><i class="icon-time" style="color:#0044aa;"></i>最近更新</a></li>
-                <li><a href="#" data-id="deadline" data-name="最近截止"><i class="icon-time" style="color:#d14;"></i>最近截止</a></li>
-                <li><a href="#" data-id="priority" data-name="高优先级"><i class="icon-arrow-up"></i>高优先级</a></li>
-                <li><a href="#" data-id="totalSupporters" data-name="最多支持者"><i class="icon-thumbs-up"></i>最多支持者</a></li>
+                <li><a href="#" data-id="createdAt" data-name="Created"><i class="icon-time"></i>Created</a></li>
+                <li><a href="#" data-id="updatedAt" data-name="Updated"><i class="icon-time" style="color:#0044aa;"></i>Updated</a></li>
+                <li><a href="#" data-id="deadline" data-name="Expiring"><i class="icon-time" style="color:#d14;"></i>Expiring</a></li>
+                <li><a href="#" data-id="priority" data-name="Priority"><i class="icon-arrow-up"></i>Priority</a></li>
+                <li><a href="#" data-id="totalSupporters" data-name="Supporters"><i class="icon-thumbs-up"></i>Supporters</a></li>
               </ul>
             </li>
           </ul>
@@ -145,16 +145,16 @@
 
 <template name="createTeam">
   <div id="login-buttons">
-    <h1>创建团队</h1>
+    <h1>Create Team</h1>
 
       <div>
         <label for="teamname">
-          团队名称:
+          Team Name:
         </label>
         <input id="teamname" type="text">
       </div>
       <div>
-        <input type="button" class="btn" id="btn-create-team" value="创建" />
+        <input type="button" class="btn" id="btn-create-team" value="Create" />
       </div>
 
   </div>

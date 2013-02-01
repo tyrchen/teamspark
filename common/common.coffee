@@ -26,11 +26,11 @@ ts.formatTime = (seconds) ->
   minutes = Math.floor(remainder/60)
   seconds = remainder % 60
   if hours > 0
-    return "#{hours}小时#{minutes}分钟"
+    return "#{hours}h#{minutes}m"
   else if minutes > 0
-    return "#{minutes}分钟"
+    return "#{minutes}m"
   else
-    return "#{seconds}秒"
+    return "#{seconds}s"
 
 ts.currentTeam = ->
   user = Meteor.user()
@@ -64,11 +64,11 @@ ts.projects.children = (id)-> Projects.find parent: id
 ts.sparks = ts.sparks || {}
 ts.sparks.types = ->
   [
-    {name: '想法', id: 'idea', icon: 'icon-magic'},
-    {name: 'BUG', id: 'bug', icon: 'icon-exclamation-sign'},
-    {name: '需求', id: 'feature', icon: 'icon-money'},
-    {name: '任务', id: 'task', icon: 'icon-inbox'},
-    {name: '改进', id: 'improvement', icon: 'icon-wrench'}
+    {name: 'Idea', id: 'idea', icon: 'icon-magic'},
+    {name: 'Bug', id: 'bug', icon: 'icon-exclamation-sign'},
+    {name: 'Feature', id: 'feature', icon: 'icon-money'},
+    {name: 'Task', id: 'task', icon: 'icon-inbox'},
+    {name: 'Improvement', id: 'improvement', icon: 'icon-wrench'}
   ]
 
 ts.sparks.typesPos = {'idea': 1, 'bug': 2, 'feature': 3, 'task': 4, 'improvement': 5}

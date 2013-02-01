@@ -2,12 +2,12 @@
   <div class="project-list stretch">
   <ul class="nav nav-list">
     <li class="nav-header">
-      项目
+      Projects
       <div class="btn-group pull-right">
-        <a class="btn btn-small btn-info" id="add-project" title="添加项目"><i class="icon-plus-sign"></i></a>
+        <a class="btn btn-small btn-info" id="add-project" title="Add project"><i class="icon-plus-sign"></i></a>
       </div>
     </li>
-    <li class="{{isFilterSelected all }} filter-project" data-id="" data-name=""><a href="#">全部 ({{totalUnfinished null}})</a></li>
+    <li class="{{isFilterSelected all }} filter-project" data-id="" data-name=""><a href="#">Total ({{totalUnfinished null}})</a></li>
     {{#each parentProjects}}
     <li class="{{isFilterSelected _id }} filter-project" data-id="{{_id}}" data-name="{{name}}"><a href="#">{{ name }} ({{totalUnfinished _id}})</a></li>
     {{#each childProjects _id}}
@@ -19,8 +19,8 @@
 
   <div class="toolbar-bottom">
     <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-      <button class="btn {{ isActiveMember }}" id="filter-member" title="个人"><i class="icon-user"></i></button>
-      <button class="btn {{ isActiveTeam }}" id="filter-team" title="团队"><i class="icon-group"></i></button>
+      <button class="btn {{ isActiveMember }}" id="filter-member" title="My tasks"><i class="icon-user"></i></button>
+      <button class="btn {{ isActiveTeam }}" id="filter-team" title="Team tasks"><i class="icon-group"></i></button>
     </div>
   </div>
 

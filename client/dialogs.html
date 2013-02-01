@@ -2,12 +2,12 @@
   <div class="modal fade hide" id="manage-member-dialog">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3>管理团队成员</h3>
+      <h3>Manage team members</h3>
     </div>
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <p>已有成员: </p>
+          <p>Members </p>
           <ul id="existing-members">
             {{#each ts.members.all}}
             <li data-id="{{_id}}">
@@ -18,7 +18,7 @@
         </div>
 
         <div class="control-group">
-          <p>希望加入: </p>
+          <p>Waiting list </p>
           <ul id="waiting-members">
             {{#each ts.members.waiting}}
             <li data-id="{{_id}}">
@@ -33,8 +33,8 @@
       </form>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn" id="manage-member-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="manage-member-submit">确定</a>
+      <a href="#" class="btn" id="manage-member-cancel">Cancel</a>
+      <a href="#" class="btn btn-primary" id="manage-member-submit">Proceed!</a>
     </div>
   </div>
 </template>
@@ -43,26 +43,26 @@
   <div class="modal fade hide" id="add-project-dialog">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3>添加新项目</h3>
+      <h3>Add new project</h3>
     </div>
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="project-name">项目名称</label>
-          <input type="text" class="input-large" name="name" id="project-name" placeholder="比如：cayman" maxlength="16" />
-          <span class="help-inline">项目名不能重复，且不能为空，16个字符内</span>
+          <label class="control-label" for="project-name">Project Name</label>
+          <input type="text" class="input-large" name="name" id="project-name" placeholder="such as: cayman" maxlength="16" />
+          <span class="help-inline">Project name shall be unique, nonempty and within 16 chars</span>
         </div>
 
         <div class="control-group">
-          <label class="control-label" for="project-description">项目描述</label>
-          <textarea name="description" class="input-xlarge" id="project-description" placeholder="让别人了解你的项目"></textarea>
+          <label class="control-label" for="project-description">Project description</label>
+          <textarea name="description" class="input-xlarge" id="project-description" placeholder="more information about this project"></textarea>
         </div>
 
         {{#if ts.projects.hasProject}}
         <div class="control-group">
-          <label class="control-label" for="project-parent">父项目</label>
+          <label class="control-label" for="project-parent">Parent project</label>
           <select name="parent" id="project-parent">
-            <option value="null">无</option>
+            <option value="null">n/a</option>
             {{#each ts.projects.parents}}
             <option value="{{_id}}">{{name}}</option>
             {{/each}}
@@ -72,17 +72,17 @@
       </form>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn" id="add-project-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="add-project-submit">立即创建</a>
+      <a href="#" class="btn" id="add-project-cancel">Cancel</a>
+      <a href="#" class="btn btn-primary" id="add-project-submit">Create</a>
     </div>
   </div>
 </template>
 
 <template name="sparkContentEditor">
   <div class="control-group">
-    <label class="control-label" for="spark-content">内容: </label>
+    <label class="control-label" for="spark-content">Content </label>
     <div style="display: inline-block;">
-      <div id="spark-content" style="width:650px; height:200px;"></div>
+      <div id="spark-content" style="width:600px; height:200px;"></div>
     </div>
   </div>
 </template>
@@ -92,10 +92,10 @@
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       <h3>
+        Add {{ts.State.sparkToCreate.getName}}
         {{#if ts.filteringProject}}
-        为{{ts.State.filterSelected.getName}}
+         for {{ts.State.filterSelected.getName}}
         {{/if}}
-        添加{{ts.State.sparkToCreate.getName}}
       </h3>
     </div>
     <div class="modal-body">
@@ -104,7 +104,7 @@
           {{#if ts.filteringProject}}
           {{else}}
           <div class="control-group">
-            <label class="control-label" for="spark-project">项目: </label>
+            <label class="control-label" for="spark-project">Project </label>
             <select name="project" id="spark-project">
               {{#each ts.projects.all}}
               <option value="{{_id}}">{{name}}</option>
@@ -114,25 +114,25 @@
           </div>
           {{/if}}
           <div class="control-group">
-            <label class="control-label" for="spark-title">标题: </label>
-            <input type="text" class="input-xlarge" name="title" id="spark-title" placeholder="用一句话描述这个{{ts.State.sparkToCreate.getName}}" maxlength="32" />
-            <span class="help-inline">*32个字符内</span>
+            <label class="control-label" for="spark-title">Title </label>
+            <input type="text" class="input-xlarge" name="title" id="spark-title" placeholder="Describe this {{ts.State.sparkToCreate.getName}} in one sentence" maxlength="48" />
+            <span class="help-inline">* (48 chars maximum)</span>
           </div>
 
           {{>sparkContentEditor}}
           <div class="control-group">
-            <label class="control-label" for="spark-owner">分配给: </label>
-            <input id="spark-owner" name="owner" type="text" placeholder="选择要负责的团队成员" class="input-xlarge" value="">
+            <label class="control-label" for="spark-owner">Assign to </label>
+            <input id="spark-owner" name="owner" type="text" placeholder="select the team members you wish to assign" class="input-xlarge" value="">
           </div>
         </div>
 
         <div class="span3" style="background-color: #f8f8f8; border: 1px solid #eee; padding:5px;">
           <div class="control-group">
-            <label class="control-label" for="spark-priority">标签: </label>
+            <label class="control-label" for="spark-priority">Tags </label>
             <input id="spark-tags" name="tags" type="text" placeholder="选择要打上的标签" class="input-medium" value="">
           </div>
           <div class="control-group">
-            <label class="control-label" for="spark-priority">优先级: </label>
+            <label class="control-label" for="spark-priority">Priority </label>
             <select name="priority" id="spark-priority" class="input-small">
               <option>1</option>
               <option>2</option>
@@ -142,22 +142,22 @@
             </select>
           </div>
           <div class="control-group">
-            <label class="control-label" for="spark-deadline">截止日期: </label>
+            <label class="control-label" for="spark-deadline">Deadline </label>
             <input class="input-small" size="16" type="text" value="" name="deadline" id="spark-deadline">
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn" id="add-spark-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="add-spark-submit">立即创建</a>
+      <a href="#" class="btn" id="add-spark-cancel">Cancel</a>
+      <a href="#" class="btn btn-primary" id="add-spark-submit">Create</a>
     </div>
   </div>
 </template>
 
 <template name="sparkContentEditor1">
   <div class="control-group">
-    <label class="control-label" for="spark-content">内容: </label>
+    <label class="control-label" for="spark-content">Content </label>
     <div style="display: inline-block;">
       <div id="spark-edit-content" style="width:650px; height:250px;"></div>
     </div>
@@ -173,17 +173,17 @@
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="spark-edit-title">标题: </label>
-          <input type="text" class="input-xlarge" name="title" id="spark-edit-title" maxlength="32" />
-          <span class="help-inline">*32个字符内</span>
+          <label class="control-label" for="spark-edit-title">Title </label>
+          <input type="text" class="input-xlarge" name="title" id="spark-edit-title" maxlength="48" />
+          <span class="help-inline">* (48 chars maximum)</span>
         </div>
 
         {{>sparkContentEditor1}}
       </form>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn" id="edit-spark-cancel">取消</a>
-      <a href="#" class="btn btn-primary" id="edit-spark-submit">保存</a>
+      <a href="#" class="btn" id="edit-spark-cancel">Cancel</a>
+      <a href="#" class="btn btn-primary" id="edit-spark-submit">Update</a>
     </div>
   </div>
 </template>
@@ -191,44 +191,44 @@
 <template name="login">
   {{#constant}}
   <div id="login-buttons">
-    <h3>登入Teamspark</h3>
+    <h3>Sign in to Teamspark</h3>
     <div id="login-dropdown-list" class="accounts-dialog">
       <div class="login-button " id="login-buttons-weibo">
         <div class="login-image" id="login-buttons-image-weibo"></div>
-        <span class="sign-in-text-weibo">微博账号接入</span>
+        <span class="sign-in-text-weibo">Weibo</span>
       </div>
 
       <div class="login-button " id="login-buttons-github">
         <div class="login-image" id="login-buttons-image-github"></div>
-        <span class="sign-in-text-github">GitHub账号接入</span>
+        <span class="sign-in-text-github">GitHub</span>
       </div>
 
       <div class="login-button " id="login-buttons-google">
         <div class="login-image" id="login-buttons-image-google"></div>
-        <span class="sign-in-text-google">Google账号接入</span>
+        <span class="sign-in-text-google">Google</span>
       </div>
 
       <div class="login-form login-password-form">
         <div id="login-email-label-and-input">
           <label id="login-email-label" for="login-email">
-            邮箱:
+            Email:
           </label>
           <input id="login-email" type="email">
         </div>
         <div id="login-password-label-and-input">
           <label id="login-password-label" for="login-password">
-            密码:
+            Password:
           </label>
           <input id="login-password" type="password">
         </div>
         <div class="login-button login-button-form-submit" id="login-buttons-password">
-          登录
+          Signin
         </div>
         <div class="additional-link-container">
-          <a id="signup-link" class="additional-link">创建账户</a>
+          <a id="signup-link" class="additional-link">Signup</a>
         </div>
         <div class="additional-link-container">
-          <a id="forgot-password-link" class="additional-link">忘记密码</a>
+          <a id="forgot-password-link" class="additional-link">Forgot password?</a>
         </div>
       </div>
     </div>

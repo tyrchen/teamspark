@@ -17,32 +17,32 @@
     <div class="spark-container">
       <div class="title">
         <h5>
-          <a href="#">{{author.username}}</a> 提交了一个 <a href="#" class="edit-type" data-id="{{_id}}" data-spark-type="{{typeObj.id}}"><i class="{{typeObj.icon}}"></i>{{typeObj.name}}</a>
+          <a href="#">{{author.username}}</a> submitted a <a href="#" class="edit-type" data-id="{{_id}}" data-spark-type="{{typeObj.id}}"><i class="{{typeObj.icon}}"></i>{{typeObj.name}}</a>
           <ul class="pull-right nav spark-toolbox">
-            <li class="support {{supported}}"><a href="#" title="支持"><i class="icon-thumbs-up"></i></a></li>
-            <li class="upload"><a href="#" title="上传文件"><i class="icon-upload"></i></a></li>
-            <li class="edit"><a href="#" title="编辑"><i class="icon-edit"></i></a></li>
+            <li class="support {{supported}}"><a href="#" title="vote up"><i class="icon-thumbs-up"></i></a></li>
+            <li class="upload"><a href="#" title="upload files"><i class="icon-upload"></i></a></li>
+            <li class="edit"><a href="#" title="edit content"><i class="icon-edit"></i></a></li>
             <li class="tag"><a href="#" class="edit-tags" data-id="{{_id}}"><i class="icon-tags"></i></a> </li>
             {{#if canFinish}}
-            <li class="finish"><a href="#" title="完成"><i class="icon-ok"></i></a></li>
+            <li class="finish"><a href="#" title="Mark my work as finished"><i class="icon-ok"></i></a></li>
             {{/if}}
             {{#if canVerify}}
-            <li class="verify"><a href="#" title="验证"><i class="icon-ok"></i></a> </li>
+            <li class="verify"><a href="#" title="Mark it as verified"><i class="icon-ok"></i></a> </li>
             {{/if}}
           </ul>
         </h5>
-        <p>
+        <p style="margin-top: 10px;">
           <span>{{created}}</span> |
-          <span>标签: <b class="tags">{{showTags}}</b></span> |
-          <span>项目: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
-          <span>优先级: <a href="#" class="edit-priority" data-id="{{_id}}" data-priority="{{priority}}">{{priority}}</a></span> |
-          <span>截至日期: <a href="#" class="edit-deadline" data-id="{{_id}}" data-deadline="{{deadline}}">{{expired}}</a></span> |
+          <span>Tags: <b class="tags">{{showTags}}</b></span> |
+          <span>Projects: <a href="#" class="edit-project" data-id="{{_id}}" data-project-id="{{project._id}}">{{project.name}}</a></span> |
+          <span>Priority: <a href="#" class="edit-priority" data-id="{{_id}}" data-priority="{{priority}}">{{priority}}</a></span> |
+          <span>Deadline: <a href="#" class="edit-deadline" data-id="{{_id}}" data-deadline="{{deadline}}">{{expired}}</a></span> |
           {{#if isCurrentOwner}}
-          <span>积分： <a href="#" class="edit-points size{{points}}" data-id="{{_id}}" data-points="{{points}}">{{points}}</a></span> |
+          <span>Points: <a href="#" class="edit-points size{{points}}" data-id="{{_id}}" data-points="{{points}}">{{points}}</a></span> |
           {{else}}
-          <span>当前总积分: {{totalPoints}}</span> |
+          <span>Total Points: {{totalPoints}}</span> |
           {{/if}}
-          <span>最后更新: {{updated}}</span>
+          <span>Last Update: {{updated}}</span>
         </p>
       </div>
       <div class="content">
@@ -51,7 +51,7 @@
             <b>#{{issueId}}</b>: {{title}}
             <div class="pull-right">
             {{#if supporters}}
-            <span class="small">支持者:</span> <ul>{{{showSupporters}}}</ul>
+            <span class="small">Supporters:</span> <ul>{{{showSupporters}}}</ul>
             {{/if}}
             </div>
           </h4>
@@ -60,14 +60,14 @@
           <p>{{{content}}}</p>
           {{#if hasImages}}
           <hr/>
-          <p>共{{images.length}}张图片：</p>
+          <p>{{images.length}} images: </p>
           <div class="carousel slide" id="{{_id}}-img">
             <div class="carousel-inner" data-interval="false" >
               {{#each images}}
               <div class="item">
                 <img src="{{url}}" alt="{{filename}}" />
                 <div class="carousel-caption">
-                  <p>图片大小: {{size}}字节 | 下载: <a href="{{url}}">{{filename}}</a></p>
+                  <p>Image size: {{size}} bytes | Download: <a href="{{url}}">{{filename}}</a></p>
                 </div>
               </div>
               {{/each}}
@@ -81,10 +81,10 @@
 
           {{#if hasFiles}}
           <hr/>
-          <p>共{{files.length}}个文件：</p>
+          <p>{{files.length}} files: </p>
           <ul class="files">
             {{#each files}}
-            <li><a href="{{url}}"><i class="icon-file"></i>{{filename}}</a><span class="small insignificant"> ({{size}}字节)</span></li>
+            <li><a href="{{url}}"><i class="icon-file"></i>{{filename}}</a><span class="small insignificant"> ({{size}} bytes)</span></li>
             {{/each}}
           </ul>
           {{/if}}
@@ -92,19 +92,19 @@
         <div class="modal-footer">
           <ul class="nav pull-left owners">
             {{#if allocated}}
-              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>给: <ul>{{{showOwners}}}</ul>
+              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>Assign</a> to: <ul>{{{showOwners}}}</ul>
             {{else}}
-              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>分配</a>
+              <a href="#" class="edit-owners" data-id="{{_id}}"><i class="icon-tasks"></i>Assign</a>
             {{/if}}
           </ul>
           <ul class="nav pull-left finishers">
             {{#if finishers}}
-            已完成: {{{showFinishers}}}
+            Finished: {{{showFinishers}}}
             {{/if}}
           </ul>
           <ul class="nav pull-right">
-            <li class="show-comments"><a href="#"><i class="icon-comments-alt"></i>讨论 ({{totalComments}})</a></li>
-            <li class="show-audits"><a href="#"><i class="icon-book"></i>历史 ({{totalAudits}})</a></li>
+            <li class="show-comments"><a href="#"><i class="icon-comments-alt"></i>Discussion ({{totalComments}})</a></li>
+            <li class="show-audits"><a href="#"><i class="icon-book"></i>History ({{totalAudits}})</a></li>
           </ul>
         </div>
         <div class="comment-box hide comments">
@@ -134,8 +134,8 @@
       <img src="{{avatar}}" class="avatar-medium">
       <div class="controls">
         <input type="hidden" name="spark-id" value="{{_id}}" />
-        <textarea id="id-content" name="content" rows="1" placeholder="分享一下你的想法"></textarea>
-        <button type="button" class="btn btn-green">发表</button>
+        <textarea id="id-content" name="content" rows="1" placeholder="Share your thoughts"></textarea>
+        <button type="button" class="btn btn-green">Publish</button>
       </div>
     </div>
   </form>
@@ -144,8 +144,8 @@
 <template name="comment">
   <li class="comment-item">
     <div class="comment-tools hide">
-      <a>删除</a>
-      <a>回复</a>
+      <a>Delete</a>
+      <a>Reply</a>
     </div>
     <div class="row">
       <div class="span1">

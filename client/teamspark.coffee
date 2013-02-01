@@ -35,7 +35,7 @@ ts.stripTags = (content) ->
   return ''
 
 ts.select2.formatSparkSelection = (item) ->
-  console.log item, item._id
+  #console.log item, item._id
   return item._id
 
 # TODO: this is not a perfect solution, however using jquery .on cannot bind the click event on these anchors which are created on the fly.
@@ -151,7 +151,7 @@ _.extend Template.login,
 
 _.extend Template.sparkFilter,
   rendered: ->
-    console.log 'spark filter rendered'
+    #console.log 'spark filter rendered'
     ts.setEditable
       node: $('#filter-finished')
       value: -> ts.State.sparkFinishFilter.get()
@@ -159,9 +159,9 @@ _.extend Template.sparkFilter,
       renderCallback: (e, editable) ->
         value = parseInt editable.value
         switch value
-          when 0 then value = {id: 0, name: '全部'}
-          when 1 then value = {id: 1, name: '未完成'}
-          when 2 then value = {id: 2, name: '已完成'}
+          when 0 then value = {id: 0, name: 'All'}
+          when 1 then value = {id: 1, name: 'Unfinished'}
+          when 2 then value = {id: 2, name: 'Finished'}
 
         ts.State.sparkFinishFilter.set value
 
@@ -170,11 +170,11 @@ _.extend Template.sparkFilter,
       value: -> ts.State.sparkPriorityFilter.get()
       source: ->
         priorities = ts.consts.filter.PRIORITY
-        priorities['all'] = '全部'
+        priorities['all'] = 'All'
         return priorities
       renderCallback: (e, editable) ->
         if editable.value is 'all'
-          value = {id: 'all', name: '全部'}
+          value = {id: 'all', name: 'All'}
         else
           v = parseInt editable.value
           value = {id: v, name: v}
@@ -205,12 +205,12 @@ _.extend Template.sparkFilter,
       value: -> ts.State.sparkTypeFilter.get()
       source: ->
         types = ts.consts.filter.TYPE()
-        types['all'] = '全部'
+        types['all'] = 'All'
         return types
 
       renderCallback: (e, editable) ->
         if editable.value is 'all'
-          value = {id: 'all', name: '全部'}
+          value = {id: 'all', name: 'All'}
         else
           value = {id: editable.value, name: ts.consts.filter.TYPE()[editable.value]}
         ts.State.sparkTypeFilter.set value
@@ -220,11 +220,11 @@ _.extend Template.sparkFilter,
       value: -> ts.State.sparkAuthorFilter.get()
       source: ->
         members = ts.consts.filter.MEMBERS()
-        members['all'] = '全部'
+        members['all'] = 'All'
         return members
       renderCallback: (e, editable) ->
         if editable.value is 'all'
-          user = {id: 'all', username: '全部'}
+          user = {id: 'all', username: 'All'}
         else
           user = Meteor.users.findOne _id: editable.value
         ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
@@ -235,7 +235,7 @@ _.extend Template.sparkFilter,
       source: -> ts.consts.filter.MEMBERS()
       renderCallback: (e, editable) ->
         if editable.value is 'all'
-          user = {id: 'all', username: '全部'}
+          user = {id: 'all', username: 'All'}
         else
           user = Meteor.users.findOne _id: editable.value
         ts.State.sparkOwnerFilter.set {id: user._id, name: user.username}
@@ -246,13 +246,13 @@ _.extend Template.sparkFilter,
       source: -> ts.consts.filter.TAGS()
       renderCallback: (e, editable) ->
         if editable.value is 'all'
-          tag = {id: 'all', name: '全部'}
+          tag = {id: 'all', name: 'All'}
         else
           tag = {id: editable.value, name: editable.value}
         ts.State.sparkTagFilter.set tag
 
     $('#search-spark').select2(
-      placeholder: '搜索当前项目下的任务'
+      placeholder: 'Search tasks under current project'
       minimumInputLength: 1
       formatResult: ts.select2.formatSpark
       #formatSelection: ts.select2.formatSpark
@@ -261,7 +261,7 @@ _.extend Template.sparkFilter,
         _.each Template.sparkFilter.types(), (item) ->
           creators.push("<a data-id='#{item.id}' data-name='#{item.name}' href='javascript:;' onclick=ts.createSparkFunc('#{item.id}');><i class='#{item.icon}' ></i>#{item.name}</a> ")
 
-        "<span class='pull-right' id='spark-creators'>新建：#{creators.join(' | ')}</span>"
+        "<span class='pull-right' id='spark-creators'>Create: #{creators.join(' | ')}</span>"
 
       query: (query) ->
         projectId = ts.State.filterSelected.get()
@@ -299,7 +299,7 @@ _.extend Template.sparkFilter,
           ts.State.sparkAuthorFilter.set {id: user._id, name: user.username}
         when 'finished'
           ts.State.clearFilters()
-          ts.State.sparkFinishFilter.set {id: 2, name: '已完成'}
+          ts.State.sparkFinishFilter.set {id: 2, name: 'Finished'}
 
 
     'click #clear-filter': (e) ->
@@ -334,7 +334,7 @@ _.extend Template.sparkFilter,
 
 _.extend Template.sparkContentEditor,
   rendered: ->
-    console.log 'spark content rendered'
+    #console.log 'spark content rendered'
     ts.editor().panelInstance 'spark-content', hasPanel : true
 
 _.extend Template.sparkEdit,
@@ -360,20 +360,20 @@ _.extend Template.sparkEdit,
 
 _.extend Template.sparkInput,
   rendered: ->
-    console.log 'spark input rendered'
+    #console.log 'spark input rendered'
     usernames = _.pluck ts.members.all().fetch(), 'username'
     $node = $('#spark-owner')
 
     $node.select2
       tags: usernames
-      placeholder:'添加责任人'
+      placeholder:'Add Responsibles'
       tokenSeparators: [' ']
       separator:';'
 
     $node = $('#spark-tags')
     $node.select2
       tags: _.pluck ts.tags.all().fetch(), 'name'
-      placeholder: '添加标签'
+      placeholder: 'Add Tags'
       tokenSeparators: [' ']
       separator:';'
 

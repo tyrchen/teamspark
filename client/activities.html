@@ -12,8 +12,8 @@
   </div>
   <div class="toolbar-bottom">
     <div class="btn-group" id="filter-type" data-toggle="buttons-radio">
-      <button class="btn {{ isTeamActivity }}" id="team-activity" title="团队动态"><i class="icon-user"></i>团队动态</button>
-      <button class="btn {{ isProjectActivity }}" id="project-activity" title="项目动态"><i class="icon-group">项目动态</i></button>
+      <button class="btn {{ isTeamActivity }}" id="team-activity" title="团队动态"><i class="icon-user"></i>Team Activity</button>
+      <button class="btn {{ isProjectActivity }}" id="project-activity" title="项目动态"><i class="icon-group">Project Activity</i></button>
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@
     <div class="author-info clearfix">
       <img class="avatar" src="{{avatar}}" alt="{{username}}" title="{{username}}" />
       <h5>{{username}}</h5>
-      <p><small>贡献: {{points}}点, 在线: {{onlineTime}}</small></p>
+      <p><small>Contribution: {{points}}points, online: {{onlineTime}}</small></p>
       <p>{{description}}</p>
     </div>
     <div class="navbar">
@@ -30,9 +30,9 @@
         <div class="container">
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="#">发表: {{totalSubmitted null}}</a></li>
-              <li><a href="#">进行中: {{totalUnfinished null}}</a></li>
-              <li><a href="#">已完成: {{totalFinished null}}</a></li>
+              <li><a href="#">submitted: {{totalSubmitted null}}</a></li>
+              <li><a href="#">on-going: {{totalUnfinished null}}</a></li>
+              <li><a href="#">finished: {{totalFinished null}}</a></li>
 
             </ul>
           </div>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="audit-trail-container hide">
-      <p>最近动态：</p>
+      <p>Rencent Activities: </p>
       <ul>
         {{#each auditTrails}}
         {{>audit}}
@@ -63,9 +63,9 @@
         <div class="container">
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="#">进行中: {{totalUnfinished null}}</a></li>
-              <li><a href="#">重要: {{totalImportant null}}</a></li>
-              <li><a href="#">紧急: {{totalUrgent null}}</a></li>
+              <li><a href="#">Ongoing: {{totalUnfinished null}}</a></li>
+              <li><a href="#">Important: {{totalImportant null}}</a></li>
+              <li><a href="#">Urgent: {{totalUrgent null}}</a></li>
 
             </ul>
           </div>
@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="audit-trail-container hide">
-      <p>最近动态：</p>
+      <p>Recent Activities: </p>
       <ul>
         {{#each auditTrails}}
         {{>audit}}

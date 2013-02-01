@@ -3,10 +3,13 @@
 resetData = ->
   if Accounts.loginServiceConfiguration.find(service:'weibo').count() is 0
     Accounts.loginServiceConfiguration.insert weibo_service
+      service: "weibo",
+      clientId: "2737982731", # please replace this with your own id
+      secret: "c67378e5e2d1f349397eb15f34e7f889" # please replace this with your own secret
 
 createUserHook = ->
   Accounts.onCreateUser (options, user) ->
-    console.log 'user:', user
+    #console.log 'user:', user
 
     user.teamId = null
     user.points = 0
@@ -15,7 +18,7 @@ createUserHook = ->
     if weibo?
       token = weibo.accessToken
       weibo_id = weibo.id
-      console.log token
+      #console.log token
       result = Meteor.http.get(
         "https://api.weibo.com/2/users/show.json",
         {params: {access_token: token, uid: weibo_id}})

@@ -30,7 +30,7 @@ _.extend Template.projects,
       parentId = $('select[name="parent"]', $form).val()
       if parentId is 'null'
         parentId = null
-      console.log "name: #{name}, desc: #{description}, parent: #{parentId}"
+      #console.log "name: #{name}, desc: #{description}, parent: #{parentId}"
       count = Projects.find({name: name, teamId: Meteor.user().teamId}).count()
 
       if not name or count > 0

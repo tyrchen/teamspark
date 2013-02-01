@@ -11,7 +11,7 @@ Actions.createTeam = (name) ->
     abbr: ""
     nextIssueId: 1
 
-  console.log 'team id:', id
+  #console.log 'team id:', id
   Meteor.users.update user._id, '$set': 'teamId': id
 
 Actions.hire = (user, team) ->
@@ -27,7 +27,7 @@ Actions.hire = (user, team) ->
   Teams.update team._id, $addToSet: {members: user._id}
   AuditTrails.insert
     userId: user._id
-    content: "#{user.username}加入到了#{team.name}"
+    content: "#{user.username} joined to #{team.name}"
     teamId: team._id
     projectId: null
     createdAt: ts.now()
@@ -72,7 +72,7 @@ Actions.createProject = (name, description, parentId) ->
   user = Meteor.user()
   now = ts.now()
 
-  console.log 'creating project:', name, description, parentId, user.username
+  #console.log 'creating project:', name, description, parentId, user.username
   if ts.isFreelancer user
     return null
 
@@ -85,7 +85,7 @@ Actions.createProject = (name, description, parentId) ->
     createdAt: now
 
   recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-  content = "#{user.username}创建了项目#{name}"
+  content = "#{user.username} created the project #{name}"
   Actions.notify recipients, content, content, null
   return projectId
 
@@ -94,7 +94,7 @@ Actions.updateProject = (id, description) ->
   user = Meteor.user()
   project = Projects.findOne _id: id
   recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-  content = "#{user.username}修改了项目#{project.name}的描述"
+  content = "#{user.username} updated #{project.name}"
   Actions.notify recipients, content, content, null
   return ''
 
@@ -104,7 +104,7 @@ Actions.moveProject = (id, newParentId) ->
   project = Projects.findOne _id: id
   parent = Projects.findOne _id: newParentId
   recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-  content = "#{user.username}修改了项目#{project.name}的上级项目为#{parent.name}"
+  content = "#{user.username} moved #{project.name} under #{parent.name}"
   Actions.notify recipients, content, content, null
   return ''
 
@@ -115,7 +115,7 @@ Actions.removeProject = (id) ->
     Projects.remove id
 
     recipients = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
-    content = "#{user.username}删除了项目#{project.name}"
+    content = "#{user.username} deleted project #{project.name}"
     Actions.notify recipients, content, content, null
 
 Actions.updateProjectStat = (id, unfinished=1, finished=0, verified=0) ->
@@ -199,7 +199,7 @@ Actions.createSpark = (title, content, type, projectId, owners, priority, tags, 
     Actions.updateUserStat id, 0, 1
 
   if owners
-    Actions.notify owners, "#{user.username}创建了新#{sparkType.name}: #{issueId}", "#{user.username}创建了新#{sparkType.name}: #{title}: ", sparkId
+    Actions.notify owners, "#{user.username} created a new #{sparkType.name}: #{issueId}", "#{user.username} created a new #{sparkType.name}: #{title}: ", sparkId
 
 Actions.createComment = (sparkId, content) ->
   # comments = {_id: uuid(), authorId: userId, content: content}
@@ -223,7 +223,7 @@ Actions.createComment = (sparkId, content) ->
   Actions.addPoints ts.consts.points.COMMENT
 
   recipients = _.union [spark.authorId], spark.owners, _.pluck(spark.comments, 'authorId')
-  Actions.notify recipients, "#{user.username}评论了#{spark.title}", "#{user.username}评论道: #{content}.", sparkId
+  Actions.notify recipients, "#{user.username} commented #{spark.issueId}", "#{user.username} commented: #{content}.", sparkId
 
 
 Actions.supportSpark = (sparkId) ->
@@ -235,16 +235,16 @@ Actions.supportSpark = (sparkId) ->
 
   if ts.sparks.hasSupported spark
     Sparks.update sparkId, $pull: {supporters: user._id}, $inc: {totalSupporters: -1}
-    content = "#{user.username} 取消支持 #{spark.title}"
+    content = "#{user.username} cancelled support for #{spark.issueId}"
     Actions.addPoints -1 * ts.consts.points.SUPPORT
   else
-    content = "#{user.username} 支持 #{spark.title}"
+    content = "#{user.username} supported #{spark.issueId}"
     Sparks.update sparkId, $push: {supporters: user._id}, $inc: {totalSupporters: 1}
     Actions.addPoints ts.consts.points.SUPPORT
 
     # TODO: later we should delete notification once user unsupport it.
     recipient = [spark.authorId]
-    Actions.notify recipient, "#{user.username}支持了#{spark.title}", content, sparkId
+    Actions.notify recipient, "#{user.username} support #{spark.issueId}", content, sparkId
 
 
 Actions.finishSpark = (sparkId) ->
@@ -275,12 +275,12 @@ Actions.finishSpark = (sparkId) ->
   if spark.owners[1]
     nextId = spark.owners[1]
     nextOwner = Meteor.users.findOne _id: nextId
-    audit.content = "#{user.username} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
-    content1 = "#{user.username} 对 #{spark.title} 标记自己的工作已完成，转入下一个责任人: #{nextOwner.username}"
+    audit.content = "#{user.username} marked his job as done. Next owner: #{nextOwner.username}"
+    content1 = "#{user.username} marked his job for #{spark.issueId} as done. Next owner: #{nextOwner.username}"
     finished = false
   else
-    audit.content = "#{user.username} 将任务标记为完成"
-    content1 = "#{user.username} 将任务 #{spark.title} 标记为完成"
+    audit.content = "#{user.username} marked the task as done"
+    content1 = "#{user.username} marked task #{spark.issueId} as done"
     finished = true
 
   Sparks.update sparkId,
@@ -300,7 +300,7 @@ Actions.finishSpark = (sparkId) ->
     Actions.addPoints spark.points
 
   recipients = _.union [spark.authorId], spark.owners
-  Actions.notify recipients, "#{user.username}完成了#{spark.title}", audit.content, sparkId
+  Actions.notify recipients, "#{user.username} finished #{spark.issueId}", audit.content, sparkId
 
   if finished
     Actions.trackFinished sparkId
@@ -315,7 +315,7 @@ Actions.verifySpark = (sparkId) ->
     _id: Meteor.uuid()
     authorId: user._id
     createdAt: ts.now()
-    content: "#{user.username} 将任务标记为验收合格"
+    content: "#{user.username} marked the task as verified"
 
   Sparks.update sparkId,
     $set: {verified: true, updatedAt: ts.now()}
@@ -340,9 +340,9 @@ Actions.uploadFiles = (sparkId, lists) ->
     _id: Meteor.uuid()
     authorId: user._id
     createdAt: ts.now()
-    content: "#{user.username} 上传了"
+    content: "#{user.username} uploaded "
 
-  content1 = "#{user.username} 在 #{spark.title} 里上传了"
+  content1 = "#{user.username} uploaded for #{spark.issueId} "
 
   images = []
   files  = []
@@ -357,14 +357,14 @@ Actions.uploadFiles = (sparkId, lists) ->
   if files.length > 0
     command.files = files
     filenames = _.pluck(files, 'filename').join(' ')
-    desc = " #{files.length}个文件: #{filenames}"
+    desc = " #{files.length} files: #{filenames}"
     audit.content += desc
     content1 += desc
 
   if images.length > 0
     command.images = images
     filenames = _.pluck(images, 'filename').join(' ')
-    desc = " #{images.length}个图片: #{filenames}"
+    desc = " #{images.length} images: #{filenames}"
     audit.content += desc
     content1 += desc
 
@@ -372,7 +372,7 @@ Actions.uploadFiles = (sparkId, lists) ->
   Sparks.update sparkId, $pushAll: command, $push: {auditTrails: audit}, $set: {updatedAt: ts.now()}
 
   recipients = _.union [spark.authorId], spark.owners
-  Actions.notify recipients, "#{user.username}在#{spark.title}里上传了新的文件", audit.content, sparkId
+  Actions.notify recipients, "#{user.username} uploaded new files for #{spark.issueId}", audit.content, sparkId
 
 Actions.updateSpark = (sparkId, value, field) ->
   formatValue = ->
@@ -384,12 +384,12 @@ Actions.updateSpark = (sparkId, value, field) ->
   auditInfo = ->
     v = formatValue()
     switch field
-      when 'deadline' then "截止日期为: #{ts.formatDate(v)}"
-      when 'priority' then "优先级为: #{v}"
-      when 'points' then "积分为: #{v}"
-      when 'title' then "标题为: #{v}"
-      when 'content' then "内容为: #{v}"
-      when 'type' then "类型为: #{ts.sparks.type(v).name}"
+      when 'deadline' then "deadline as: #{ts.formatDate(v)}"
+      when 'priority' then "priority as: #{v}"
+      when 'points' then "points as: #{v}"
+      when 'title' then "title as: #{v}"
+      when 'content' then "content as: #{v}"
+      when 'type' then "type as: #{ts.sparks.type(v).name}"
 
   #console.log 'updateSpark: ', value, field
   fields = ['project', 'deadline', 'priority', 'owners', 'title', 'content', 'type', 'points']
@@ -409,9 +409,9 @@ Actions.updateSpark = (sparkId, value, field) ->
     _id: Meteor.uuid()
     authorId: user._id
     createdAt: ts.now()
-    content: "#{user.username} 更新了"
+    content: "#{user.username} updated "
 
-  content1 = "#{user.username} 更新了 #{spark.title} 的"
+  content1 = "#{user.username} updated #{spark.issueId}'s "
 
   if field is 'project'
     if spark.finished
@@ -424,7 +424,7 @@ Actions.updateSpark = (sparkId, value, field) ->
     else
       projects = [project._id]
 
-    info = "项目为: #{project.name}"
+    info = "project as: #{project.name}"
     audit.content += info
     content1 += info
 
@@ -446,9 +446,9 @@ Actions.updateSpark = (sparkId, value, field) ->
       command['verified'] = false
 
     if users
-      info = '责任人为: ' + _.pluck(users, 'username').join(', ')
+      info = 'responsibles as: ' + _.pluck(users, 'username').join(', ')
     else
-      info = '责任人为空'
+      info = 'responsibles as empty'
     audit.content += info
     content1 += info
 
@@ -459,11 +459,11 @@ Actions.updateSpark = (sparkId, value, field) ->
       else
         Actions.updateProjectStat spark.projects[0], 1, -1
 
-    console.log 'update:', command['owners'], spark.owners
+    #console.log 'update:', command['owners'], spark.owners
     added = _.difference command['owners'], spark.owners
     deleted = _.difference spark.owners, command['owners']
 
-    console.log 'update:', added, deleted
+    #console.log 'update:', added, deleted
     _.each added, (id) ->
       Actions.updateUserStat id, 0, 1
 
@@ -475,7 +475,7 @@ Actions.updateSpark = (sparkId, value, field) ->
     audit.content += info
     # for system audit, do not need to put entire change into it
     if field is 'content'
-      content1 += '内容'
+      content1 += 'content'
     else
       content1 += info
 
@@ -489,16 +489,16 @@ Actions.updateSpark = (sparkId, value, field) ->
       # ugly guy we will notify the entire team
       all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
       recipients = _.without all, user._id
-      title = "#{user.username}贱贱地修改了#{spark.title}的积分为#{command[field]}"
+      title = "Hmmm...#{user.username} modified points of #{spark.issueId} to #{command[field]}"
     else if command[field] < ts.consts.points.FINISH_SPARK and command[field] < spark.points
       # ugly guy we will notify the entire team
       all = _.pluck Meteor.users.find(teamId: user.teamId).fetch(), '_id'
       recipients = _.without all, user._id
-      title = "#{user.username}很有节操地修改了#{spark.title}的积分为#{command[field]}"
+      title = "Clap...#{user.username} modified points of #{spark.issueId} to #{command[field]}"
     else
-      title = "#{user.username}修改了#{spark.title}"
+      title = "#{user.username} modified #{spark.issueId}"
   else
-    title = "#{user.username}修改了#{spark.title}"
+    title = "#{user.username} modified #{spark.issueId}"
 
   Actions.notify recipients, title, audit.content, sparkId
 
@@ -527,10 +527,10 @@ Actions.tagSpark = (sparkId, tags) ->
   if added.length > 0
     _.each added, (name) ->
       ts.tags.createOrUpdate name, projectId
-    info.push "添加了标签: #{added.join(', ')}"
+    info.push "added tags: #{added.join(', ')}"
 
   if deleted.length > 0
-    info.push "删除了标签: #{deleted.join(', ')}"
+    info.push "deleted tags: #{deleted.join(', ')}"
     _.each deleted, (name) ->
       ts.tags.createOrUpdate name, projectId, -1
 
@@ -542,16 +542,16 @@ Actions.tagSpark = (sparkId, tags) ->
     _id: Meteor.uuid()
     authorId: user._id
     createdAt: ts.now()
-    content: "#{user.username}#{info}"
+    content: "#{user.username} #{info}"
 
-  content1 = "#{user.username}为#{spark.title}#{info}"
+  content1 = "#{user.username} #{info} for #{spark.issueId}"
 
   Sparks.update sparkId,
     $set: {tags: tags}
     $push: {auditTrails: audit}
 
   recipients = _.union [spark.authorId], spark.owners
-  Actions.notify recipients, "#{user.username}修改了#{spark.title}的标签", audit.content, sparkId
+  Actions.notify recipients, "#{user.username} modified tags of #{spark.issueId}", audit.content, sparkId
 
 # Notifications related
 Actions.notify = (recipients, title, content, sparkId, type=1, level=2) ->
@@ -568,7 +568,7 @@ Actions.notify = (recipients, title, content, sparkId, type=1, level=2) ->
   if not all
     return
 
-  console.log 'Notify: from ', actor, 'to ', all, " with #{title}, #{content} and sparkId is #{sparkId}"
+  #console.log 'Notify: from ', actor, 'to ', all, " with #{title}, #{content} and sparkId is #{sparkId}"
 
   _.each all, (id) ->
     Notifications.insert
