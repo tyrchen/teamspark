@@ -34,12 +34,11 @@ createUserHook = ->
       user.profile.status = null
 
     github = user.services.github
-    console.log github
     if github?
       token = github.accessToken
       result = Meteor.http.get(
         "https://api.github.com/user",
-        {params: {access_token: oken}})
+        {params: {access_token: token}})
       if result.error
         throw result.error
       user.profile = result.data
