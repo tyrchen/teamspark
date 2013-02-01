@@ -20,7 +20,10 @@ Teams.allow
   remove: (userId, items) -> false
 
 Profiles.allow
-  insert: (userId, item) -> false
+  insert: (userId, item) -> true
+    #team = Teams.find(_id: item.teamId)
+    #console.log item, team
+    #team.authorId is userId
   update: (userId, items, fields, modifier) ->
     _.all items, (item) ->
       item.userId is userId
