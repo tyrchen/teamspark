@@ -3,9 +3,6 @@
 resetData = ->
   if Accounts.loginServiceConfiguration.find(service:'weibo').count() is 0
     Accounts.loginServiceConfiguration.insert weibo_service
-      service: "weibo",
-      clientId: "2737982731", # please replace this with your own id
-      secret: "c67378e5e2d1f349397eb15f34e7f889" # please replace this with your own secret
 
 createUserHook = ->
   Accounts.onCreateUser (options, user) ->
