@@ -487,8 +487,8 @@ Meteor.startup ->
 
 
   Accounts.ui.config
-    requestPermissions:
-      github: ['user', 'repo']
+    #requestPermissions:
+    #  github: ['user', 'repo']
     #requestOfflineToken:
     #  google: true
 

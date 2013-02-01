@@ -25,9 +25,10 @@ _.extend Template.activities,
 _.extend Template.member,
   events:
     'click .member': (e) ->
-      $node = $(e.currentTarget)
-      $('.audit-trail-container', $node).toggle()
-      $node.toggleClass('active')
+      e.preventDefault()
+      #$node = $(e.currentTarget)
+      #$('.audit-trail-container', $node).toggle()
+      #$node.toggleClass('active')
 
   auditTrails: -> ts.audits.all @_id, null
 
@@ -60,7 +61,7 @@ _.extend Template.member,
     profile = Profiles.findOne userId: @_id
     if profile?.totalSeconds
       return ts.formatTime profile.totalSeconds
-    return '0秒'
+    return '0s'
 
 _.extend Template.project,
   events:
