@@ -479,8 +479,8 @@ Meteor.startup ->
   setTimeout("$('#create-team-form').fadeIn('slow')", 1000)
 
   Accounts.ui.config
-    requestPermissions:
-      github: ['user', 'repo']
+    #requestPermissions:
+    #  github: ['user', 'repo']
     #requestOfflineToken:
     #  google: true
 

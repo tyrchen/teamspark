@@ -4,6 +4,9 @@ resetData = ->
   if Accounts.loginServiceConfiguration.find(service:'weibo').count() is 0
     Accounts.loginServiceConfiguration.insert weibo_service
 
+  if Accounts.loginServiceConfiguration.find(service:'github').count() is 0
+    Accounts.loginServiceConfiguration.insert github_service
+
 createUserHook = ->
   Accounts.onCreateUser (options, user) ->
     console.log 'user:', user
@@ -30,12 +33,21 @@ createUserHook = ->
       user.location = user.profile.location
       user.profile.status = null
 
-#    if user.services.github?
-#      user.username = user.profile.name
-#      user.description = user.profile.bio
-#      user.avatar = user.profile.avatar_url
-#      user.url = user.profile.html_url
-#      user.location = user.profile.location
+    github = user.services.github
+    console.log github
+    if github?
+      token = github.accessToken
+      result = Meteor.http.get(
+        "https://api.github.com/user",
+        {params: {access_token: oken}})
+      if result.error
+        throw result.error
+      user.profile = result.data
+      user.username = user.profile.name
+      user.description = user.profile.bio
+      user.avatar = user.profile.avatar_url
+      user.url = user.profile.html_url
+      user.location = user.profile.location
 #
 #    if user.services.google?
 #      user.username = user.profile.name
