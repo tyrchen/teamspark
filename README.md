@@ -11,6 +11,7 @@ It could be used for product discussions and/or bug/task tracking.
 ### MongoDB
 
 [Mongodb](http://www.mongodb.org/) shall be installed as a database service for Teamspark. To install it:
+
 Ubuntu:
 ```
 $ sudo apt-get install mongodb
