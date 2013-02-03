@@ -1,4 +1,4 @@
-Teamspark
+![Teamspark](/public/favicon.png) Teamspark
 =========
 
 ## What is Teamspark?
