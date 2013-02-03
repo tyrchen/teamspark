@@ -476,7 +476,15 @@ Meteor.startup ->
       Actions.online false
 
   # a little hack for not making the create team form show each time when data hasn't arrived
-  setTimeout("$('#create-team-form').fadeIn('slow')", 1000)
+  id = Meteor.setInterval ->
+    $node = $('#create-team-form')
+    if $node.length > 0
+      $node.fadeIn('slow')
+      Meteor.clearInterval id
+    if $('.project-list').length > 0
+      Meteor.clearInterval id
+  , 2000
+
 
   Accounts.ui.config
     #requestPermissions:
