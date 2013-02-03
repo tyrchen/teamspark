@@ -28,11 +28,16 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h2>What is Teamspark?</h2>
+          <h1>
+<img src="https://raw.github.com/tyrchen/teamspark/master/public/favicon.png" alt="Teamspark"> Teamspark</h1>
 
-<p>Teamspark is a clean and simple project/task management tool. It enables <strong>everyone</strong> within the team to capture inspiration, manage tasks, track the progress and communicate freely.</p>
+<h2>Teamspark Introduction</h2>
 
-<h2>Why Teamspark?</h2>
+<h3>What is Teamspark?</h3>
+
+<p>Teamspark is a clean and simple project/task management tool. It enables everyone within the team to capture inspiration, manage tasks, track the progress and communicate freely.</p>
+
+<h3>Why Teamspark?</h3>
 
 <p>I've been looking for a right team collaboration system. Email is an inefficient communication tool for us, especially when there are lots of files shared back and forth. IM is good to some extend, but it is hard to trace back. Before building teamspark, we use <a href="http://www.redmine.org/">Redmine</a> a lot for project management and bug tracking. But it is a little bit complicate. We tried to force the entire team to use Redmine for communication and collaboration but it turned out that non techies dislike it.</p>
 
@@ -47,7 +52,7 @@
 <li>teambition: A collaboration tool, seems great on sharing information but not collaborating on tasks.</li>
 </ol><p>As there seems no free and good tools, I decided to build my own.</p>
 
-<h2>What on earth team spark can help?</h2>
+<h3>What on earth team spark can help?</h3>
 
 <p>Teamspark could help to:</p>
 
@@ -55,27 +60,149 @@
 <li>Record every piece of information related with your project. Teamspark allow people to discuss and share ideas within the team freely. Including but not limited to: Ideas, Bugs, Tasks, Features, Improvements.</li>
 <li>Make everyone in the team could know everything about the projects within the team.</li>
 <li>Enable realtime collaboration.</li>
-</ol><h2>What is the current status of teamspark?</h2>
+</ol><h3>What is the current status of teamspark?</h3>
 
 <p>Teamspark is still a very young project. But it is usable now. In <a href="http://tukeq.com">tukequan</a>, we've been using is for over 2 months and more than 1000 sparks were created and processed. So if your team is as small as us (less than 20 people), please have a try.</p>
 
-<h2>Why don't your provide a online service?</h2>
+<h3>Why don't your provide a online service?</h3>
 
 <p>Teamspark is far from a complete product to be an online service. It lacks of many security considerations. So deploying teamspark inside your company, without public facing IP, and protected by your company's firewall, is the right choice at the moment.</p>
 
-<p>However, we do provide an online demo for teamspark for you to test: <a href="http://ts-demo.tchen.me">http://ts-demo.tchen.me</a>. You can login with demo/teamspark to have a first glance.</p>
+<p>However, we do provide an online demo for teamspark for you to test: <a href="http://ts-demo.tchen.me">http://ts-demo.tchen.me</a>. You can login with demo/teamspark to have a first glance. If you want to create your own profile, you need to open <a href="http://ts-demo.tchen.me">http://ts-demo.tchen.me</a> with another browser and login with admin/teamspark, then click "+" button right on the title to add your newly created user into the team.</p>
 
-<h2>Authors and Contributors</h2>
+<h3>Authors and Contributors</h3>
 
 <p>Teamspark is designed and implemented by <a href="https://github.com/tyrchen" class="user-mention">@tyrchen</a>. For more information about the author, please visit: <a href="http://tchen.me/pages/aboutme.html">http://tchen.me/pages/aboutme.html</a></p>
 
-<h3>Contributors</h3>
+<p>The logo of Teamspark is contributed by <a href="https://github.com/0065paula" class="user-mention">@0065paula</a> of <a href="http://pyology.com/">Pyology</a>.</p>
 
-<p>I'm looking forward to your contributions.</p>
-
-<h2>Support or Contact</h2>
+<h3>Support or Contact</h3>
 
 <p>Having trouble with Teamspark? Please submit issues in <a href="https://github.com/tyrchen/teamspark/issues">https://github.com/tyrchen/teamspark/issues</a>.</p>
+
+<h3>License</h3>
+
+<p>Teamspark is licensed under the MIT License.</p>
+
+<h2>Installation</h2>
+
+<h3>MongoDB</h3>
+
+<p><a href="http://www.mongodb.org/">Mongodb</a> shall be installed as a database service for Teamspark. To install it:</p>
+
+<p>Ubuntu:</p>
+
+<pre><code>$ sudo apt-get install mongodb
+</code></pre>
+
+<p>OSX with homebrew:</p>
+
+<pre><code>$ brew install mongodb
+</code></pre>
+
+<p>For windows and other platforms, please refer to the related documents.</p>
+
+<h3>Meteor</h3>
+
+<p>Teamspark uses <a href="http://meteor.com">meteor</a> framework. To install meteor:</p>
+
+<pre><code>$ curl https://install.meteor.com | /bin/sh
+</code></pre>
+
+<p>Meanwhile, you can clone/fork the code to your local folder. When meteor/mongodb installation finished, you can run it by:</p>
+
+<pre><code>$ cd teamspark
+$ meteor
+</code></pre>
+
+<blockquote>
+<p>Note: for chinese user, please checkout to chinese branch so that you could have a familiar user interface.</p>
+</blockquote>
+
+<p>Then teamspark service will be started at port 3000. You can visit http://localhost:3000 to see the demo.</p>
+
+<h2>Configuration</h2>
+
+<p>If you intend to use it in your own projects, make sure you configure the proper keys. Open teamspark/common/configuration.coffee, replace the weibo app key/secret and filepicker.io api key with your own ones.</p>
+
+<h2>Deploy Teamspark with Nginx and Supervisor</h2>
+
+<p>Assume you have teamspark installed correctly and you can access http://localhost:3000 when you bootup teamspark with <code>meteor</code> command. Then you may want to deploy teamspark in a production environment. Here are the instructions (for debian/ubuntu):</p>
+
+<h3>Meteor Bundle</h3>
+
+<p>According to meteor document, you should use <code>meteor bundle</code> to create the tarball for deployment.</p>
+
+<p>Under your teamspark source code directory, do:</p>
+
+<pre><code>$ meteor bundle ~/deployment/teamspark.tgz
+</code></pre>
+
+<p>This will create a bundled teamspark tarball. You can scp it to your server (assume your put it in ~/deployment directory). Then you should do:</p>
+
+<pre><code>$ cd ~/deployment
+$ rm -rf teamspark.bak
+$ mv teamspark teamspark.bak
+$ tar zxvf teamspark.tgz
+$ mv bundle teamspark
+$ cd teamspark/server/node_modules
+$ rm -r fibers
+$ npm install fibers@0.6.9
+</code></pre>
+
+<p>Now teamspark is ready for use. The next step is to run teamspark under supervisord.</p>
+
+<h3>Install and configure supervisord</h3>
+
+<pre><code>$ sudo apt-get install supervisord
+</code></pre>
+
+<p>In your supervisor configuration (normally it's in /etc/supervisor/supervisor.conf), add the following in the end of the file:</p>
+
+<pre><code>[program:teamspark]
+directory=/home/ubuntu/deployment/teamspark
+user=ubuntu
+command=node main.js
+environment=PORT=7005,ROOT_URL="http://teamspark.yourdomain.com",MONGO_URL="mongodb://localhost:27017/teamspark"
+redirect_stderr=true
+stderr_logfile=none
+stdout_logfile=/var/log/supervisor/teamspark.log
+autostart=true
+autorestart=true
+</code></pre>
+
+<p>Remember to replace <code>ubuntu</code> to the username in your server. You should also change <code>teamspark.yourdomain.com</code> to a real domain name.</p>
+
+<p>After this you could run <code>sudo supervisorctl</code> to manage supervisor. In the supervisor prompt, input <code>reread</code> to reload the configuration, then <code>update</code> to take effects. Your teamspark service should be running if you input <code>status</code>. If not, go to /var/log/supervisor/teamspark.log to see the error information.</p>
+
+<h3>Run in nginx</h3>
+
+<p>Create a new file in /etc/nginx/site-available/teamspark. Put the following configuration in it:</p>
+
+<pre><code>server {
+  listen 80;
+  server_name teamspark.yourdomain.com;
+  access_log /var/log/nginx/teamspark.access.log;
+  error_log /var/log/nginx/teamspark.error.log;
+  location / {
+    proxy_pass http://localhost:7005;
+    include /etc/nginx/proxy_params;
+  }
+}
+</code></pre>
+
+<p>Then make a soft link in site-enabled and restart nginx:</p>
+
+<pre><code>$ cd ../site-enabled
+$ ln -s ../site-available/teamspark teamspark
+$ sudo /etc/init.d/nginx restart
+</code></pre>
+
+<p>You may also need to add the domain name <code>teamspark</code> in your DNS configuration.</p>
+
+<p>After all these done, you should be able to see teamspark up and running with: <a href="http://teamspark.yourdomain.com">http://teamspark.yourdomain.com</a>.</p>
+
+<p>Enjoy it.</p>
         </section>
 
         <aside id="sidebar">
