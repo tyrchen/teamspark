@@ -13,6 +13,21 @@ Actions.createTeam = (name) ->
 
   #console.log 'team id:', id
   Meteor.users.update user._id, '$set': 'teamId': id
+  Actions.createProfile()
+
+Actions.createProfile = ->
+  user = Meteor.user()
+  if Profiles.find(userId: user._id).count() is 0
+    Profiles.insert
+      userId: user._id
+      username: user.username
+      online: true
+      totalSubmitted: 0
+      totalUnfinished: 0
+      totalFinished: 0
+      lastActive: ts.now()
+      teamId: user.teamId
+      totalSeconds: 0
 
 Actions.hire = (user, team) ->
 
@@ -25,18 +40,8 @@ Actions.hire = (user, team) ->
 
   Meteor.users.update user._id, $set: {teamId: team._id}
   Teams.update team._id, $addToSet: {members: user._id}
-  if Profiles.find(userId: user._id).count() is 0
-    Profiles.insert
-      userId: user._id
-      username: user.username
-      online: true
-      teamId: user.teamId
-      totalSubmitted: 0
-      totalUnfinished: 0
-      totalFinished: 0
-      lastActive: ts.now()
-      teamId: team._id
-      totalSeconds: 0
+
+  Actions.createProfile()
 
   AuditTrails.insert
     userId: user._id

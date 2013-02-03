@@ -483,7 +483,7 @@ Meteor.startup ->
       Meteor.clearInterval id
     if $('.project-list').length > 0
       Meteor.clearInterval id
-  , 1000
+  , 2000
 
 
   Accounts.ui.config
