@@ -49,6 +49,12 @@ If you intend to use it in your own projects, make sure you configure the proper
 
 Teamspark is licensed under the MIT License.
 
+## Contributors
+
+Teamspark is designed and implemented by @tyrchen. For more information about the author, please visit: http://tchen.me/pages/aboutme.html
+
+Teamspark logo is contributed by @0065paula of [Pyology](http://pyology.com/).
+
 ## More Information
 
 For more information, please visit: http://tyrchen.github.com/teamspark.
