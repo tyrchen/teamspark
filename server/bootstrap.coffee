@@ -13,6 +13,7 @@ createUserHook = ->
 
     user.teamId = null
     user.points = 0
+    user.avatar = '/default_avatar.jpg'
 
     weibo = user.services.weibo
     if weibo?
@@ -47,6 +48,7 @@ createUserHook = ->
       user.avatar = user.profile.avatar_url
       user.url = user.profile.html_url
       user.location = user.profile.location
+
 #
 #    if user.services.google?
 #      user.username = user.profile.name
