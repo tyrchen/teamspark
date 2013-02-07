@@ -9,7 +9,9 @@ Teamspark is a clean and simple project/task management tool. It enables everyon
 we provided an online demo for teamspark for you to test: http://ts-demo.tchen.me. 
 
 We provided two accounts:
+
 admin user: admin/teamspark
+
 normal user: demo/teamspark
 
 You can login with these 2 users in different browsers (suggest chrome/firefox). If you want to register your own, you should use admin user to approve the new user.
