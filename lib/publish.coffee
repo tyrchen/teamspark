@@ -1,4 +1,4 @@
-if Meteor.is_server
+if Meteor.isServer
   Meteor.publish 'projects', (teamId) ->
     Projects.find teamId: teamId
 
@@ -38,7 +38,7 @@ if Meteor.is_server
   Meteor.publish 'tags', (teamId) ->
     Tags.find {teamId: teamId}, {sort: 'count': -1}
 
-if Meteor.is_client
+if Meteor.isClient
   Meteor.subscribe 'teams'
   Meteor.autosubscribe ->
     teamId = Meteor.user()?.teamId
@@ -57,7 +57,7 @@ if Meteor.is_client
       #    ts.State.loaded.set true
       Meteor.subscribe 'sparks', teamId, ->
         console.log 'sparks loaded'
-        ts.State.loaded.set true
+        # ts.State.loaded.set true
 
       #Meteor.subscribe 'auditTrails', teamId
 

@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.setProject = (project_name) ->
   project_name = decodeURIComponent(project_name)
 
@@ -7,7 +7,7 @@ ts.setProject = (project_name) ->
     return
 
   # here we need to delay initial url parsing since data hasn't arrived
-  Meteor.autorun (handle)->
+  Deps.autorun (handle)->
     project = null
     if not Meteor.user()?.teamId
       return
@@ -38,7 +38,7 @@ TsRouter = Backbone.Router.extend
       self.navigate "/projects/#{lastProject}/sparks", true
       return
 
-    Meteor.autorun (handle) ->
+    Deps.autorun (handle) ->
       p = Projects.findOne {}, {sort: createdAt: 1}
       if p
         handle.stop()
@@ -59,7 +59,7 @@ TsRouter = Backbone.Router.extend
 
 
   spark: (spark_id) ->
-    Meteor.autorun (handle) ->
+    Deps.autorun (handle) ->
       spark = Sparks.findOne _id: spark_id
       if not spark
         return
@@ -80,7 +80,7 @@ TsRouter = Backbone.Router.extend
 
 
 
-Router = new TsRouter
+@Router = new TsRouter
 
 Meteor.startup ->
   Backbone.history.start pushState: true

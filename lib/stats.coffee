@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.stats = ts.stats || {}
 ts.stats.createDayStat = (date, teamId, projectId) ->
   l = [0, 0, 0, 0, 0, 0]

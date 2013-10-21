@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.charts = ts.charts || {}
 
 ts.charts.userDistribution = ts.charts.userDistribution || {}

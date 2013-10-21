@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 
 ts.now = ->
   (new Date()).getTime()
@@ -156,16 +156,17 @@ ts.sparks.totalImportant = (projectId=null, ownerId=null) ->
 ts.sparks.urgentItems = (projectId=null, ownerId=null) ->
   # tasks expire in 3 days
   time = ts.now() + ts.consts.EXPIRE_IN_3_DAYS
-  query = [
-    deadline: $and: $ne: null, $lt:  time
-  ]
+  query = {
+    deadline: {$ne: null, $lt:  time}
+  }
 
   if projectId
-    query.push projects: projectId
+    query.projects = projectId
 
   if ownerId
-    query.push owners: ownerId
+    query.owners = ownerId
 
+  console.log query
   Sparks.find query
 
 ts.sparks.totalUrgent = (projectId) -> ts.sparks.urgentItems(projectId).count()

@@ -1,5 +1,5 @@
 # const definitions
-ts = ts || {}
+@ts = @ts || {}
 ts.consts = ts.consts || {}
 
 # priority

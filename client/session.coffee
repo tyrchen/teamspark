@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.getSession = (name) ->
   Session.get name
 
@@ -11,7 +11,7 @@ ts.setSession = (name, value) ->
   Session.set name, value
 
 
-ts.members = {}
+ts.members = ts.members || {}
 ts.members.all = ->
   Meteor.users.find teamId: ts.State.teamId.get()
 
@@ -21,7 +21,7 @@ ts.members.waiting = ->
 ts.members.ordered = ->
   return ts.members.all().fetch()
 
-ts.tags = {}
+ts.tags = ts.tags || {}
 ts.tags.all =  ->
   query = {'teamId': ts.State.teamId.get()}
   projectId = ts.State.filterSelected.get()
@@ -42,7 +42,7 @@ ts.editor = ->
     iconsPath: '/nicEditorIcons.gif'
 
 
-ts.State = {}
+ts.State = ts.State || {}
 
 _.extend ts.State,
   # current user's team

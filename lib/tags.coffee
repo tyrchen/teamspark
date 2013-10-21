@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.tags = ts.tags || {}
 ts.tags.createOrUpdate = (name, projectId, value=1) ->
   if not name

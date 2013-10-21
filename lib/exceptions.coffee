@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.exp = ts.exp || {}
 
 class ts.exp.Exception

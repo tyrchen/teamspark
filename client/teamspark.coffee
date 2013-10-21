@@ -1,4 +1,4 @@
-ts = ts || {}
+@ts = @ts || {}
 ts.filteringTeam = ->
   ts.State.filterType.get() is 'team'
 
@@ -411,7 +411,7 @@ _.extend Template.sparkInput,
       owners = $.trim($('input[name="owner"]', $form).val())
       if owners
         owners = _.map owners.split(';'), (username) ->
-          user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+          user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id': 1}
           return user?._id
         owners = _.filter owners, (id) -> id
       else

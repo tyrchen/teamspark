@@ -124,7 +124,7 @@ _.extend Template.spark,
       value = editable.value
       sparkId = editable.$element.data('id')
       owners = _.map value.split(';'), (username) ->
-        user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id'}
+        user = Meteor.users.findOne {teamId: ts.State.teamId.get(), username: username}, {fields: '_id': 1}
         return user?._id
 
       owners = _.filter owners, (id) -> id

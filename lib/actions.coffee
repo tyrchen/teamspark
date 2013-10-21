@@ -1,4 +1,4 @@
-Actions = {}
+@Actions = {}
 
 # team related
 Actions.createTeam = (name) ->
@@ -284,7 +284,7 @@ Actions.finishSpark = (sparkId) ->
       throw new ts.exp.AccessDeniedException 'Spark already finished or not assigned yet'
 
   audit =
-    _id: Meteor.uuid()
+#    _id: Meteor.uuid()
     authorId: user._id
     createdAt: ts.now()
 
@@ -646,10 +646,10 @@ Actions.online = (isOnline=true) ->
         if seconds > 900
           # for most cases user do any operation should not exceed 15 mins
           seconds = 900
-          Profiles.update {userId: profile.userId}, {$set: {online: isOnline}, $inc: {totalSeconds: seconds}}
+          Profiles.update {_id: profile._id}, {$set: {online: isOnline}, $inc: {totalSeconds: seconds}}
       else
         # offline to online, start record time spent
-        Profiles.update {userId: profile.userId}, {$set: {online: isOnline, lastActive: now}}
+        Profiles.update {_id: profile._id}, {$set: {online: isOnline, lastActive: now}}
     else
       # TODO: work around. should do this in after user create hook
       user = Meteor.user()
