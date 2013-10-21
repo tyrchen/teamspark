@@ -21,7 +21,7 @@ Profiles.allow
     #team = Teams.find(_id: item.teamId)
     #console.log item, team
     #team.authorId is userId
-  update: (userId, item, fields, modifier) -> item.userId is userId
+  update: (userId, item, fields, modifier) -> true
   remove: (userId, item) -> false
 
 team_access =

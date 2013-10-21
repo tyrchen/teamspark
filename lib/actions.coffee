@@ -13,10 +13,10 @@ Actions.createTeam = (name) ->
 
   #console.log 'team id:', id
   Meteor.users.update user._id, '$set': 'teamId': id
-  Actions.createProfile()
+  Actions.createProfile(user, id)
 
-Actions.createProfile = ->
-  user = Meteor.user()
+Actions.createProfile = (user, teamId) ->
+
   if Profiles.find(userId: user._id).count() is 0
     Profiles.insert
       userId: user._id
@@ -26,7 +26,7 @@ Actions.createProfile = ->
       totalUnfinished: 0
       totalFinished: 0
       lastActive: ts.now()
-      teamId: user.teamId
+      teamId: teamId
       totalSeconds: 0
 
 Actions.hire = (user, team) ->
@@ -38,18 +38,17 @@ Actions.hire = (user, team) ->
     #throw new ts.exp.InvalidValueException('Only freelancer can be hired by a team')
     return
 
-  Meteor.users.update user._id, $set: {teamId: team._id}
-  Teams.update team._id, $addToSet: {members: user._id}
+  Meteor.call 'addToTeam', user._id, team._id, (err, res) ->
 
-  Actions.createProfile()
+    if not err
+      Actions.createProfile(user, team._id)
 
-  AuditTrails.insert
-    userId: user._id
-    content: "#{user.username} joined to #{team.name}"
-    teamId: team._id
-    projectId: null
-    createdAt: ts.now()
-  return true
+      AuditTrails.insert
+        userId: user._id
+        content: "#{user.username} joined to #{team.name}"
+        teamId: team._id
+        projectId: null
+        createdAt: ts.now()
 
 Actions.layoff = (user, team) ->
   if not ts.isStaff team
@@ -60,14 +59,14 @@ Actions.layoff = (user, team) ->
     return
 
   if not ts.isFreelancer user
-    Meteor.users.update user._id, $set: {teamId: null}
-    Teams.update team._id, $pull: {members: user._id}
-    AuditTrails.insert
-      userId: user._id
-      content: "#{user.username}退出了#{team.name}"
-      teamId: team._id
-      projectId: null
-      createdAt: ts.now()
+    Meteor.call 'removeFromTeam', user._id, team._id, (err, res) ->
+      if not err
+        AuditTrails.insert
+          userId: user._id
+          content: "#{user.username}退出了#{team.name}"
+          teamId: team._id
+          projectId: null
+          createdAt: ts.now()
 
 Actions.updateMembers = (added_ids, removed_ids) ->
   team = ts.currentTeam()
@@ -646,7 +645,7 @@ Actions.online = (isOnline=true) ->
         if seconds > 900
           # for most cases user do any operation should not exceed 15 mins
           seconds = 900
-          Profiles.update {_id: profile._id}, {$set: {online: isOnline}, $inc: {totalSeconds: seconds}}
+        Profiles.update {_id: profile._id}, {$set: {online: isOnline}, $inc: {totalSeconds: seconds}}
       else
         # offline to online, start record time spent
         Profiles.update {_id: profile._id}, {$set: {online: isOnline, lastActive: now}}
