@@ -6,7 +6,7 @@
 Teamspark is a clean and simple project/task management tool. It enables everyone within the team to capture inspiration, manage tasks, track the progress and communicate freely.
 
 ### Online Demo
-we provided an online demo for teamspark for you to test: http://ts-demo.tchen.me. 
+we provided an online demo for teamspark for you to test: http://teamspark.meteor.com. 
 
 We provided two accounts:
 
